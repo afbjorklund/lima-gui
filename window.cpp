@@ -61,6 +61,7 @@
 #include <QDebug>
 #include <QGroupBox>
 #include <QListView>
+#include <QMainWindow>
 #include <QMenu>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -68,6 +69,13 @@
 #include <QPushButton>
 #include <QProcess>
 #include <QString>
+
+#ifndef QT_NO_TERMWIDGET
+#include <QApplication>
+#include <QMainWindow>
+#include <QStandardPaths>
+#include "qtermwidget.h"
+#endif
 
 //! [0]
 Window::Window()
@@ -79,6 +87,7 @@ Window::Window()
     createActions();
     createTrayIcon();
 
+    connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &Window::setIcon);
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
@@ -150,6 +159,30 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 //! [4]
 
+void Window::shellConsole()
+{
+    QModelIndex index = instanceListView->currentIndex();
+    QString instance = index.data(Qt::DisplayRole).toString();
+
+#ifndef QT_NO_TERMWIDGET
+    QMainWindow *mainWindow = new QMainWindow();
+
+    int startnow = 0; // set shell program first
+    QTermWidget *console = new QTermWidget(startnow);
+    console->setShellProgram(QStandardPaths::findExecutable("limactl"));
+    QStringList args = {"shell", instance};
+    console->setArgs(args);
+    console->startShellProgram();
+
+    QObject::connect(console, SIGNAL(finished()), mainWindow, SLOT(close()));
+
+    mainWindow->setWindowTitle(QString(tr("lima [%1]")).arg(instance));
+    mainWindow->resize(640, 480);
+    mainWindow->setCentralWidget(console);
+    mainWindow->show();
+#endif
+}
+
 bool Window::getProcessOutput(QStringList arguments, QString& text) {
     bool success;
 
@@ -214,16 +247,22 @@ void Window::createInstanceGroupBox()
 
     instanceListView = new QListView();
     instanceListView->setModel(instanceModel);
+    instanceListView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    createButton = new QPushButton(tr("Create"));
     shellButton = new QPushButton(tr("Shell"));
+    shellButton->setIcon(QIcon(":/images/terminal.png"));
+    createButton = new QPushButton(tr("Create"));
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     removeButton = new QPushButton(tr("Remove"));
 
+#ifdef QT_NO_TERMWIDGET
+    shellButton->setEnabled(false);
+#endif
+
     QHBoxLayout *instanceButtonLayout = new QHBoxLayout;
-    instanceButtonLayout->addWidget(createButton);
     instanceButtonLayout->addWidget(shellButton);
+    instanceButtonLayout->addWidget(createButton);
     instanceButtonLayout->addWidget(startButton);
     instanceButtonLayout->addWidget(stopButton);
     instanceButtonLayout->addWidget(removeButton);

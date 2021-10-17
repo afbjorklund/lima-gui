@@ -93,14 +93,15 @@ private:
     void createActions();
     void createTrayIcon();
 
+    void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
 
     QComboBox *iconComboBox;
 
     QGroupBox *instanceGroupBox;
     QListView *instanceListView;
-    QPushButton *createButton;
     QPushButton *shellButton;
+    QPushButton *createButton;
     QPushButton *startButton;
     QPushButton *stopButton;
     QPushButton *removeButton;

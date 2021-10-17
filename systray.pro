@@ -9,6 +9,8 @@ requires(qtConfig(combobox))
 DISTFILES += \
     LICENSE
 
+include(QSourceHighlite/QSourceHighlite.pri)
+
 win32: DEFINES += QT_NO_TERMWIDGET
 macx: DEFINES += QT_NO_TERMWIDGET
 

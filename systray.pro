@@ -5,3 +5,6 @@ RESOURCES     = systray.qrc
 
 QT += widgets
 requires(qtConfig(combobox))
+
+DISTFILES += \
+    LICENSE

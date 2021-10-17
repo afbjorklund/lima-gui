@@ -1,5 +1,7 @@
 /****************************************************************************
 **
+** Copyright (C) 2021 Anders F Björklund
+**
 ** Copyright (C) 2016 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **

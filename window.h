@@ -92,6 +92,8 @@ private:
     void createActions();
     void createTrayIcon();
 
+    bool getProcessOutput(QStringList arguments, QString& text);
+
     QComboBox *iconComboBox;
 
     QGroupBox *instanceGroupBox;

@@ -58,12 +58,15 @@
 #include <QComboBox>
 #include <QCoreApplication>
 #include <QCloseEvent>
+#include <QDebug>
 #include <QGroupBox>
 #include <QListView>
 #include <QMenu>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QProcess>
+#include <QString>
 
 //! [0]
 Window::Window()
@@ -146,6 +149,23 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 //! [4]
 
+bool Window::getProcessOutput(QStringList arguments, QString& text) {
+    bool success;
+
+    QString program = "limactl";
+
+    QProcess *process = new QProcess(this);
+    process->start(program, arguments);
+    success = process->waitForFinished();
+    if (success) {
+        text = process->readAllStandardOutput();
+    } else {
+        qDebug() << process->readAllStandardError();
+    }
+    delete process;
+    return success;
+}
+
 int InstanceModel::rowCount(const QModelIndex &) const
 {
     return stringList.count();
@@ -182,7 +202,13 @@ void Window::createInstanceGroupBox()
     instanceGroupBox = new QGroupBox(tr("Instances"));
 
     QStringList instances;
-    instances << "default";
+    QStringList arguments;
+    arguments << "list" << "--quiet";
+    QString text;
+    bool success = getProcessOutput(arguments, text);
+    if (success) {
+        instances = text.split("\n", QString::SkipEmptyParts);
+    }
     QAbstractItemModel *instanceModel = new InstanceModel(instances);
 
     instanceListView = new QListView();

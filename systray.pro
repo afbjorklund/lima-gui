@@ -12,7 +12,6 @@ DISTFILES += \
 include(QSourceHighlite/QSourceHighlite.pri)
 
 win32: DEFINES += QT_NO_TERMWIDGET
-macx: DEFINES += QT_NO_TERMWIDGET
 
 unix:!macx: CONFIG += link_pkgconfig
 unix:!macx: PKGCONFIG += qtermwidget5

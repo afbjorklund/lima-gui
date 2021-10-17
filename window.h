@@ -62,6 +62,7 @@ class QAction;
 class QCheckBox;
 class QComboBox;
 class QGroupBox;
+class QIcon;
 class QLabel;
 class QLineEdit;
 class QMenu;
@@ -119,6 +120,7 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+    QIcon *trayIconIcon;
 };
 //! [0]
 

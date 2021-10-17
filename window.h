@@ -95,6 +95,7 @@ private:
 
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
+    void createEditor();
 
     QComboBox *iconComboBox;
 

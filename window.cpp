@@ -59,8 +59,11 @@
 #include <QCoreApplication>
 #include <QCloseEvent>
 #include <QDebug>
+#include <QFont>
 #include <QGroupBox>
+#include <QLabel>
 #include <QListView>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QMenu>
 #include <QHBoxLayout>
@@ -69,12 +72,18 @@
 #include <QPushButton>
 #include <QProcess>
 #include <QString>
+#include <QTextEdit>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
 #include <QMainWindow>
 #include <QStandardPaths>
 #include "qtermwidget.h"
+#endif
+
+#ifndef QT_NO_SOURCEHIGHLITER
+#include "qsourcehighliter.h"
+using namespace QSourceHighlite;
 #endif
 
 //! [0]
@@ -88,6 +97,7 @@ Window::Window()
     createTrayIcon();
 
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
+    connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &Window::setIcon);
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
@@ -181,6 +191,60 @@ void Window::shellConsole()
     mainWindow->setCentralWidget(console);
     mainWindow->show();
 #endif
+}
+
+void Window::createEditor()
+{
+    QMainWindow *mainWindow = new QMainWindow();
+
+    QLabel *label = new QLabel(tr("Name"));
+    QLineEdit *name = new QLineEdit("default");
+
+    QHBoxLayout *topLayout = new QHBoxLayout;
+    topLayout->addWidget(label);
+    topLayout->addWidget(name);
+
+    QTextEdit *editor = new QTextEdit();
+    QFont font("monospace");
+    font.setStyleHint(QFont::Monospace);
+    font.setPointSize(10);
+   editor->setFont(font);
+#ifndef QT_NO_SOURCEHIGHLITER
+    QSourceHighliter *highlighter = new QSourceHighliter(editor->document());
+    highlighter->setCurrentLanguage(QSourceHighliter::CodeYAML);
+#endif
+
+    QString prefix = "/usr/local";
+    QString examples = prefix + "/share/doc/lima/examples";
+    QString defaultYAML = examples + "/default.yaml";
+    QFile file(defaultYAML);
+    if (file.open(QFile::ReadOnly | QIODevice::Text)) {
+      QString content = QString::fromUtf8(file.readAll());
+      editor->setPlainText(content);
+      file.close();
+    }
+
+    QPushButton *cancel = new QPushButton(tr("Cancel"));
+    QPushButton *ok = new QPushButton(tr("Create"));
+
+    ok->setEnabled(false); // disable until implemented
+
+    QHBoxLayout *bottomLayout = new QHBoxLayout;
+    bottomLayout->addWidget(cancel);
+    bottomLayout->addWidget(ok);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addLayout(topLayout);
+    layout->addWidget(editor);
+    layout->addLayout(bottomLayout);
+
+    QWidget *widget = new QWidget();
+    widget->setLayout(layout);
+
+    mainWindow->setWindowTitle(tr("lima"));
+    mainWindow->resize(640, 480);
+    mainWindow->setCentralWidget(widget);
+    mainWindow->show();
 }
 
 bool Window::getProcessOutput(QStringList arguments, QString& text) {

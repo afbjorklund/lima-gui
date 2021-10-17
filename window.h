@@ -58,19 +58,16 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <QDialog>
+#include <QAbstractListModel>
 
 QT_BEGIN_NAMESPACE
 class QAction;
-class QCheckBox;
 class QComboBox;
 class QGroupBox;
 class QIcon;
-class QLabel;
-class QLineEdit;
+class QListView;
 class QMenu;
-class QPushButton;
-class QSpinBox;
-class QTextEdit;
+class QStringList;
 QT_END_NAMESPACE
 
 //! [0]
@@ -89,31 +86,16 @@ protected:
 private slots:
     void setIcon(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void showMessage();
-    void messageClicked();
 
 private:
-    void createIconGroupBox();
-    void createMessageGroupBox();
+    void createInstanceGroupBox();
     void createActions();
     void createTrayIcon();
 
-    QGroupBox *iconGroupBox;
-    QLabel *iconLabel;
     QComboBox *iconComboBox;
-    QCheckBox *showIconCheckBox;
 
-    QGroupBox *messageGroupBox;
-    QLabel *typeLabel;
-    QLabel *durationLabel;
-    QLabel *durationWarningLabel;
-    QLabel *titleLabel;
-    QLabel *bodyLabel;
-    QComboBox *typeComboBox;
-    QSpinBox *durationSpinBox;
-    QLineEdit *titleEdit;
-    QTextEdit *bodyEdit;
-    QPushButton *showMessageButton;
+    QGroupBox *instanceGroupBox;
+    QListView *instanceListView;
 
     QAction *minimizeAction;
     QAction *maximizeAction;
@@ -125,6 +107,25 @@ private:
     QIcon *trayIconIcon;
 };
 //! [0]
+
+//! [1]
+class InstanceModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    InstanceModel(const QStringList &strings, QObject *parent = nullptr)
+        : QAbstractListModel(parent), stringList(strings) {}
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const override;
+
+private:
+    QStringList stringList;
+};
+//! [1]
 
 #endif // QT_NO_SYSTEMTRAYICON
 

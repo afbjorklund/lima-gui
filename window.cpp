@@ -65,6 +65,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QProcess>
 #include <QString>
 
@@ -214,8 +215,22 @@ void Window::createInstanceGroupBox()
     instanceListView = new QListView();
     instanceListView->setModel(instanceModel);
 
-    QHBoxLayout *instanceLayout = new QHBoxLayout;
+    createButton = new QPushButton(tr("Create"));
+    shellButton = new QPushButton(tr("Shell"));
+    startButton = new QPushButton(tr("Start"));
+    stopButton = new QPushButton(tr("Stop"));
+    removeButton = new QPushButton(tr("Remove"));
+
+    QHBoxLayout *instanceButtonLayout = new QHBoxLayout;
+    instanceButtonLayout->addWidget(createButton);
+    instanceButtonLayout->addWidget(shellButton);
+    instanceButtonLayout->addWidget(startButton);
+    instanceButtonLayout->addWidget(stopButton);
+    instanceButtonLayout->addWidget(removeButton);
+
+    QVBoxLayout *instanceLayout = new QVBoxLayout;
     instanceLayout->addWidget(instanceListView);
+    instanceLayout->addLayout(instanceButtonLayout);
     instanceGroupBox->setLayout(instanceLayout);
 }
 

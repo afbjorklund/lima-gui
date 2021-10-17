@@ -67,6 +67,7 @@ class QGroupBox;
 class QIcon;
 class QListView;
 class QMenu;
+class QPushButton;
 class QStringList;
 QT_END_NAMESPACE
 
@@ -98,6 +99,11 @@ private:
 
     QGroupBox *instanceGroupBox;
     QListView *instanceListView;
+    QPushButton *createButton;
+    QPushButton *shellButton;
+    QPushButton *startButton;
+    QPushButton *stopButton;
+    QPushButton *removeButton;
 
     QAction *minimizeAction;
     QAction *maximizeAction;

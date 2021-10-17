@@ -1,0 +1,12 @@
+build-*-Desktop-Debug/
+build-*-Desktop-Release/
+build-*-Desktop-Profile/
+systray
+systray.pro.user
+# qmake
+.qmake.stash
+Makefile
+moc_predefs.h
+moc_*.cpp
+qrc_*.cpp
+*.o

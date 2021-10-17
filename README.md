@@ -17,6 +17,12 @@ $ make
 $ ./systray
 ```
 
+## Screenshots
+
+### Main window
+
+![screenshot](assets/screenshot1.png)
+
 ----
 
 See <https://doc.qt.io/qt-5/qtwidgets-desktop-systray-example.html>

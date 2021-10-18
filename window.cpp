@@ -72,12 +72,12 @@
 #include <QPushButton>
 #include <QProcess>
 #include <QString>
+#include <QStandardPaths>
 #include <QTextEdit>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
 #include <QMainWindow>
-#include <QStandardPaths>
 #include "qtermwidget.h"
 #endif
 
@@ -174,12 +174,13 @@ void Window::shellConsole()
     QModelIndex index = instanceListView->currentIndex();
     QString instance = index.data(Qt::DisplayRole).toString();
 
+    QString program = QStandardPaths::findExecutable("limactl");
 #ifndef QT_NO_TERMWIDGET
     QMainWindow *mainWindow = new QMainWindow();
 
     int startnow = 0; // set shell program first
     QTermWidget *console = new QTermWidget(startnow);
-    console->setShellProgram(QStandardPaths::findExecutable("limactl"));
+    console->setShellProgram(program);
     QStringList args = {"shell", instance};
     console->setArgs(args);
     console->startShellProgram();
@@ -190,6 +191,19 @@ void Window::shellConsole()
     mainWindow->resize(640, 480);
     mainWindow->setCentralWidget(console);
     mainWindow->show();
+#else
+    QString terminal = qEnvironmentVariable("TERMINAL");
+    if (terminal.isEmpty()) {
+        terminal = "x-terminal-emulator";
+        if (QStandardPaths::findExecutable(terminal).isEmpty()) {
+            terminal = "xterm";
+        }
+    }
+
+    QStringList arguments;
+    arguments << "-e" << QString("%1 shell %2").arg(program).arg(instance);
+    QProcess *process = new QProcess(this);
+    process->start(QStandardPaths::findExecutable(terminal), arguments);
 #endif
 }
 
@@ -319,10 +333,6 @@ void Window::createInstanceGroupBox()
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     removeButton = new QPushButton(tr("Remove"));
-
-#ifdef QT_NO_TERMWIDGET
-    shellButton->setEnabled(false);
-#endif
 
     QHBoxLayout *instanceButtonLayout = new QHBoxLayout;
     instanceButtonLayout->addWidget(shellButton);

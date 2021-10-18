@@ -11,7 +11,14 @@ DISTFILES += \
 
 include(QSourceHighlite/QSourceHighlite.pri)
 
-win32: DEFINES += QT_NO_TERMWIDGET
+# Enabling qtermwidget requires GPL-v2 license
+#CONFIG += gpl_licensed
 
-unix: CONFIG += link_pkgconfig
-unix: PKGCONFIG += qtermwidget5
+gpl_licensed {
+  win32: DEFINES += QT_NO_TERMWIDGET
+
+  unix: CONFIG += link_pkgconfig
+  unix: PKGCONFIG += qtermwidget5
+} else {
+  DEFINES += QT_NO_TERMWIDGET
+}

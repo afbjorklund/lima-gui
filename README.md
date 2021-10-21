@@ -23,6 +23,14 @@ $ ./systray
 
 ![screenshot](assets/screenshot1.png)
 
+#### Create
+
+![screenshot](assets/screenshot2.png)
+
+#### Remove
+
+![screenshot](assets/screenshot3.png)
+
 ----
 
 See <https://doc.qt.io/qt-5/qtwidgets-desktop-systray-example.html>

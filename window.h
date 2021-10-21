@@ -93,9 +93,16 @@ private:
     void createActions();
     void createTrayIcon();
 
+    QString selectedInstance();
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
     void createEditor();
+    void sendCommand(QString cmd);
+    void sendCommand(QStringList cmds);
+    void startInstance();
+    void stopInstance();
+    bool askConfirm(QString instance);
+    void removeInstance();
 
     QComboBox *iconComboBox;
 

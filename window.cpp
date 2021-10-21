@@ -100,6 +100,9 @@ Window::Window()
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &Window::setIcon);
+    connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
+    connect(stopButton, &QAbstractButton::clicked, this, &Window::stopInstance);
+    connect(removeButton, &QAbstractButton::clicked, this, &Window::removeInstance);
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -169,11 +172,15 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 //! [4]
 
-void Window::shellConsole()
+QString Window::selectedInstance()
 {
     QModelIndex index = instanceListView->currentIndex();
-    QString instance = index.data(Qt::DisplayRole).toString();
+    return index.data(Qt::DisplayRole).toString();
+}
 
+void Window::shellConsole()
+{
+    QString instance = selectedInstance();
     QString program = QStandardPaths::findExecutable("limactl");
 #ifndef QT_NO_TERMWIDGET
     QMainWindow *mainWindow = new QMainWindow();
@@ -345,6 +352,61 @@ void Window::createInstanceGroupBox()
     instanceLayout->addWidget(instanceListView);
     instanceLayout->addLayout(instanceButtonLayout);
     instanceGroupBox->setLayout(instanceLayout);
+}
+
+void Window::sendCommand(QString cmd)
+{
+    sendCommand(QStringList(cmd));
+}
+
+void Window::sendCommand(QStringList arguments)
+{
+    QString program = "limactl";
+    QProcess *process = new QProcess(this);
+    process->start(program, arguments);
+    this->setCursor(Qt::WaitCursor);
+    int timeout = 30;
+    bool success = process->waitForFinished(timeout * 1000);
+    this->unsetCursor();
+
+    if (!success) {
+        qDebug() << process->readAllStandardOutput();
+        qDebug() << process->readAllStandardError();
+    }
+}
+
+void Window::startInstance()
+{
+    QString instance = selectedInstance();
+    QStringList args = {"start", instance};
+    sendCommand(args);
+}
+
+void Window::stopInstance()
+{
+    QString instance = selectedInstance();
+    QStringList args = {"stop", instance};
+    sendCommand(args);
+}
+
+bool Window::askConfirm(QString instance)
+{
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setText(tr("Remove an existing machine"));
+    msgBox.setInformativeText(tr("Are you sure you want to remove '%1' ? This will delete all files for the instance.").arg(instance));
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    return msgBox.exec() == QMessageBox::Ok;
+}
+
+void Window::removeInstance()
+{
+    QString instance = selectedInstance();
+    if (askConfirm(instance)) {
+        QStringList args = {"rm", "--force", instance};
+        sendCommand(args);
+    }
 }
 
 void Window::createActions()

@@ -58,11 +58,13 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <QDialog>
+#include <QProcess>
 #include <QAbstractListModel>
 
 QT_BEGIN_NAMESPACE
 class QAction;
 class QComboBox;
+class QFile;
 class QGroupBox;
 class QIcon;
 class QLineEdit;
@@ -71,6 +73,7 @@ class QMainWindow;
 class QMenu;
 class QPushButton;
 class QStringList;
+class QTemporaryDir;
 class QTextEdit;
 QT_END_NAMESPACE
 
@@ -90,6 +93,8 @@ protected:
 private slots:
     void setIcon(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void startedCommand();
+    void finishedCommand(int code, QProcess::ExitStatus status);
 
 private:
     QStringList getInstances();
@@ -102,8 +107,8 @@ private:
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
     void createEditor();
-    bool sendCommand(QString cmd);
-    bool sendCommand(QStringList cmds);
+    void sendCommand(QString cmd);
+    void sendCommand(QStringList cmds);
     void createInstance();
     void startInstance();
     void stopInstance();
@@ -113,6 +118,8 @@ private:
     QComboBox *iconComboBox;
 
     QMainWindow *editWindow;
+    QTemporaryDir *editDir;
+    QFile *editFile;
     QLineEdit *createName;
     QTextEdit *createYAML;
 
@@ -129,6 +136,7 @@ private:
     QAction *restoreAction;
     QAction *quitAction;
 
+    QProcess *process;
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     QIcon *trayIconIcon;

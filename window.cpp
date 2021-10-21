@@ -97,6 +97,9 @@ Window::Window()
     createActions();
     createTrayIcon();
 
+    editDir = nullptr;
+    editFile = nullptr;
+
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -371,58 +374,63 @@ void Window::createInstanceGroupBox()
     instanceGroupBox->setLayout(instanceLayout);
 }
 
-bool Window::sendCommand(QString cmd)
+void Window::sendCommand(QString cmd)
 {
     return sendCommand(QStringList(cmd));
 }
 
-bool Window::sendCommand(QStringList arguments)
+void Window::sendCommand(QStringList arguments)
 {
     QString program = "limactl";
-    QProcess *process = new QProcess(this);
+    process = new QProcess(this);
+    connect(process, SIGNAL(started()), this, SLOT(startedCommand()));
+    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedCommand(int, QProcess::ExitStatus)));
     process->start(program, arguments);
+}
+
+void Window::startedCommand()
+{
     this->setCursor(Qt::WaitCursor);
-    int timeout = 30;
-    if (arguments[0] == QString("start")) {
-        // this might take a while
-        timeout = 300;
-    }
-    bool success = process->waitForFinished(timeout * 1000);
+}
+
+void Window::finishedCommand(int code, QProcess::ExitStatus status)
+{
     this->unsetCursor();
-
-    if (!success) {
-
-        qDebug() << process->readAllStandardOutput();
-        qDebug() << process->readAllStandardError();
-    }
-
-    QProcess::ExitStatus status = process->exitStatus();
-    int code = process->exitCode();
     if (status == QProcess::NormalExit && code != 0) {
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText(tr("%1 %2 failed").arg(program).arg(arguments.join(" ")));
+        msgBox.setText(process->program() + " " + process->arguments().join(" "));
         msgBox.setInformativeText(process->readAllStandardError());
         msgBox.exec();
     }
 
-    return code == 0;
+    if (editFile) {
+       editFile->remove();
+       delete editFile;
+       editFile = nullptr;
+       delete editDir;
+       editDir = nullptr;
+    }
 }
 
 void Window::createInstance()
 {
     QString name = createName->text();
-    QTemporaryDir tempdir;
-    QFile temp(tempdir.path() + "/" + QString("%1.yaml").arg(name));
-    if (temp.open(QFile::WriteOnly | QIODevice::Text)) {
-      QString yaml = createYAML->toPlainText();
-      temp.write(yaml.toUtf8());
-      temp.close();
+    editDir = new QTemporaryDir;
+    if (!editDir->isValid()) {
+        QMessageBox::warning(this, tr("lima"), tr("Could not create temporary dir"));
+        return;
     }
+    QFile *temp = new QFile(editDir->path() + "/" + QString("%1.yaml").arg(name));
+    if (temp->open(QFile::WriteOnly | QIODevice::Text)) {
+      QString yaml = createYAML->toPlainText();
+      temp->write(yaml.toUtf8());
+      temp->close();
+    }
+    editFile = temp;
     editWindow->close();
-    QStringList args = {"start", "--tty=false", temp.fileName()};
+    QStringList args = {"start", "--tty=false", editFile->fileName()};
     sendCommand(args);
-    temp.remove();
 }
 
 void Window::startInstance()

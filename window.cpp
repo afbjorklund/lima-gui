@@ -100,6 +100,8 @@ Window::Window()
     editDir = nullptr;
     editFile = nullptr;
 
+    connect(refreshButton, &QAbstractButton::clicked, this, &Window::updateInstances);
+
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -360,12 +362,19 @@ void Window::createInstanceGroupBox()
     instanceListView->setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectedInstance("default");
 
+    refreshButton = new QPushButton(tr("Refresh"));
+    refreshButton->setIcon(QIcon(":/images/reload.png"));
+
     shellButton = new QPushButton(tr("Shell"));
     shellButton->setIcon(QIcon(":/images/terminal.png"));
     createButton = new QPushButton(tr("Create"));
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     removeButton = new QPushButton(tr("Remove"));
+
+    QHBoxLayout *refreshButtonLayout = new QHBoxLayout;
+    refreshButtonLayout->addStretch();
+    refreshButtonLayout->addWidget(refreshButton);
 
     QHBoxLayout *instanceButtonLayout = new QHBoxLayout;
     instanceButtonLayout->addWidget(shellButton);
@@ -375,6 +384,7 @@ void Window::createInstanceGroupBox()
     instanceButtonLayout->addWidget(removeButton);
 
     QVBoxLayout *instanceLayout = new QVBoxLayout;
+    instanceLayout->addLayout(refreshButtonLayout);
     instanceLayout->addWidget(instanceListView);
     instanceLayout->addLayout(instanceButtonLayout);
     instanceGroupBox->setLayout(instanceLayout);

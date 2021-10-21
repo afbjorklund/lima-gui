@@ -129,6 +129,7 @@ private:
     QGroupBox *instanceGroupBox;
     InstanceModel *instanceModel;
     QListView *instanceListView;
+    QPushButton *refreshButton;
     QPushButton *shellButton;
     QPushButton *createButton;
     QPushButton *startButton;

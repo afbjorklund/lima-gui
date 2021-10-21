@@ -383,6 +383,10 @@ bool Window::sendCommand(QStringList arguments)
     process->start(program, arguments);
     this->setCursor(Qt::WaitCursor);
     int timeout = 30;
+    if (arguments[0] == QString("start")) {
+        // this might take a while
+        timeout = 300;
+    }
     bool success = process->waitForFinished(timeout * 1000);
     this->unsetCursor();
 

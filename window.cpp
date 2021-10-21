@@ -371,12 +371,12 @@ void Window::createInstanceGroupBox()
     instanceGroupBox->setLayout(instanceLayout);
 }
 
-void Window::sendCommand(QString cmd)
+bool Window::sendCommand(QString cmd)
 {
-    sendCommand(QStringList(cmd));
+    return sendCommand(QStringList(cmd));
 }
 
-void Window::sendCommand(QStringList arguments)
+bool Window::sendCommand(QStringList arguments)
 {
     QString program = "limactl";
     QProcess *process = new QProcess(this);
@@ -387,9 +387,22 @@ void Window::sendCommand(QStringList arguments)
     this->unsetCursor();
 
     if (!success) {
+
         qDebug() << process->readAllStandardOutput();
         qDebug() << process->readAllStandardError();
     }
+
+    QProcess::ExitStatus status = process->exitStatus();
+    int code = process->exitCode();
+    if (status == QProcess::NormalExit && code != 0) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText(tr("%1 %2 failed").arg(program).arg(arguments.join(" ")));
+        msgBox.setInformativeText(process->readAllStandardError());
+        msgBox.exec();
+    }
+
+    return code == 0;
 }
 
 void Window::createInstance()

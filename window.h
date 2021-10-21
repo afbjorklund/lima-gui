@@ -102,8 +102,8 @@ private:
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
     void createEditor();
-    void sendCommand(QString cmd);
-    void sendCommand(QStringList cmds);
+    bool sendCommand(QString cmd);
+    bool sendCommand(QStringList cmds);
     void createInstance();
     void startInstance();
     void stopInstance();

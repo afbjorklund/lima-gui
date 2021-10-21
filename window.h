@@ -65,10 +65,13 @@ class QAction;
 class QComboBox;
 class QGroupBox;
 class QIcon;
+class QLineEdit;
 class QListView;
+class QMainWindow;
 class QMenu;
 class QPushButton;
 class QStringList;
+class QTextEdit;
 QT_END_NAMESPACE
 
 //! [0]
@@ -101,12 +104,17 @@ private:
     void createEditor();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);
+    void createInstance();
     void startInstance();
     void stopInstance();
     bool askConfirm(QString instance);
     void removeInstance();
 
     QComboBox *iconComboBox;
+
+    QMainWindow *editWindow;
+    QLineEdit *createName;
+    QTextEdit *createYAML;
 
     QGroupBox *instanceGroupBox;
     QListView *instanceListView;

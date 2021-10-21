@@ -73,6 +73,7 @@
 #include <QProcess>
 #include <QString>
 #include <QStandardPaths>
+#include <QTemporaryDir>
 #include <QTextEdit>
 
 #ifndef QT_NO_TERMWIDGET
@@ -224,22 +225,22 @@ void Window::shellConsole()
 
 void Window::createEditor()
 {
-    QMainWindow *mainWindow = new QMainWindow();
+    editWindow = new QMainWindow();
 
     QLabel *label = new QLabel(tr("Name"));
-    QLineEdit *name = new QLineEdit("default");
+    createName = new QLineEdit("default");
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(label);
-    topLayout->addWidget(name);
+    topLayout->addWidget(createName);
 
-    QTextEdit *editor = new QTextEdit();
+    createYAML = new QTextEdit();
     QFont font("monospace");
     font.setStyleHint(QFont::Monospace);
     font.setPointSize(10);
-   editor->setFont(font);
+    createYAML->setFont(font);
 #ifndef QT_NO_SOURCEHIGHLITER
-    QSourceHighliter *highlighter = new QSourceHighliter(editor->document());
+    QSourceHighliter *highlighter = new QSourceHighliter(createYAML->document());
     highlighter->setCurrentLanguage(QSourceHighliter::CodeYAML);
 #endif
 
@@ -249,31 +250,32 @@ void Window::createEditor()
     QFile file(defaultYAML);
     if (file.open(QFile::ReadOnly | QIODevice::Text)) {
       QString content = QString::fromUtf8(file.readAll());
-      editor->setPlainText(content);
+      createYAML->setPlainText(content);
       file.close();
     }
 
-    QPushButton *cancel = new QPushButton(tr("Cancel"));
-    QPushButton *ok = new QPushButton(tr("Create"));
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    QPushButton *okButton = new QPushButton(tr("Create"));
 
-    ok->setEnabled(false); // disable until implemented
+    connect(cancelButton, SIGNAL(clicked()), editWindow, SLOT(close()));
+    connect(okButton, &QAbstractButton::clicked, this, &Window::createInstance);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
-    bottomLayout->addWidget(cancel);
-    bottomLayout->addWidget(ok);
+    bottomLayout->addWidget(cancelButton);
+    bottomLayout->addWidget(okButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(topLayout);
-    layout->addWidget(editor);
+    layout->addWidget(createYAML);
     layout->addLayout(bottomLayout);
 
     QWidget *widget = new QWidget();
     widget->setLayout(layout);
 
-    mainWindow->setWindowTitle(tr("lima"));
-    mainWindow->resize(640, 480);
-    mainWindow->setCentralWidget(widget);
-    mainWindow->show();
+    editWindow->setWindowTitle(tr("lima"));
+    editWindow->resize(640, 480);
+    editWindow->setCentralWidget(widget);
+    editWindow->show();
 }
 
 bool Window::getProcessOutput(QStringList arguments, QString& text) {
@@ -388,6 +390,22 @@ void Window::sendCommand(QStringList arguments)
         qDebug() << process->readAllStandardOutput();
         qDebug() << process->readAllStandardError();
     }
+}
+
+void Window::createInstance()
+{
+    QString name = createName->text();
+    QTemporaryDir tempdir;
+    QFile temp(tempdir.path() + "/" + QString("%1.yaml").arg(name));
+    if (temp.open(QFile::WriteOnly | QIODevice::Text)) {
+      QString yaml = createYAML->toPlainText();
+      temp.write(yaml.toUtf8());
+      temp.close();
+    }
+    editWindow->close();
+    QStringList args = {"start", "--tty=false", temp.fileName()};
+    sendCommand(args);
+    temp.remove();
 }
 
 void Window::startInstance()

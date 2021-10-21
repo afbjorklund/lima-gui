@@ -298,6 +298,12 @@ bool Window::getProcessOutput(QStringList arguments, QString& text) {
     return success;
 }
 
+void InstanceModel::setInstances(const QStringList &strings) {
+    beginResetModel();
+    stringList = strings;
+    endResetModel();
+}
+
 int InstanceModel::rowCount(const QModelIndex &) const
 {
     return stringList.count();
@@ -347,7 +353,7 @@ void Window::createInstanceGroupBox()
     instanceGroupBox = new QGroupBox(tr("Instances"));
 
     QStringList instances = getInstances();
-    QAbstractItemModel *instanceModel = new InstanceModel(instances);
+    instanceModel = new InstanceModel(instances);
 
     instanceListView = new QListView();
     instanceListView->setModel(instanceModel);
@@ -372,6 +378,13 @@ void Window::createInstanceGroupBox()
     instanceLayout->addWidget(instanceListView);
     instanceLayout->addLayout(instanceButtonLayout);
     instanceGroupBox->setLayout(instanceLayout);
+}
+
+void Window::updateInstances()
+{
+    QString instance = selectedInstance();
+    instanceModel->setInstances(getInstances());
+    setSelectedInstance(instance);
 }
 
 void Window::sendCommand(QString cmd)
@@ -431,6 +444,8 @@ void Window::createInstance()
     editWindow->close();
     QStringList args = {"start", "--tty=false", editFile->fileName()};
     sendCommand(args);
+
+    updateInstances();
 }
 
 void Window::startInstance()
@@ -438,6 +453,7 @@ void Window::startInstance()
     QString instance = selectedInstance();
     QStringList args = {"start", instance};
     sendCommand(args);
+    //updateInstances();
 }
 
 void Window::stopInstance()
@@ -445,6 +461,7 @@ void Window::stopInstance()
     QString instance = selectedInstance();
     QStringList args = {"stop", instance};
     sendCommand(args);
+    //updateInstances();
 }
 
 bool Window::askConfirm(QString instance)
@@ -464,6 +481,7 @@ void Window::removeInstance()
     if (askConfirm(instance)) {
         QStringList args = {"rm", "--force", instance};
         sendCommand(args);
+        updateInstances();
     }
 }
 

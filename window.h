@@ -77,6 +77,8 @@ class QTemporaryDir;
 class QTextEdit;
 QT_END_NAMESPACE
 
+class InstanceModel;
+
 //! [0]
 class Window : public QDialog
 {
@@ -104,6 +106,7 @@ private:
 
     QString selectedInstance();
     void setSelectedInstance(QString instance);
+    void updateInstances();
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
     void createEditor();
@@ -124,6 +127,7 @@ private:
     QTextEdit *createYAML;
 
     QGroupBox *instanceGroupBox;
+    InstanceModel *instanceModel;
     QListView *instanceListView;
     QPushButton *shellButton;
     QPushButton *createButton;
@@ -152,6 +156,7 @@ public:
     InstanceModel(const QStringList &strings, QObject *parent = nullptr)
         : QAbstractListModel(parent), stringList(strings) {}
 
+    void setInstances(const QStringList &strings);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,

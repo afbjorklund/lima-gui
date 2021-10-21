@@ -89,11 +89,13 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
 private:
+    QStringList getInstances();
     void createInstanceGroupBox();
     void createActions();
     void createTrayIcon();
 
     QString selectedInstance();
+    void setSelectedInstance(QString instance);
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString& text);
     void createEditor();

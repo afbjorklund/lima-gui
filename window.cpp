@@ -178,6 +178,14 @@ QString Window::selectedInstance()
     return index.data(Qt::DisplayRole).toString();
 }
 
+void Window::setSelectedInstance(QString instance)
+{
+    QAbstractItemModel *model = instanceListView->model();
+    QModelIndex start = model->index(0, 0);
+    QModelIndexList index = model->match(start, Qt::DisplayRole, instance);
+    instanceListView->setCurrentIndex(index[0]);
+}
+
 void Window::shellConsole()
 {
     QString instance = selectedInstance();
@@ -316,10 +324,8 @@ QVariant InstanceModel::headerData(int section, Qt::Orientation orientation,
         return QStringLiteral("Row %1").arg(section);
 }
 
-void Window::createInstanceGroupBox()
+QStringList Window::getInstances()
 {
-    instanceGroupBox = new QGroupBox(tr("Instances"));
-
     QStringList instances;
     QStringList arguments;
     arguments << "list" << "--quiet";
@@ -328,11 +334,20 @@ void Window::createInstanceGroupBox()
     if (success) {
         instances = text.split("\n", QString::SkipEmptyParts);
     }
+    return instances;
+}
+
+void Window::createInstanceGroupBox()
+{
+    instanceGroupBox = new QGroupBox(tr("Instances"));
+
+    QStringList instances = getInstances();
     QAbstractItemModel *instanceModel = new InstanceModel(instances);
 
     instanceListView = new QListView();
     instanceListView->setModel(instanceModel);
     instanceListView->setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectedInstance("default");
 
     shellButton = new QPushButton(tr("Shell"));
     shellButton->setIcon(QIcon(":/images/terminal.png"));

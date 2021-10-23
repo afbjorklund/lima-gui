@@ -75,6 +75,8 @@
 #include <QStandardPaths>
 #include <QTemporaryDir>
 #include <QTextEdit>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
@@ -341,11 +343,27 @@ QStringList Window::getInstances()
 {
     QStringList instances;
     QStringList arguments;
-    arguments << "list" << "--quiet";
+    arguments << "list" << "--json";
     QString text;
     bool success = getProcessOutput(arguments, text);
+    QStringList lines;
     if (success) {
-        instances = text.split("\n", QString::SkipEmptyParts);
+        lines = text.split("\n", QString::SkipEmptyParts);
+    }
+    for (int i = 0; i < lines.size(); i++) {
+        QString line = lines.at(i);
+        QJsonParseError error;
+        QJsonDocument json = QJsonDocument::fromJson(line.toUtf8(), &error);
+        if (json.isNull()) {
+            qDebug() <<  error.errorString();
+            continue;
+        }
+        if (json.isObject()) {
+            QJsonObject instance = json.object();
+            if (instance.contains("name")) {
+                instances << instance["name"].toString();
+            }
+        }
     }
     return instances;
 }

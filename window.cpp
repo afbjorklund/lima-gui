@@ -62,7 +62,8 @@
 #include <QFont>
 #include <QGroupBox>
 #include <QLabel>
-#include <QListView>
+#include <QTableView>
+#include <QHeaderView>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QMenu>
@@ -348,9 +349,11 @@ void Window::createInstanceGroupBox()
     InstanceList instances = getInstances();
     instanceModel = new InstanceModel(instances);
 
-    instanceListView = new QListView();
+    instanceListView = new QTableView();
     instanceListView->setModel(instanceModel);
     instanceListView->setSelectionMode(QAbstractItemView::SingleSelection);
+    instanceListView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    instanceListView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     setSelectedInstance("default");
 
     refreshButton = new QPushButton(tr("Refresh"));

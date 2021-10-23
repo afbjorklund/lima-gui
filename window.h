@@ -67,7 +67,7 @@ class QFile;
 class QGroupBox;
 class QIcon;
 class QLineEdit;
-class QListView;
+class QTableView;
 class QMainWindow;
 class QMenu;
 class QPushButton;
@@ -127,7 +127,7 @@ private:
 
     QGroupBox *instanceGroupBox;
     InstanceModel *instanceModel;
-    QListView *instanceListView;
+    QTableView *instanceListView;
     QPushButton *refreshButton;
     QPushButton *shellButton;
     QPushButton *createButton;

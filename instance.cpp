@@ -11,6 +11,11 @@ int InstanceModel::rowCount(const QModelIndex &) const
     return instanceList.count();
 }
 
+int InstanceModel::columnCount(const QModelIndex &) const
+{
+    return 2;
+}
+
 QVariant InstanceModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -18,11 +23,18 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
 
     if (index.row() >= instanceList.size())
         return QVariant();
+    if (index.column() >= 2)
+        return QVariant();
 
     if (role == Qt::DisplayRole)
-        return QString("%1 (%2)").arg(instanceList.at(index.row()).name()).arg(instanceList.at(index.row()).status());
-    else
-        return QVariant();
+    {
+        Instance instance = instanceList.at(index.row());
+        if (index.column() == 0)
+            return instance.name();
+        else if (index.column() == 1)
+            return instance.status();
+    }
+    return QVariant();
 }
 
 QVariant InstanceModel::headerData(int section, Qt::Orientation orientation,
@@ -31,8 +43,11 @@ QVariant InstanceModel::headerData(int section, Qt::Orientation orientation,
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    if (orientation == Qt::Horizontal)
-        return QStringLiteral("Column %1").arg(section);
-    else
-        return QStringLiteral("Row %1").arg(section);
+    if (orientation == Qt::Horizontal) {
+        if (section == 0)
+            return tr("Name");
+        else if (section == 1)
+            return tr("Status");
+    }
+    return QVariant(); // QStringLiteral("Row %1").arg(section);
 }

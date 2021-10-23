@@ -9,13 +9,20 @@ class Instance
 {
 public:
     Instance(const QString &name)
-        : m_name(name) {}
+        : m_name(name), m_status("") {}
 
     QString name() const {
         return m_name;
     }
+    QString status() const {
+        return m_status;
+    }
+    void setStatus(QString status) {
+        m_status = status;
+    }
 private:
     QString m_name;
+    QString m_status;
 };
 //! [0]
 

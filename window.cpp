@@ -330,7 +330,12 @@ InstanceList Window::getInstances()
             if (name.isEmpty()) {
                 continue;
             }
-            instances << Instance(name);
+            Instance instance(name);
+            if (obj.contains("status")) {
+                QString status = obj["status"].toString();
+                instance.setStatus(status);
+            }
+            instances << instance;
         }
     }
     return instances;

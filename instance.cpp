@@ -20,7 +20,7 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole)
-        return instanceList.at(index.row()).name();
+        return QString("%1 (%2)").arg(instanceList.at(index.row()).name()).arg(instanceList.at(index.row()).status());
     else
         return QVariant();
 }

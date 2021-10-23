@@ -2,27 +2,43 @@
 #define INSTANCE_H
 
 #include <QAbstractListModel>
-
-class QStringList;
+#include <QString>
 
 //! [0]
+class Instance
+{
+public:
+    Instance(const QString &name)
+        : m_name(name) {}
+
+    QString name() const {
+        return m_name;
+    }
+private:
+    QString m_name;
+};
+//! [0]
+
+typedef QList<Instance> InstanceList;
+
+//! [1]
 class InstanceModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    InstanceModel(const QStringList &strings, QObject *parent = nullptr)
-        : QAbstractListModel(parent), stringList(strings) {}
+    InstanceModel(const InstanceList &instances, QObject *parent = nullptr)
+        : QAbstractListModel(parent), instanceList(instances) {}
 
-    void setInstances(const QStringList &strings);
+    void setInstances(const InstanceList &instances);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
 private:
-    QStringList stringList;
+    InstanceList instanceList;
 };
-//! [0]
+//! [1]
 
 #endif // INSTANCE_H

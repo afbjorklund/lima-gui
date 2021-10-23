@@ -51,7 +51,6 @@
 ****************************************************************************/
 
 #include "window.h"
-#include "instance.h"
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
@@ -303,9 +302,9 @@ bool Window::getProcessOutput(QStringList arguments, QString& text) {
     return success;
 }
 
-QStringList Window::getInstances()
+InstanceList Window::getInstances()
 {
-    QStringList instances;
+    InstanceList instances;
     QStringList arguments;
     arguments << "list" << "--json";
     QString text;
@@ -323,10 +322,15 @@ QStringList Window::getInstances()
             continue;
         }
         if (json.isObject()) {
-            QJsonObject instance = json.object();
-            if (instance.contains("name")) {
-                instances << instance["name"].toString();
+            QJsonObject obj = json.object();
+            QString name;
+            if (obj.contains("name")) {
+                name = obj["name"].toString();
             }
+            if (name.isEmpty()) {
+                continue;
+            }
+            instances << Instance(name);
         }
     }
     return instances;
@@ -336,7 +340,7 @@ void Window::createInstanceGroupBox()
 {
     instanceGroupBox = new QGroupBox(tr("Instances"));
 
-    QStringList instances = getInstances();
+    InstanceList instances = getInstances();
     instanceModel = new InstanceModel(instances);
 
     instanceListView = new QListView();

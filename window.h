@@ -76,7 +76,7 @@ class QTemporaryDir;
 class QTextEdit;
 QT_END_NAMESPACE
 
-class InstanceModel;
+#include "instance.h"
 
 //! [0]
 class Window : public QDialog
@@ -98,7 +98,7 @@ private slots:
     void finishedCommand(int code, QProcess::ExitStatus status);
 
 private:
-    QStringList getInstances();
+    InstanceList getInstances();
     void createInstanceGroupBox();
     void createActions();
     void createTrayIcon();

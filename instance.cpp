@@ -1,14 +1,14 @@
 #include "instance.h"
 
-void InstanceModel::setInstances(const QStringList &strings) {
+void InstanceModel::setInstances(const InstanceList &instances) {
     beginResetModel();
-    stringList = strings;
+    instanceList = instances;
     endResetModel();
 }
 
 int InstanceModel::rowCount(const QModelIndex &) const
 {
-    return stringList.count();
+    return instanceList.count();
 }
 
 QVariant InstanceModel::data(const QModelIndex &index, int role) const
@@ -16,11 +16,11 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (index.row() >= stringList.size())
+    if (index.row() >= instanceList.size())
         return QVariant();
 
     if (role == Qt::DisplayRole)
-        return stringList.at(index.row());
+        return instanceList.at(index.row()).name();
     else
         return QVariant();
 }

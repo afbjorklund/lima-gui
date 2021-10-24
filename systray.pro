@@ -8,6 +8,8 @@ RESOURCES     = systray.qrc
 QT += widgets
 requires(qtConfig(combobox))
 
+TARGET        = lima-gui
+
 DISTFILES += \
     LICENSE
 

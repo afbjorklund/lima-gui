@@ -2,6 +2,7 @@ build-*-Desktop-Debug/
 build-*-Desktop-Release/
 build-*-Desktop-Profile/
 systray
+lima-gui
 systray.pro.user
 # qmake
 .qmake.stash

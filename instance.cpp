@@ -41,6 +41,23 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
     if (index.column() >= 6)
         return QVariant();
 
+    if (role == Qt::TextAlignmentRole)
+    {
+        switch (index.column()) {
+            case 0:
+                return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
+            case 1:
+                return QVariant(Qt::AlignRight | Qt::AlignVCenter);
+            case 2:
+                // fall-through
+            case 3:
+                // fall-through
+            case 4:
+                // fall-through
+            case 5:
+                return QVariant(Qt::AlignHCenter | Qt::AlignVCenter);
+        }
+    }
     if (role == Qt::DisplayRole)
     {
         Instance instance = instanceList.at(index.row());
@@ -79,7 +96,7 @@ QVariant InstanceModel::headerData(int section, Qt::Orientation orientation,
             case 3:
                 return tr("CPUs");
             case 4:
-                return tr("Memory");
+                return tr("Mem.");
             case 5:
                 return tr("Disk");
         }

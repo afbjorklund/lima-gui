@@ -23,9 +23,16 @@ public:
     void setStatus(QString status) {
         m_status = status;
     }
+    QString arch() const {
+        return m_arch;
+    }
+    void setArch(QString arch) {
+        m_arch = arch;
+    }
 private:
     QString m_name;
     QString m_status;
+    QString m_arch;
 };
 //! [0]
 

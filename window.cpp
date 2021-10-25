@@ -338,6 +338,10 @@ InstanceList Window::getInstances()
                 QString status = obj["status"].toString();
                 instance.setStatus(status);
             }
+            if (obj.contains("arch")) {
+                QString arch = obj["arch"].toString();
+                instance.setArch(arch);
+            }
             instances << instance;
         }
     }
@@ -367,6 +371,8 @@ void Window::createInstanceGroupBox()
     instanceListView->setSelectionMode(QAbstractItemView::SingleSelection);
     instanceListView->setSelectionBehavior(QAbstractItemView::SelectRows);
     instanceListView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    instanceListView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    instanceListView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     setSelectedInstance("default");
 
     connect(instanceListView, SIGNAL(clicked( const QModelIndex&)), this, SLOT(updateButtons()));

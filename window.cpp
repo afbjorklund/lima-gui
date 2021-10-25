@@ -372,6 +372,7 @@ void Window::createInstanceGroupBox()
     connect(instanceListView, SIGNAL(clicked( const QModelIndex&)), this, SLOT(updateButtons()));
 
     createButton = new QPushButton(tr("Create"));
+    createButton->setIcon(QIcon(":/images/add.png"));
     refreshButton = new QPushButton(tr("Refresh"));
     refreshButton->setIcon(QIcon(":/images/reload.png"));
 
@@ -380,6 +381,7 @@ void Window::createInstanceGroupBox()
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     removeButton = new QPushButton(tr("Remove"));
+    removeButton->setIcon(QIcon(":/images/remove.png"));
 
     updateButtons();
 

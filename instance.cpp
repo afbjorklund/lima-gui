@@ -1,5 +1,7 @@
 #include "instance.h"
 
+#include <QStringList>
+
 void InstanceModel::setInstances(const InstanceList &instances) {
     beginResetModel();
     instanceList = instances;
@@ -14,6 +16,19 @@ int InstanceModel::rowCount(const QModelIndex &) const
 int InstanceModel::columnCount(const QModelIndex &) const
 {
     return 6;
+}
+
+static QStringList binaryAbbrs = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"};
+
+// BytesSize returns a human-readable size in bytes, kibibytes,
+// mebibytes, gibibytes, or tebibytes (eg. "44kiB", "17MiB").
+static QString bytesSize(qint64 size) {
+    qint64 base = 1024;
+    int i, unitsLimit = binaryAbbrs.size();
+    for (i= 0; size >= base && i < unitsLimit; i++) {
+        size /= base;
+    }
+    return QString("%1 %2").arg(size, 4).arg(binaryAbbrs[i]);
 }
 
 QVariant InstanceModel::data(const QModelIndex &index, int role) const
@@ -39,9 +54,9 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
             case 3:
                 return QString::number(instance.cpus());
             case 4:
-                return QString::number(instance.memory());
+                return bytesSize(instance.memory());
             case 5:
-                return QString::number(instance.disk());
+                return bytesSize(instance.disk());
         }
     }
     return QVariant();

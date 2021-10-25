@@ -342,6 +342,17 @@ InstanceList Window::getInstances()
     return instances;
 }
 
+InstanceHash Window::getInstanceHash()
+{
+    InstanceList instances = getInstances();
+    InstanceHash instanceHash;
+    for (int i = 0; i < instances.size(); i++) {
+        Instance instance = instances.at(i);
+        instanceHash[instance.name()] = instance;
+    }
+    return instanceHash;
+}
+
 void Window::createInstanceGroupBox()
 {
     instanceGroupBox = new QGroupBox(tr("Instances"));
@@ -356,6 +367,8 @@ void Window::createInstanceGroupBox()
     instanceListView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     setSelectedInstance("default");
 
+    connect(instanceListView, SIGNAL(clicked( const QModelIndex&)), this, SLOT(updateButtons()));
+
     refreshButton = new QPushButton(tr("Refresh"));
     refreshButton->setIcon(QIcon(":/images/reload.png"));
 
@@ -365,6 +378,8 @@ void Window::createInstanceGroupBox()
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     removeButton = new QPushButton(tr("Remove"));
+
+    updateButtons();
 
     QHBoxLayout *refreshButtonLayout = new QHBoxLayout;
     refreshButtonLayout->addStretch();
@@ -382,6 +397,23 @@ void Window::createInstanceGroupBox()
     instanceLayout->addWidget(instanceListView);
     instanceLayout->addLayout(instanceButtonLayout);
     instanceGroupBox->setLayout(instanceLayout);
+}
+
+void Window::updateButtons()
+{
+    QString inst = selectedInstance();
+    Instance instance = getInstanceHash()[inst];
+    if (instance.status() == "Running") {
+        shellButton->setEnabled(true);
+        startButton->setEnabled(false);
+        stopButton->setEnabled(true);
+        removeButton->setEnabled(false);
+    } else if (instance.status() == "Stopped") {
+        shellButton->setEnabled(false);
+        startButton->setEnabled(true);
+        stopButton->setEnabled(false);
+        removeButton->setEnabled(true);
+    }
 }
 
 void Window::updateInstances()

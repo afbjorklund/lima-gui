@@ -3,11 +3,14 @@
 
 #include <QAbstractListModel>
 #include <QString>
+#include <QList>
+#include <QMap>
 
 //! [0]
 class Instance
 {
 public:
+    Instance() {}
     Instance(const QString &name)
         : m_name(name), m_status("") {}
 
@@ -27,6 +30,7 @@ private:
 //! [0]
 
 typedef QList<Instance> InstanceList;
+typedef QHash<QString, Instance> InstanceHash;
 
 //! [1]
 class InstanceModel : public QAbstractListModel

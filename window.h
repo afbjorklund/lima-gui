@@ -94,11 +94,13 @@ protected:
 private slots:
     void setIcon(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void updateButtons();
     void startedCommand();
     void finishedCommand(int code, QProcess::ExitStatus status);
 
 private:
     InstanceList getInstances();
+    InstanceHash getInstanceHash();
     void createInstanceGroupBox();
     void createActions();
     void createTrayIcon();

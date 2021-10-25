@@ -130,9 +130,9 @@ private:
     QGroupBox *instanceGroupBox;
     InstanceModel *instanceModel;
     QTableView *instanceListView;
+    QPushButton *createButton;
     QPushButton *refreshButton;
     QPushButton *shellButton;
-    QPushButton *createButton;
     QPushButton *startButton;
     QPushButton *stopButton;
     QPushButton *removeButton;

@@ -103,15 +103,17 @@ Window::Window()
     editDir = nullptr;
     editFile = nullptr;
 
+    connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(refreshButton, &QAbstractButton::clicked, this, &Window::updateInstances);
 
-    connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
-    connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &Window::setIcon);
+
+    connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
     connect(stopButton, &QAbstractButton::clicked, this, &Window::stopInstance);
     connect(removeButton, &QAbstractButton::clicked, this, &Window::removeInstance);
+
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -369,12 +371,12 @@ void Window::createInstanceGroupBox()
 
     connect(instanceListView, SIGNAL(clicked( const QModelIndex&)), this, SLOT(updateButtons()));
 
+    createButton = new QPushButton(tr("Create"));
     refreshButton = new QPushButton(tr("Refresh"));
     refreshButton->setIcon(QIcon(":/images/reload.png"));
 
     shellButton = new QPushButton(tr("Shell"));
     shellButton->setIcon(QIcon(":/images/terminal.png"));
-    createButton = new QPushButton(tr("Create"));
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     removeButton = new QPushButton(tr("Remove"));
@@ -382,12 +384,12 @@ void Window::createInstanceGroupBox()
     updateButtons();
 
     QHBoxLayout *refreshButtonLayout = new QHBoxLayout;
+    refreshButtonLayout->addWidget(createButton);
     refreshButtonLayout->addStretch();
     refreshButtonLayout->addWidget(refreshButton);
 
     QHBoxLayout *instanceButtonLayout = new QHBoxLayout;
     instanceButtonLayout->addWidget(shellButton);
-    instanceButtonLayout->addWidget(createButton);
     instanceButtonLayout->addWidget(startButton);
     instanceButtonLayout->addWidget(stopButton);
     instanceButtonLayout->addWidget(removeButton);

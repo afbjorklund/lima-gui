@@ -13,7 +13,7 @@ int InstanceModel::rowCount(const QModelIndex &) const
 
 int InstanceModel::columnCount(const QModelIndex &) const
 {
-    return 3;
+    return 6;
 }
 
 QVariant InstanceModel::data(const QModelIndex &index, int role) const
@@ -23,7 +23,7 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
 
     if (index.row() >= instanceList.size())
         return QVariant();
-    if (index.column() >= 3)
+    if (index.column() >= 6)
         return QVariant();
 
     if (role == Qt::DisplayRole)
@@ -36,6 +36,12 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
                 return instance.status();
             case 2:
                 return instance.arch();
+            case 3:
+                return QString::number(instance.cpus());
+            case 4:
+                return QString::number(instance.memory());
+            case 5:
+                return QString::number(instance.disk());
         }
     }
     return QVariant();
@@ -55,6 +61,12 @@ QVariant InstanceModel::headerData(int section, Qt::Orientation orientation,
                 return tr("Status");
             case 2:
                 return tr("Arch");
+            case 3:
+                return tr("CPUs");
+            case 4:
+                return tr("Memory");
+            case 5:
+                return tr("Disk");
         }
     }
     return QVariant(); // QStringLiteral("Row %1").arg(section);

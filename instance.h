@@ -29,10 +29,31 @@ public:
     void setArch(QString arch) {
         m_arch = arch;
     }
+    int cpus() const {
+        return m_cpus;
+    }
+    void setCpus(int cpus) {
+        m_cpus = cpus;
+    }
+    qint64 memory() const {
+        return m_memory;
+    }
+    void setMemory(qint64 memory) {
+        m_memory = memory;
+    }
+    qint64 disk() const {
+        return m_disk;
+    }
+    void setDisk(qint64 disk) {
+        m_disk = disk;
+    }
 private:
     QString m_name;
     QString m_status;
     QString m_arch;
+    int m_cpus;
+    qint64 m_memory;
+    qint64 m_disk;
 };
 //! [0]
 

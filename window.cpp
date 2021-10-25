@@ -125,7 +125,7 @@ Window::Window()
 
     setWindowTitle(tr("Lima"));
     setWindowIcon(*trayIconIcon);
-    resize(400, 300);
+    resize(600, 400);
 }
 //! [0]
 
@@ -342,6 +342,18 @@ InstanceList Window::getInstances()
                 QString arch = obj["arch"].toString();
                 instance.setArch(arch);
             }
+            if (obj.contains("cpus")) {
+                int cpus = obj["cpus"].toInt();
+                instance.setCpus(cpus);
+            }
+            if (obj.contains("memory")) {
+                double memory = obj["memory"].toDouble();
+                instance.setMemory((qint64)memory);
+            }
+            if (obj.contains("disk")) {
+                double disk = obj["disk"].toDouble();
+                instance.setDisk((qint64)disk);
+            }
             instances << instance;
         }
     }
@@ -373,6 +385,9 @@ void Window::createInstanceGroupBox()
     instanceListView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     instanceListView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     instanceListView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    instanceListView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+    instanceListView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+    instanceListView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
     setSelectedInstance("default");
 
     connect(instanceListView, SIGNAL(clicked( const QModelIndex&)), this, SLOT(updateButtons()));

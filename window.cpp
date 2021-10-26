@@ -186,7 +186,11 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 QString Window::selectedInstance()
 {
     QModelIndex index = instanceListView->currentIndex();
-    return index.data(Qt::DisplayRole).toString();
+    QVariant variant = index.data(Qt::DisplayRole);
+    if (variant.isNull()) {
+        return QString();
+    }
+    return variant.toString();
 }
 
 void Window::setSelectedInstance(QString instance)
@@ -194,6 +198,9 @@ void Window::setSelectedInstance(QString instance)
     QAbstractItemModel *model = instanceListView->model();
     QModelIndex start = model->index(0, 0);
     QModelIndexList index = model->match(start, Qt::DisplayRole, instance);
+    if (index.size() == 0) {
+        return;
+    }
     instanceListView->setCurrentIndex(index[0]);
 }
 
@@ -427,6 +434,13 @@ void Window::createInstanceGroupBox()
 void Window::updateButtons()
 {
     QString inst = selectedInstance();
+    if (inst.isEmpty()) {
+        shellButton->setEnabled(false);
+        startButton->setEnabled(false);
+        stopButton->setEnabled(false);
+        removeButton->setEnabled(false);
+	return;
+    }
     Instance instance = getInstanceHash()[inst];
     if (instance.status() == "Running") {
         shellButton->setEnabled(true);

@@ -567,6 +567,20 @@ void Window::createInstance()
       temp->write(yaml.toUtf8());
       temp->close();
     }
+    QProcess process(this);
+    process.start("limactl", {"validate", temp->fileName()});
+    bool success = process.waitForFinished();
+    if (success) {
+        if (process.exitStatus() == QProcess::NormalExit && process.exitCode() != 0) {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Critical);
+            msgBox.setText(tr("Validation failed!"));
+            msgBox.setInformativeText(process.readAllStandardError());
+            msgBox.exec();
+            delete temp;
+            return;
+        }
+    }
     editFile = temp;
     editWindow->close();
     QStringList args = {"start", "--tty=false", editFile->fileName()};

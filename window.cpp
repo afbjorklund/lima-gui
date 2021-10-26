@@ -242,6 +242,16 @@ void Window::shellConsole()
 #endif
 }
 
+static QString getPrefix() {
+    QString prefix = "/usr/local";
+    QString program = QStandardPaths::findExecutable("limactl");
+    if (!program.isEmpty()) {
+        QString bin = QFileInfo(program).dir().absolutePath();
+        prefix = QFileInfo(bin).dir().absolutePath();
+    }
+    return prefix;
+}
+
 void Window::createEditor()
 {
     editWindow = new QMainWindow();
@@ -263,8 +273,7 @@ void Window::createEditor()
     highlighter->setCurrentLanguage(QSourceHighliter::CodeYAML);
 #endif
 
-    QString prefix = "/usr/local";
-    QString examples = prefix + "/share/doc/lima/examples";
+    QString examples = getPrefix() + "/share/doc/lima/examples";
     QString defaultYAML = examples + "/default.yaml";
     QFile file(defaultYAML);
     if (file.open(QFile::ReadOnly | QIODevice::Text)) {
@@ -511,8 +520,7 @@ void Window::finishedCommand(int code, QProcess::ExitStatus status)
 
 void Window::loadYAML()
 {
-    QString prefix = "/usr/local";
-    QString examples = prefix + "/share/doc/lima/examples";
+    QString examples = getPrefix() + "/share/doc/lima/examples";
 
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open YAML"), examples, tr("YAML Files (*.yaml)"));

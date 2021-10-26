@@ -253,7 +253,7 @@ void Window::createEditor()
     topLayout->addWidget(label);
     topLayout->addWidget(createName);
 
-    createYAML = new QTextEdit();
+    createYAML = new QTextEdit("lima");
     QFont font("monospace");
     font.setStyleHint(QFont::Monospace);
     font.setPointSize(10);

@@ -588,7 +588,7 @@ bool Window::askConfirm(QString instance)
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("lima"));
     msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setText(tr("Remove an existing machine"));
+    msgBox.setText(tr("Remove an existing instance"));
     msgBox.setInformativeText(tr("Are you sure you want to remove '%1' ? This will delete all files for the instance.").arg(instance));
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Cancel);

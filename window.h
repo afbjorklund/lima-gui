@@ -113,6 +113,8 @@ private:
     void createEditor();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);
+    void loadYAML();
+    void saveYAML();
     void createInstance();
     void startInstance();
     void stopInstance();

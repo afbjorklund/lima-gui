@@ -78,6 +78,8 @@
 #include <QTextEdit>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QFileDialog>
+#include <QFileInfo>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
@@ -272,13 +274,19 @@ void Window::createEditor()
     }
 
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    QPushButton *loadButton = new QPushButton(tr("Load"));
+    QPushButton *saveButton = new QPushButton(tr("Save"));
     QPushButton *okButton = new QPushButton(tr("Create"));
 
     connect(cancelButton, SIGNAL(clicked()), editWindow, SLOT(close()));
+    connect(loadButton, &QAbstractButton::clicked, this, &Window::loadYAML);
+    connect(saveButton, &QAbstractButton::clicked, this, &Window::saveYAML);
     connect(okButton, &QAbstractButton::clicked, this, &Window::createInstance);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
     bottomLayout->addWidget(cancelButton);
+    bottomLayout->addWidget(loadButton);
+    bottomLayout->addWidget(saveButton);
     bottomLayout->addWidget(okButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -498,6 +506,42 @@ void Window::finishedCommand(int code, QProcess::ExitStatus status)
        editFile = nullptr;
        delete editDir;
        editDir = nullptr;
+    }
+}
+
+void Window::loadYAML()
+{
+    QString prefix = "/usr/local";
+    QString examples = prefix + "/share/doc/lima/examples";
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open YAML"), examples, tr("YAML Files (*.yaml)"));
+    if (fileName.isEmpty()) {
+        return;
+    }
+    QString baseName = QFileInfo(fileName).baseName();
+    createName->setText(baseName.replace(".yaml", ""));
+    QFile file(fileName);
+    if (file.open(QFile::ReadOnly | QIODevice::Text)) {
+      QString content = QString::fromUtf8(file.readAll());
+      createYAML->setPlainText(content);
+      file.close();
+    }
+}
+
+void Window::saveYAML()
+{
+    QString baseName = createName->text() + ".yaml";
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save YAML"), baseName, tr("YAML Files (*.yaml)"));
+    if (fileName.isEmpty()) {
+        return;
+    }
+    QFile file(fileName);
+    if (file.open(QFile::WriteOnly | QIODevice::Text)) {
+      QString yaml = createYAML->toPlainText();
+      file.write(yaml.toUtf8());
+      file.close();
     }
 }
 

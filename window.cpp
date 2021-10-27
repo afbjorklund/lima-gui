@@ -108,8 +108,8 @@ Window::Window()
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(refreshButton, &QAbstractButton::clicked, this, &Window::updateInstances);
 
-    connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &Window::setIcon);
+    connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            &Window::setIcon);
 
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
@@ -179,8 +179,7 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
     case QSystemTrayIcon::DoubleClick:
         iconComboBox->setCurrentIndex((iconComboBox->currentIndex() + 1) % iconComboBox->count());
         break;
-    default:
-        ;
+    default:;
     }
 }
 //! [4]
@@ -216,7 +215,7 @@ void Window::shellConsole()
     int startnow = 0; // set shell program first
     QTermWidget *console = new QTermWidget(startnow);
     console->setShellProgram(program);
-    QStringList args = {"shell", instance};
+    QStringList args = { "shell", instance };
     console->setArgs(args);
     console->startShellProgram();
 
@@ -242,7 +241,8 @@ void Window::shellConsole()
 #endif
 }
 
-static QString getPrefix() {
+static QString getPrefix()
+{
     QString prefix = "/usr/local";
     QString program = QStandardPaths::findExecutable("limactl");
     if (!program.isEmpty()) {
@@ -277,9 +277,9 @@ void Window::createEditor()
     QString defaultYAML = examples + "/default.yaml";
     QFile file(defaultYAML);
     if (file.open(QFile::ReadOnly | QIODevice::Text)) {
-      QString content = QString::fromUtf8(file.readAll());
-      createYAML->setPlainText(content);
-      file.close();
+        QString content = QString::fromUtf8(file.readAll());
+        createYAML->setPlainText(content);
+        file.close();
     }
 
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
@@ -312,7 +312,8 @@ void Window::createEditor()
     editWindow->show();
 }
 
-bool Window::getProcessOutput(QStringList arguments, QString& text) {
+bool Window::getProcessOutput(QStringList arguments, QString &text)
+{
     bool success;
 
     QString program = "limactl";
@@ -333,7 +334,8 @@ InstanceList Window::getInstances()
 {
     InstanceList instances;
     QStringList arguments;
-    arguments << "list" << "--json";
+    arguments << "list"
+              << "--json";
     QString text;
     bool success = getProcessOutput(arguments, text);
     QStringList lines;
@@ -345,7 +347,7 @@ InstanceList Window::getInstances()
         QJsonParseError error;
         QJsonDocument json = QJsonDocument::fromJson(line.toUtf8(), &error);
         if (json.isNull()) {
-            qDebug() <<  error.errorString();
+            qDebug() << error.errorString();
             continue;
         }
         if (json.isObject()) {
@@ -414,7 +416,7 @@ void Window::createInstanceGroupBox()
     instanceListView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
     setSelectedInstance("default");
 
-    connect(instanceListView, SIGNAL(clicked( const QModelIndex&)), this, SLOT(updateButtons()));
+    connect(instanceListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(updateButtons()));
 
     createButton = new QPushButton(tr("Create"));
     createButton->setIcon(QIcon(":/images/add.png"));
@@ -456,7 +458,7 @@ void Window::updateButtons()
         startButton->setEnabled(false);
         stopButton->setEnabled(false);
         removeButton->setEnabled(false);
-	return;
+        return;
     }
     Instance instance = getInstanceHash()[inst];
     if (instance.status() == "Running") {
@@ -489,7 +491,8 @@ void Window::sendCommand(QStringList arguments)
     QString program = "limactl";
     process = new QProcess(this);
     connect(process, SIGNAL(started()), this, SLOT(startedCommand()));
-    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finishedCommand(int, QProcess::ExitStatus)));
+    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+            SLOT(finishedCommand(int, QProcess::ExitStatus)));
     process->start(program, arguments);
 }
 
@@ -510,11 +513,11 @@ void Window::finishedCommand(int code, QProcess::ExitStatus status)
     }
 
     if (editFile) {
-       editFile->remove();
-       delete editFile;
-       editFile = nullptr;
-       delete editDir;
-       editDir = nullptr;
+        editFile->remove();
+        delete editFile;
+        editFile = nullptr;
+        delete editDir;
+        editDir = nullptr;
     }
 }
 
@@ -522,8 +525,8 @@ void Window::loadYAML()
 {
     QString examples = getPrefix() + "/share/doc/lima/examples";
 
-    QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open YAML"), examples, tr("YAML Files (*.yaml)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open YAML"), examples,
+                                                    tr("YAML Files (*.yaml)"));
     if (fileName.isEmpty()) {
         return;
     }
@@ -531,25 +534,25 @@ void Window::loadYAML()
     createName->setText(baseName.replace(".yaml", ""));
     QFile file(fileName);
     if (file.open(QFile::ReadOnly | QIODevice::Text)) {
-      QString content = QString::fromUtf8(file.readAll());
-      createYAML->setPlainText(content);
-      file.close();
+        QString content = QString::fromUtf8(file.readAll());
+        createYAML->setPlainText(content);
+        file.close();
     }
 }
 
 void Window::saveYAML()
 {
     QString baseName = createName->text() + ".yaml";
-    QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Save YAML"), baseName, tr("YAML Files (*.yaml)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save YAML"), baseName,
+                                                    tr("YAML Files (*.yaml)"));
     if (fileName.isEmpty()) {
         return;
     }
     QFile file(fileName);
     if (file.open(QFile::WriteOnly | QIODevice::Text)) {
-      QString yaml = createYAML->toPlainText();
-      file.write(yaml.toUtf8());
-      file.close();
+        QString yaml = createYAML->toPlainText();
+        file.write(yaml.toUtf8());
+        file.close();
     }
 }
 
@@ -563,12 +566,12 @@ void Window::createInstance()
     }
     QFile *temp = new QFile(editDir->path() + "/" + QString("%1.yaml").arg(name));
     if (temp->open(QFile::WriteOnly | QIODevice::Text)) {
-      QString yaml = createYAML->toPlainText();
-      temp->write(yaml.toUtf8());
-      temp->close();
+        QString yaml = createYAML->toPlainText();
+        temp->write(yaml.toUtf8());
+        temp->close();
     }
     QProcess process(this);
-    process.start("limactl", {"validate", temp->fileName()});
+    process.start("limactl", { "validate", temp->fileName() });
     bool success = process.waitForFinished();
     if (success) {
         if (process.exitStatus() == QProcess::NormalExit && process.exitCode() != 0) {
@@ -583,7 +586,7 @@ void Window::createInstance()
     }
     editFile = temp;
     editWindow->close();
-    QStringList args = {"start", "--tty=false", editFile->fileName()};
+    QStringList args = { "start", "--tty=false", editFile->fileName() };
     sendCommand(args);
 
     updateInstances();
@@ -592,17 +595,17 @@ void Window::createInstance()
 void Window::startInstance()
 {
     QString instance = selectedInstance();
-    QStringList args = {"start", instance};
+    QStringList args = { "start", instance };
     sendCommand(args);
-    //updateInstances();
+    // updateInstances();
 }
 
 void Window::stopInstance()
 {
     QString instance = selectedInstance();
-    QStringList args = {"stop", instance};
+    QStringList args = { "stop", instance };
     sendCommand(args);
-    //updateInstances();
+    // updateInstances();
 }
 
 bool Window::askConfirm(QString instance)
@@ -611,7 +614,9 @@ bool Window::askConfirm(QString instance)
     msgBox.setWindowTitle(tr("lima"));
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText(tr("Remove an existing instance"));
-    msgBox.setInformativeText(tr("Are you sure you want to remove '%1' ? This will delete all files for the instance.").arg(instance));
+    msgBox.setInformativeText(tr("Are you sure you want to remove '%1' ? "
+                                 "This will delete all files for the instance.")
+                                      .arg(instance));
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Cancel);
     return msgBox.exec() == QMessageBox::Ok;
@@ -621,7 +626,7 @@ void Window::removeInstance()
 {
     QString instance = selectedInstance();
     if (askConfirm(instance)) {
-        QStringList args = {"rm", "--force", instance};
+        QStringList args = { "rm", "--force", instance };
         sendCommand(args);
         updateInstances();
     }

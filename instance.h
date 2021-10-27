@@ -10,43 +10,21 @@
 class Instance
 {
 public:
-    Instance() {}
-    Instance(const QString &name)
-        : m_name(name), m_status("") {}
+    Instance() { }
+    Instance(const QString &name) : m_name(name), m_status("") { }
 
-    QString name() const {
-        return m_name;
-    }
-    QString status() const {
-        return m_status;
-    }
-    void setStatus(QString status) {
-        m_status = status;
-    }
-    QString arch() const {
-        return m_arch;
-    }
-    void setArch(QString arch) {
-        m_arch = arch;
-    }
-    int cpus() const {
-        return m_cpus;
-    }
-    void setCpus(int cpus) {
-        m_cpus = cpus;
-    }
-    qint64 memory() const {
-        return m_memory;
-    }
-    void setMemory(qint64 memory) {
-        m_memory = memory;
-    }
-    qint64 disk() const {
-        return m_disk;
-    }
-    void setDisk(qint64 disk) {
-        m_disk = disk;
-    }
+    QString name() const { return m_name; }
+    QString status() const { return m_status; }
+    void setStatus(QString status) { m_status = status; }
+    QString arch() const { return m_arch; }
+    void setArch(QString arch) { m_arch = arch; }
+    int cpus() const { return m_cpus; }
+    void setCpus(int cpus) { m_cpus = cpus; }
+    qint64 memory() const { return m_memory; }
+    void setMemory(qint64 memory) { m_memory = memory; }
+    qint64 disk() const { return m_disk; }
+    void setDisk(qint64 disk) { m_disk = disk; }
+
 private:
     QString m_name;
     QString m_status;
@@ -67,7 +45,9 @@ class InstanceModel : public QAbstractListModel
 
 public:
     InstanceModel(const InstanceList &instances, QObject *parent = nullptr)
-        : QAbstractListModel(parent), instanceList(instances) {}
+        : QAbstractListModel(parent), instanceList(instances)
+    {
+    }
 
     void setInstances(const InstanceList &instances);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

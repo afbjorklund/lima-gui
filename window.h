@@ -109,7 +109,7 @@ private:
     void setSelectedInstance(QString instance);
     void updateInstances();
     void shellConsole();
-    bool getProcessOutput(QStringList arguments, QString& text);
+    bool getProcessOutput(QStringList arguments, QString &text);
     void createEditor();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);

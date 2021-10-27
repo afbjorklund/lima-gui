@@ -71,7 +71,6 @@ class QTableView;
 class QMainWindow;
 class QMenu;
 class QPushButton;
-class QStringList;
 class QTemporaryDir;
 class QTextEdit;
 QT_END_NAMESPACE

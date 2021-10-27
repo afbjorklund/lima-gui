@@ -10,8 +10,11 @@
 class Instance
 {
 public:
-    Instance() { }
-    Instance(const QString &name) : m_name(name), m_status("") { }
+    Instance() : Instance("") { }
+    Instance(const QString &name)
+        : m_name(name), m_status(""), m_arch(""), m_cpus(0), m_memory(0), m_disk(0)
+    {
+    }
 
     QString name() const { return m_name; }
     QString status() const { return m_status; }

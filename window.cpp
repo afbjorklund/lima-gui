@@ -55,6 +55,7 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <QAction>
+#include <QApplication>
 #include <QComboBox>
 #include <QCoreApplication>
 #include <QCloseEvent>
@@ -330,6 +331,22 @@ bool Window::getProcessOutput(QStringList arguments, QString &text)
     return success;
 }
 
+QString Window::getVersion()
+{
+    QString program = QStandardPaths::findExecutable("limactl");
+    if (!program.isEmpty()) {
+        QStringList arguments;
+        arguments << "--version";
+        QString text;
+        bool success = getProcessOutput(arguments, text);
+        if (success) {
+            text.replace("limactl version", "");
+            return text.trimmed();
+        }
+    }
+    return "N/A";
+}
+
 InstanceList Window::getInstances()
 {
     InstanceList instances;
@@ -476,6 +493,14 @@ void Window::updateButtons()
         stopButton->setEnabled(false);
         removeButton->setEnabled(true);
     }
+}
+
+void Window::aboutProgram()
+{
+    QString url = "https://github.com/lima-vm/lima";
+    QMessageBox::about(this, tr("Lima") + " version " + getVersion(),
+                       tr("Lima runs Linux Virtual Machines") + "<br>" + "<br>" + "<a href=\"" + url
+                               + "\">" + url + "</a>");
 }
 
 void Window::updateInstances()
@@ -647,6 +672,12 @@ void Window::createActions()
     restoreAction = new QAction(tr("&Restore"), this);
     connect(restoreAction, &QAction::triggered, this, &QWidget::showNormal);
 
+    aboutAction = new QAction(tr("About"), this);
+    connect(aboutAction, &QAction::triggered, this, &Window::aboutProgram);
+
+    aboutQtAction = new QAction(tr("About &Qt"), this);
+    connect(aboutQtAction, &QAction::triggered, this, &QApplication::aboutQt);
+
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
 }
@@ -658,6 +689,8 @@ void Window::createTrayIcon()
     trayIconMenu->addAction(maximizeAction);
     trayIconMenu->addAction(restoreAction);
     trayIconMenu->addSeparator();
+    trayIconMenu->addAction(aboutAction);
+    trayIconMenu->addAction(aboutQtAction);
     trayIconMenu->addAction(quitAction);
 
     trayIconIcon = new QIcon(":/images/tux.png");

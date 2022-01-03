@@ -94,10 +94,12 @@ private slots:
     void setIcon(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void updateButtons();
+    void aboutProgram();
     void startedCommand();
     void finishedCommand(int code, QProcess::ExitStatus status);
 
 private:
+    QString getVersion();
     InstanceList getInstances();
     InstanceHash getInstanceHash();
     void createInstanceGroupBox();
@@ -141,6 +143,8 @@ private:
     QAction *minimizeAction;
     QAction *maximizeAction;
     QAction *restoreAction;
+    QAction *aboutAction;
+    QAction *aboutQtAction;
     QAction *quitAction;
 
     QProcess *process;

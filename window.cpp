@@ -107,6 +107,7 @@ Window::Window()
     editFile = nullptr;
 
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
+    connect(quickButton, &QAbstractButton::clicked, this, &Window::quickInstance);
     connect(refreshButton, &QAbstractButton::clicked, this, &Window::updateInstances);
 
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -313,6 +314,28 @@ void Window::createEditor()
     editWindow->show();
 }
 
+void Window::quickInstance()
+{
+    quickDialog = new QDialog(this);
+    quickDialog->setModal(true);
+
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    connect(cancelButton, SIGNAL(clicked()), quickDialog, SLOT(close()));
+
+    QHBoxLayout *topLayout = new QHBoxLayout;
+
+    QHBoxLayout *bottomLayout = new QHBoxLayout;
+    bottomLayout->addWidget(cancelButton);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addLayout(topLayout);
+    layout->addLayout(bottomLayout);
+
+    quickDialog->resize(640, 480);
+    quickDialog->setLayout(layout);
+    quickDialog->exec();
+}
+
 bool Window::getProcessOutput(QStringList arguments, QString &text)
 {
     bool success;
@@ -441,6 +464,8 @@ void Window::createInstanceGroupBox()
 
     createButton = new QPushButton(tr("Create"));
     createButton->setIcon(QIcon(":/images/add.png"));
+    quickButton = new QPushButton(tr("Quick"));
+    quickButton->setIcon(QIcon(":/images/quick.png"));
     refreshButton = new QPushButton(tr("Refresh"));
     refreshButton->setIcon(QIcon(":/images/reload.png"));
 
@@ -455,6 +480,7 @@ void Window::createInstanceGroupBox()
 
     QHBoxLayout *refreshButtonLayout = new QHBoxLayout;
     refreshButtonLayout->addWidget(createButton);
+    refreshButtonLayout->addWidget(quickButton);
     refreshButtonLayout->addStretch();
     refreshButtonLayout->addWidget(refreshButton);
 

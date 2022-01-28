@@ -63,6 +63,7 @@
 QT_BEGIN_NAMESPACE
 class QAction;
 class QComboBox;
+class QDialog;
 class QFile;
 class QGroupBox;
 class QIcon;
@@ -112,6 +113,7 @@ private:
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString &text);
     void createEditor();
+    void quickInstance();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);
     void loadYAML();
@@ -125,6 +127,7 @@ private:
     QComboBox *iconComboBox;
 
     QMainWindow *editWindow;
+    QDialog *quickDialog;
     QTemporaryDir *editDir;
     QFile *editFile;
     QLineEdit *createName;
@@ -134,6 +137,7 @@ private:
     InstanceModel *instanceModel;
     QTableView *instanceListView;
     QPushButton *createButton;
+    QPushButton *quickButton;
     QPushButton *refreshButton;
     QPushButton *shellButton;
     QPushButton *startButton;

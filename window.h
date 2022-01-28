@@ -138,6 +138,7 @@ private:
     QTableView *instanceListView;
     QPushButton *createButton;
     QPushButton *quickButton;
+    QPushButton *aboutButton;
     QPushButton *refreshButton;
     QPushButton *shellButton;
     QPushButton *startButton;

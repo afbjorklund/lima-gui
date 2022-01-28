@@ -108,6 +108,7 @@ Window::Window()
 
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(quickButton, &QAbstractButton::clicked, this, &Window::quickInstance);
+    connect(aboutButton, &QAbstractButton::clicked, this, &Window::aboutProgram);
     connect(refreshButton, &QAbstractButton::clicked, this, &Window::updateInstances);
 
     connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
@@ -466,6 +467,8 @@ void Window::createInstanceGroupBox()
     createButton->setIcon(QIcon(":/images/add.png"));
     quickButton = new QPushButton(tr("Quick"));
     quickButton->setIcon(QIcon(":/images/quick.png"));
+    aboutButton = new QPushButton(tr("About"));
+    aboutButton->setIcon(QIcon(":/images/info.png"));
     refreshButton = new QPushButton(tr("Refresh"));
     refreshButton->setIcon(QIcon(":/images/reload.png"));
 
@@ -482,6 +485,7 @@ void Window::createInstanceGroupBox()
     refreshButtonLayout->addWidget(createButton);
     refreshButtonLayout->addWidget(quickButton);
     refreshButtonLayout->addStretch();
+    refreshButtonLayout->addWidget(aboutButton);
     refreshButtonLayout->addWidget(refreshButton);
 
     QHBoxLayout *instanceButtonLayout = new QHBoxLayout;

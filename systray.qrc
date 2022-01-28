@@ -4,6 +4,7 @@
    <file>images/add.png</file>
    <file>images/remove.png</file>
    <file>images/quick.png</file>
+   <file>images/info.png</file>
    <file>images/reload.png</file>
    <file>images/terminal.png</file>
 </qresource>

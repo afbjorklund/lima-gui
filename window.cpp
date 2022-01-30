@@ -409,6 +409,10 @@ InstanceList Window::getInstances()
                 QString status = obj["status"].toString();
                 instance.setStatus(status);
             }
+            if (obj.contains("dir")) {
+                QString dir = obj["dir"].toString();
+                instance.setDir(dir);
+            }
             if (obj.contains("arch")) {
                 QString arch = obj["arch"].toString();
                 instance.setArch(arch);

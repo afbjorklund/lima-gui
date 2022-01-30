@@ -12,13 +12,15 @@ class Instance
 public:
     Instance() : Instance("") { }
     Instance(const QString &name)
-        : m_name(name), m_status(""), m_arch(""), m_cpus(0), m_memory(0), m_disk(0)
+        : m_name(name), m_status(""), m_dir(""), m_arch(""), m_cpus(0), m_memory(0), m_disk(0)
     {
     }
 
     QString name() const { return m_name; }
     QString status() const { return m_status; }
     void setStatus(QString status) { m_status = status; }
+    QString dir() const { return m_dir; }
+    void setDir(QString dir) { m_dir = dir; }
     QString arch() const { return m_arch; }
     void setArch(QString arch) { m_arch = arch; }
     int cpus() const { return m_cpus; }
@@ -31,6 +33,7 @@ public:
 private:
     QString m_name;
     QString m_status;
+    QString m_dir;
     QString m_arch;
     int m_cpus;
     qint64 m_memory;

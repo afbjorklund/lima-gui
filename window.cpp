@@ -434,11 +434,16 @@ void Window::quickInstance()
     orchestratorLayout->addWidget(newExampleButton("nomad"));
     orchestratorGroupBox->setLayout(orchestratorLayout);
 
+    QLabel *moreExamplesAvailable =
+            new QLabel(tr("There are more examples available. "
+                          "Use the \"Load\" button (under Advanced), to see them.<br>"));
+
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(machineGroupBox);
     topLayout->addWidget(distroGroupBox);
     topLayout->addWidget(engineGroupBox);
     topLayout->addWidget(orchestratorGroupBox);
+    topLayout->addWidget(moreExamplesAvailable);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
     bottomLayout->addWidget(cancelButton);

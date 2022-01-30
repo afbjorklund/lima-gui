@@ -533,7 +533,7 @@ void Window::updateButtons()
         shellButton->setEnabled(true);
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
-        editButton->setEnabled(true);
+        editButton->setEnabled(false);
         removeButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
         shellButton->setEnabled(false);

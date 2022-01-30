@@ -56,11 +56,13 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QCheckBox>
 #include <QComboBox>
 #include <QCoreApplication>
 #include <QCloseEvent>
 #include <QDebug>
 #include <QFont>
+#include <QFormLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QTableView>
@@ -263,7 +265,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
     QLabel *label = new QLabel(tr("Name"));
     createName = new QLineEdit(instanceName);
     if (!create) {
-	    createName->setReadOnly(true);
+        createName->setReadOnly(true);
     }
 
     QHBoxLayout *topLayout = new QHBoxLayout;
@@ -291,6 +293,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
     QPushButton *loadButton = new QPushButton(tr("Load"));
     QPushButton *saveButton = new QPushButton(tr("Save"));
     QPushButton *okButton = create ? new QPushButton(tr("Create")) : new QPushButton(tr("Ok"));
+    okButton->setDefault(true);
 
     connect(cancelButton, SIGNAL(clicked()), editWindow, SLOT(close()));
     connect(loadButton, &QAbstractButton::clicked, this, &Window::loadYAML);
@@ -321,22 +324,126 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
 void Window::createEditor()
 {
     QString examples = getPrefix() + "/share/doc/lima/examples";
-    QString defaultYAML = examples + "/default.yaml";
+    QString defaultYAML = examples + "/" + "default.yaml";
     yamlEditor("default", defaultYAML, true);
+}
+
+QWidget *Window::newExampleButton(QString name)
+{
+    Example example = getExamples()[name];
+    QIcon icon(QString(":/logos/" + name + ".png"));
+    QPushButton *button = new QPushButton;
+    button->setIconSize(QSize(48, 48));
+    button->setIcon(icon);
+    QString text = example.text();
+    QLabel *textLabel = new QLabel(text);
+    textLabel->setAlignment(Qt::AlignCenter);
+    QString url = example.url();
+    QLabel *urlLabel = new QLabel("<small><a href=\"" + url + "\">" + url + "</a></small>");
+    urlLabel->setAlignment(Qt::AlignCenter);
+    urlLabel->setOpenExternalLinks(true);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(button);
+    layout->addWidget(textLabel);
+    layout->addWidget(urlLabel);
+    connect(button, &QAbstractButton::clicked, this, &Window::quickCreate);
+    button->setProperty("name", name);
+    QWidget *widget = new QWidget();
+    widget->setLayout(layout);
+    return widget;
+}
+
+void Window::quickCreate()
+{
+    quickDialog->close();
+    QString name = QObject::sender()->property("name").value<QString>();
+    Example example = getExamples()[name];
+    QString examples = getPrefix() + "/share/doc/lima/examples";
+    QString exampleYAML = examples + "/" + example.yaml();
+    if (quickPreview->isChecked()) {
+        yamlEditor(example.name(), exampleYAML, true);
+    } else {
+        createName = new QLineEdit;
+        createYAML = new QTextEdit;
+        readYAML(exampleYAML);
+        // TODO: arch, cpus, memory, disk
+        createInstance();
+    }
+}
+
+void Window::advancedCreate()
+{
+    quickDialog->close();
+    createEditor();
 }
 
 void Window::quickInstance()
 {
     quickDialog = new QDialog(this);
+    quickDialog->setWindowTitle(tr("Quick Start"));
     quickDialog->setModal(true);
 
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
     connect(cancelButton, SIGNAL(clicked()), quickDialog, SLOT(close()));
+    QPushButton *advancedButton = new QPushButton(tr("Advanced..."));
+    connect(advancedButton, &QAbstractButton::clicked, this, &Window::advancedCreate);
 
-    QHBoxLayout *topLayout = new QHBoxLayout;
+    QWidget *machineGroupBox = new QWidget();
+    QHBoxLayout *machineLayout = new QHBoxLayout;
+    machineLayout->addWidget(new QLabel(tr("Arch:")));
+    QComboBox *archComboBox = new QComboBox;
+    archComboBox->addItem(tr("default"));
+    archComboBox->addItem("x86_64");
+    archComboBox->addItem("aarch64");
+    archComboBox->setEnabled(false); // TODO
+    machineLayout->addWidget(archComboBox);
+    machineLayout->addWidget(new QLabel(tr("CPUs:")));
+    QLineEdit *cpus = new QLineEdit("4");
+    cpus->setEnabled(false); // TODO
+    machineLayout->addWidget(cpus);
+    machineLayout->addWidget(new QLabel(tr("Memory:")));
+    QLineEdit *memory = new QLineEdit("4GiB");
+    memory->setEnabled(false); // TODO
+    machineLayout->addWidget(memory);
+    machineLayout->addWidget(new QLabel(tr("Disk:")));
+    QLineEdit *disk = new QLineEdit("100GiB");
+    disk->setEnabled(false); // TODO
+    machineLayout->addWidget(disk);
+    quickPreview = new QCheckBox("Edit YAML", this);
+    machineLayout->addWidget(quickPreview);
+    machineGroupBox->setLayout(machineLayout);
+
+    QGroupBox *distroGroupBox = new QGroupBox(tr("Linux Distributions"));
+    QHBoxLayout *distroLayout = new QHBoxLayout;
+    distroLayout->addWidget(newExampleButton("alpine"));
+    distroLayout->addWidget(newExampleButton("ubuntu"));
+    distroLayout->addWidget(newExampleButton("fedora"));
+    distroGroupBox->setLayout(distroLayout);
+
+    QGroupBox *engineGroupBox = new QGroupBox(tr("Container Engines"));
+    QHBoxLayout *engineLayout = new QHBoxLayout;
+    engineLayout->addWidget(newExampleButton("nerdctl"));
+    engineLayout->addWidget(newExampleButton("docker"));
+    engineLayout->addWidget(newExampleButton("podman"));
+    engineGroupBox->setLayout(engineLayout);
+
+    QGroupBox *orchestratorGroupBox = new QGroupBox(tr("Container Orchestration"));
+    QHBoxLayout *orchestratorLayout = new QHBoxLayout;
+    orchestratorLayout->addWidget(newExampleButton("k3s"));
+    orchestratorLayout->addWidget(newExampleButton("k8s"));
+    orchestratorLayout->addWidget(newExampleButton("nomad"));
+    orchestratorGroupBox->setLayout(orchestratorLayout);
+
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    topLayout->addWidget(machineGroupBox);
+    topLayout->addWidget(distroGroupBox);
+    topLayout->addWidget(engineGroupBox);
+    topLayout->addWidget(orchestratorGroupBox);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
     bottomLayout->addWidget(cancelButton);
+    bottomLayout->addStretch();
+    bottomLayout->addWidget(advancedButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(topLayout);
@@ -608,6 +715,11 @@ void Window::loadYAML()
     if (fileName.isEmpty()) {
         return;
     }
+    readYAML(fileName);
+}
+
+void Window::readYAML(QString fileName)
+{
     QString baseName = QFileInfo(fileName).baseName();
     createName->setText(baseName.replace(".yaml", ""));
     QFile file(fileName);
@@ -626,6 +738,11 @@ void Window::saveYAML()
     if (fileName.isEmpty()) {
         return;
     }
+    writeYAML(fileName);
+}
+
+void Window::writeYAML(QString fileName)
+{
     QFile file(fileName);
     if (file.open(QFile::WriteOnly | QIODevice::Text)) {
         QString yaml = createYAML->toPlainText();

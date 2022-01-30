@@ -62,6 +62,7 @@
 
 QT_BEGIN_NAMESPACE
 class QAction;
+class QCheckBox;
 class QComboBox;
 class QDialog;
 class QFile;
@@ -77,6 +78,7 @@ class QTextEdit;
 QT_END_NAMESPACE
 
 #include "instance.h"
+#include "examples.h"
 
 //! [0]
 class Window : public QDialog
@@ -114,11 +116,16 @@ private:
     bool getProcessOutput(QStringList arguments, QString &text);
     void yamlEditor(QString instanceName, QString yamlFile, bool create);
     void createEditor();
+    QWidget *newExampleButton(QString name);
+    void quickCreate();
+    void advancedCreate();
     void quickInstance();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);
     void loadYAML();
+    void readYAML(QString fileName);
     void saveYAML();
+    void writeYAML(QString fileName);
     QFile *validateYAML(QString name);
     void createInstance();
     void updateInstance();
@@ -132,6 +139,7 @@ private:
 
     QMainWindow *editWindow;
     QDialog *quickDialog;
+    QCheckBox *quickPreview;
     QTemporaryDir *editDir;
     QFile *editFile;
     QLineEdit *createName;

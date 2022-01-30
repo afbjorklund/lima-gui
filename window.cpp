@@ -689,12 +689,22 @@ void Window::startedCommand()
 void Window::finishedCommand(int code, QProcess::ExitStatus status)
 {
     this->unsetCursor();
+    QString command = process->program() + " " + process->arguments().join(" ");
     if (status == QProcess::NormalExit && code != 0) {
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText(process->program() + " " + process->arguments().join(" "));
+        msgBox.setText("<b>" + command + "</b>");
         msgBox.setInformativeText(process->readAllStandardError());
         msgBox.exec();
+    } else {
+        QByteArray output = process->readAllStandardOutput();
+        if (output.length() > 0) {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText("<b>" + command + "</b>");
+            msgBox.setInformativeText(output);
+            msgBox.exec();
+        }
     }
 
     if (editFile) {

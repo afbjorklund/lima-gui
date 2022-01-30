@@ -117,6 +117,7 @@ Window::Window()
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
     connect(stopButton, &QAbstractButton::clicked, this, &Window::stopInstance);
+    connect(editButton, &QAbstractButton::clicked, this, &Window::editInstance);
     connect(removeButton, &QAbstractButton::clicked, this, &Window::removeInstance);
 
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
@@ -255,12 +256,15 @@ static QString getPrefix()
     return prefix;
 }
 
-void Window::createEditor()
+void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
 {
     editWindow = new QMainWindow();
 
     QLabel *label = new QLabel(tr("Name"));
-    createName = new QLineEdit("default");
+    createName = new QLineEdit(instanceName);
+    if (!create) {
+	    createName->setReadOnly(true);
+    }
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(label);
@@ -276,9 +280,7 @@ void Window::createEditor()
     highlighter->setCurrentLanguage(QSourceHighliter::CodeYAML);
 #endif
 
-    QString examples = getPrefix() + "/share/doc/lima/examples";
-    QString defaultYAML = examples + "/default.yaml";
-    QFile file(defaultYAML);
+    QFile file(yamlFile);
     if (file.open(QFile::ReadOnly | QIODevice::Text)) {
         QString content = QString::fromUtf8(file.readAll());
         createYAML->setPlainText(content);
@@ -288,12 +290,13 @@ void Window::createEditor()
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
     QPushButton *loadButton = new QPushButton(tr("Load"));
     QPushButton *saveButton = new QPushButton(tr("Save"));
-    QPushButton *okButton = new QPushButton(tr("Create"));
+    QPushButton *okButton = create ? new QPushButton(tr("Create")) : new QPushButton(tr("Ok"));
 
     connect(cancelButton, SIGNAL(clicked()), editWindow, SLOT(close()));
     connect(loadButton, &QAbstractButton::clicked, this, &Window::loadYAML);
     connect(saveButton, &QAbstractButton::clicked, this, &Window::saveYAML);
-    connect(okButton, &QAbstractButton::clicked, this, &Window::createInstance);
+    connect(okButton, &QAbstractButton::clicked, this,
+            create ? &Window::createInstance : &Window::updateInstance);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
     bottomLayout->addWidget(cancelButton);
@@ -313,6 +316,13 @@ void Window::createEditor()
     editWindow->resize(640, 480);
     editWindow->setCentralWidget(widget);
     editWindow->show();
+}
+
+void Window::createEditor()
+{
+    QString examples = getPrefix() + "/share/doc/lima/examples";
+    QString defaultYAML = examples + "/default.yaml";
+    yamlEditor("default", defaultYAML, true);
 }
 
 void Window::quickInstance()
@@ -480,6 +490,7 @@ void Window::createInstanceGroupBox()
     shellButton->setIcon(QIcon(":/images/terminal.png"));
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
+    editButton = new QPushButton(tr("Edit"));
     removeButton = new QPushButton(tr("Remove"));
     removeButton->setIcon(QIcon(":/images/remove.png"));
 
@@ -496,6 +507,7 @@ void Window::createInstanceGroupBox()
     instanceButtonLayout->addWidget(shellButton);
     instanceButtonLayout->addWidget(startButton);
     instanceButtonLayout->addWidget(stopButton);
+    instanceButtonLayout->addWidget(editButton);
     instanceButtonLayout->addWidget(removeButton);
 
     QVBoxLayout *instanceLayout = new QVBoxLayout;
@@ -512,6 +524,7 @@ void Window::updateButtons()
         shellButton->setEnabled(false);
         startButton->setEnabled(false);
         stopButton->setEnabled(false);
+        editButton->setEnabled(false);
         removeButton->setEnabled(false);
         return;
     }
@@ -520,11 +533,13 @@ void Window::updateButtons()
         shellButton->setEnabled(true);
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
+        editButton->setEnabled(true);
         removeButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
         shellButton->setEnabled(false);
         startButton->setEnabled(true);
         stopButton->setEnabled(false);
+        editButton->setEnabled(true);
         removeButton->setEnabled(true);
     }
 }
@@ -619,13 +634,12 @@ void Window::saveYAML()
     }
 }
 
-void Window::createInstance()
+QFile *Window::validateYAML(QString name)
 {
-    QString name = createName->text();
     editDir = new QTemporaryDir;
     if (!editDir->isValid()) {
         QMessageBox::warning(this, tr("lima"), tr("Could not create temporary dir"));
-        return;
+        return 0;
     }
     QFile *temp = new QFile(editDir->path() + "/" + QString("%1.yaml").arg(name));
     if (temp->open(QFile::WriteOnly | QIODevice::Text)) {
@@ -644,15 +658,36 @@ void Window::createInstance()
             msgBox.setInformativeText(process.readAllStandardError());
             msgBox.exec();
             delete temp;
-            return;
+            return 0;
         }
     }
-    editFile = temp;
+    return temp;
+}
+
+void Window::createInstance()
+{
+    QString name = createName->text();
+    editFile = validateYAML(name);
+    if (!editFile)
+        return;
     editWindow->close();
     QStringList args = { "start", "--tty=false", editFile->fileName() };
     sendCommand(args);
 
     updateInstances();
+}
+
+void Window::updateInstance()
+{
+    QString name = createName->text();
+    editFile = validateYAML(name);
+    if (!editFile)
+        return;
+    editWindow->close();
+    Instance instance = getInstanceHash()[name];
+    QString yamlFile = instance.dir() + "/" + "lima.yaml";
+    QFile(yamlFile).remove();
+    editFile->rename(yamlFile);
 }
 
 void Window::startInstance()
@@ -669,6 +704,14 @@ void Window::stopInstance()
     QStringList args = { "stop", instance };
     sendCommand(args);
     // updateInstances();
+}
+
+void Window::editInstance()
+{
+    QString name = selectedInstance();
+    Instance instance = getInstanceHash()[name];
+    QString yamlFile = instance.dir() + "/" + "lima.yaml";
+    yamlEditor(instance.name(), yamlFile, false);
 }
 
 bool Window::askConfirm(QString instance)

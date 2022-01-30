@@ -112,15 +112,19 @@ private:
     void updateInstances();
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString &text);
+    void yamlEditor(QString instanceName, QString yamlFile, bool create);
     void createEditor();
     void quickInstance();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);
     void loadYAML();
     void saveYAML();
+    QFile *validateYAML(QString name);
     void createInstance();
+    void updateInstance();
     void startInstance();
     void stopInstance();
+    void editInstance();
     bool askConfirm(QString instance);
     void removeInstance();
 
@@ -143,6 +147,7 @@ private:
     QPushButton *shellButton;
     QPushButton *startButton;
     QPushButton *stopButton;
+    QPushButton *editButton;
     QPushButton *removeButton;
 
     QAction *minimizeAction;

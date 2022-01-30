@@ -1,7 +1,9 @@
 HEADERS       = window.h \
-    instance.h
+                examples.h \
+                instance.h
 SOURCES       = main.cpp \
                 instance.cpp \
+                examples.cpp \
                 window.cpp
 RESOURCES     = systray.qrc
 

@@ -22,13 +22,13 @@ ExampleHash &getExamples()
     // Container engines
     hash["docker"] = Example("docker", "Docker", "https://docker.com");
     hash["podman"] = Example("podman", "Podman", "https://podman.io");
-    hash["singularity"] = Example("singularity", "Singularity", "");
+    hash["singularity"] = Example("singularity", "Singularity", "https://apptainer.org");
     hash["nerdctl"] = Example("nerdctl", "Nerdctl", "https://containerd.io");
 
     // Container orchestration
     hash["k3s"] = Example("k3s", "Kubernetes (k3s)", "https://k3s.io");
     hash["k8s"] = Example("k8s", "Kubernetes (k8s)", "https://kubernetes.io");
-    hash["nomad"] = Example("docker", "Nomad", "https://nomadproject.io");
+    hash["nomad"] = Example("nomad", "Nomad", "https://nomadproject.io");
     hash["faasd"] = Example("faasd", "Faasd", "https://openfaas.com");
 
     hash["nerdctl"].setYaml("default.yaml");

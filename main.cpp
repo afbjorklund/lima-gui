@@ -53,6 +53,7 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <QMessageBox>
+#include <QStandardPaths>
 #include "window.h"
 
 int main(int argc, char *argv[])
@@ -68,6 +69,13 @@ int main(int argc, char *argv[])
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Systray"),
                               QObject::tr("I couldn't detect any system tray "
+                                          "on this system."));
+        return 1;
+    }
+    QString program = QStandardPaths::findExecutable("limactl");
+    if (program.isEmpty()) {
+        QMessageBox::critical(0, QObject::tr("Lima"),
+                              QObject::tr("I couldn't find limactl in PATH "
                                           "on this system."));
         return 1;
     }

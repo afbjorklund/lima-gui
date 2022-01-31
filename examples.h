@@ -2,6 +2,7 @@
 #define EXAMPLES_H
 
 #include <QList>
+#include <QHash>
 
 class Example
 {

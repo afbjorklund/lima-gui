@@ -464,7 +464,10 @@ bool Window::getProcessOutput(QStringList arguments, QString &text)
 {
     bool success;
 
-    QString program = "limactl";
+    QString program = QStandardPaths::findExecutable("limactl");
+    if (program.isEmpty()) {
+        return false;
+    }
 
     QProcess *process = new QProcess(this);
     process->start(program, arguments);
@@ -679,7 +682,7 @@ void Window::sendCommand(QString cmd)
 
 void Window::sendCommand(QStringList arguments)
 {
-    QString program = "limactl";
+    QString program = QStandardPaths::findExecutable("limactl");
     process = new QProcess(this);
     connect(process, SIGNAL(started()), this, SLOT(startedCommand()));
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
@@ -781,7 +784,8 @@ QFile *Window::validateYAML(QString name)
         temp->close();
     }
     QProcess process(this);
-    process.start("limactl", { "validate", temp->fileName() });
+    QString program = QStandardPaths::findExecutable("limactl");
+    process.start(program, { "validate", temp->fileName() });
     bool success = process.waitForFinished();
     if (success) {
         if (process.exitStatus() == QProcess::NormalExit && process.exitCode() != 0) {

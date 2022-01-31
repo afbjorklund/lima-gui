@@ -363,6 +363,7 @@ void Window::quickCreate()
     if (quickPreview->isChecked()) {
         yamlEditor(example.name(), exampleYAML, true);
     } else {
+        editWindow = new QMainWindow;
         createName = new QLineEdit;
         createYAML = new QTextEdit;
         readYAML(exampleYAML);

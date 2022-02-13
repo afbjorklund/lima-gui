@@ -11,6 +11,11 @@ QString defaultYAML()
     return "examples/default.yaml";
 }
 
+QString defaultURL()
+{
+    return "https://github.com/lima-vm/lima/blob/master/examples/default.yaml";
+}
+
 QString limactlPath()
 {
     QString program = QStandardPaths::findExecutable("limactl");

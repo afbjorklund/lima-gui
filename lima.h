@@ -2,6 +2,7 @@
 #define LIMA_H
 
 extern QString defaultYAML();
+extern QString defaultURL();
 
 extern QString limactlPath();
 

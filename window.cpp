@@ -372,6 +372,12 @@ void Window::quickCreate()
     }
 }
 
+void Window::urlCreate()
+{
+    quickDialog->close();
+    createInstanceURL();
+}
+
 void Window::advancedCreate()
 {
     quickDialog->close();
@@ -386,8 +392,16 @@ void Window::quickInstance()
 
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
     connect(cancelButton, SIGNAL(clicked()), quickDialog, SLOT(close()));
+    QPushButton *urlButton = new QPushButton(tr("URL..."));
+    connect(urlButton, &QAbstractButton::clicked, this, &Window::urlCreate);
     QPushButton *advancedButton = new QPushButton(tr("Advanced..."));
     connect(advancedButton, &QAbstractButton::clicked, this, &Window::advancedCreate);
+
+    createURL = new QLineEdit(defaultURL());
+    createURL->setFixedWidth(400);
+    QFont font;
+    font.setPointSize(9);
+    createURL->setFont(font);
 
     QWidget *machineGroupBox = new QWidget();
     QHBoxLayout *machineLayout = new QHBoxLayout;
@@ -452,6 +466,8 @@ void Window::quickInstance()
     QHBoxLayout *bottomLayout = new QHBoxLayout;
     bottomLayout->addWidget(cancelButton);
     bottomLayout->addStretch();
+    bottomLayout->addWidget(urlButton);
+    bottomLayout->addWidget(createURL);
     bottomLayout->addWidget(advancedButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -809,6 +825,20 @@ void Window::createInstance()
         return;
     editWindow->close();
     QStringList args = { "start", "--tty=false", editFile->fileName() };
+    sendCommand(args);
+
+    updateInstances();
+}
+
+void Window::createInstanceURL()
+{
+    QString url = createURL->text();
+    if (url.startsWith("https://github.com")) {
+        // Get the "raw" YAML, and not the prettified HTTP
+        url = url.replace("github.com", "raw.githubusercontent.com");
+        url = url.replace("blob/", "");
+    }
+    QStringList args = { "start", "--tty=false", url };
     sendCommand(args);
 
     updateInstances();

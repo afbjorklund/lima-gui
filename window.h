@@ -118,6 +118,7 @@ private:
     void createEditor();
     QWidget *newExampleButton(QString name);
     void quickCreate();
+    void urlCreate();
     void advancedCreate();
     void quickInstance();
     void sendCommand(QString cmd);
@@ -128,6 +129,7 @@ private:
     void writeYAML(QString fileName);
     QFile *validateYAML(QString name);
     void createInstance();
+    void createInstanceURL();
     void updateInstance();
     void startInstance();
     void stopInstance();
@@ -144,6 +146,7 @@ private:
     QFile *editFile;
     QLineEdit *createName;
     QTextEdit *createYAML;
+    QLineEdit *createURL;
 
     QGroupBox *instanceGroupBox;
     InstanceModel *instanceModel;

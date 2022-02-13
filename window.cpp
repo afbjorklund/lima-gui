@@ -324,9 +324,8 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
 
 void Window::createEditor()
 {
-    QString examples = getPrefix() + "/share/doc/lima/examples";
-    QString defaultYAML = examples + "/" + "default.yaml";
-    yamlEditor("default", defaultYAML, true);
+    QString directory = getPrefix() + "/share/doc/lima";
+    yamlEditor("default", directory + "/" + defaultYAML(), true);
 }
 
 QWidget *Window::newExampleButton(QString name)

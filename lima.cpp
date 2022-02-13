@@ -6,6 +6,11 @@
 
 #include "lima.h"
 
+QString defaultYAML()
+{
+    return "examples/default.yaml";
+}
+
 QString limactlPath()
 {
     QString program = QStandardPaths::findExecutable("limactl");

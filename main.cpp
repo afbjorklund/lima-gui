@@ -53,8 +53,8 @@
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include <QMessageBox>
-#include <QStandardPaths>
 #include "window.h"
+#include "lima.h"
 
 int main(int argc, char *argv[])
 {
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
                                           "on this system."));
         return 1;
     }
-    QString program = QStandardPaths::findExecutable("limactl");
+    QString program = limactlPath();
     if (program.isEmpty()) {
         QMessageBox::critical(0, QObject::tr("Lima"),
                               QObject::tr("I couldn't find limactl in PATH "

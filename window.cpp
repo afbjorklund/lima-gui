@@ -51,6 +51,7 @@
 ****************************************************************************/
 
 #include "window.h"
+#include "lima.h"
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
@@ -214,7 +215,7 @@ void Window::setSelectedInstance(QString instance)
 void Window::shellConsole()
 {
     QString instance = selectedInstance();
-    QString program = QStandardPaths::findExecutable("limactl");
+    QString program = limactlPath();
 #ifndef QT_NO_TERMWIDGET
     QMainWindow *mainWindow = new QMainWindow();
 
@@ -250,7 +251,7 @@ void Window::shellConsole()
 static QString getPrefix()
 {
     QString prefix = "/usr/local";
-    QString program = QStandardPaths::findExecutable("limactl");
+    QString program = limactlPath();
     if (!program.isEmpty()) {
         QString bin = QFileInfo(program).dir().absolutePath();
         prefix = QFileInfo(bin).dir().absolutePath();
@@ -464,7 +465,7 @@ bool Window::getProcessOutput(QStringList arguments, QString &text)
 {
     bool success;
 
-    QString program = "limactl";
+    QString program = limactlPath();
 
     QProcess *process = new QProcess(this);
     process->start(program, arguments);
@@ -480,7 +481,7 @@ bool Window::getProcessOutput(QStringList arguments, QString &text)
 
 QString Window::getVersion()
 {
-    QString program = QStandardPaths::findExecutable("limactl");
+    QString program = limactlPath();
     if (!program.isEmpty()) {
         QStringList arguments;
         arguments << "--version";
@@ -679,7 +680,7 @@ void Window::sendCommand(QString cmd)
 
 void Window::sendCommand(QStringList arguments)
 {
-    QString program = "limactl";
+    QString program = limactlPath();
     process = new QProcess(this);
     connect(process, SIGNAL(started()), this, SLOT(startedCommand()));
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
@@ -781,7 +782,8 @@ QFile *Window::validateYAML(QString name)
         temp->close();
     }
     QProcess process(this);
-    process.start("limactl", { "validate", temp->fileName() });
+    QString program = limactlPath();
+    process.start(program, { "validate", temp->fileName() });
     bool success = process.waitForFinished();
     if (success) {
         if (process.exitStatus() == QProcess::NormalExit && process.exitCode() != 0) {

@@ -10,11 +10,14 @@
    <file>logos/ubuntu.png</file>
    <file>logos/alpine.png</file>
    <file>logos/fedora.png</file>
+   <file>logos/archlinux.png</file>
    <file>logos/nerdctl.png</file>
    <file>logos/docker.png</file>
    <file>logos/podman.png</file>
+   <file>logos/singularity.png</file>
    <file>logos/k3s.png</file>
    <file>logos/k8s.png</file>
    <file>logos/nomad.png</file>
+   <file>logos/openfaas.png</file>
 </qresource>
 </RCC>

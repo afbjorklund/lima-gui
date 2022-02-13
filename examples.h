@@ -9,11 +9,13 @@ class Example
 public:
     Example() : Example("", "", "") { }
     Example(const QString &name, const QString &text, const QString &url)
-        : m_name(name), m_yaml(""), m_text(text), m_url(url)
+        : m_name(name), m_logo(""), m_yaml(""), m_text(text), m_url(url)
     {
     }
 
     QString name() const { return m_name; }
+    QString logo() const { return m_logo.isEmpty() ? m_name + ".png" : m_logo; }
+    void setLogo(QString logo) { m_logo = logo; }
     QString yaml() const { return m_yaml.isEmpty() ? m_name + ".yaml" : m_yaml; }
     void setYaml(QString yaml) { m_yaml = yaml; }
     QString text() const { return m_text; }
@@ -23,6 +25,7 @@ public:
 
 private:
     QString m_name;
+    QString m_logo;
     QString m_yaml;
     QString m_text;
     QString m_url;

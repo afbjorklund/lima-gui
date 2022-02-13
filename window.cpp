@@ -332,7 +332,7 @@ void Window::createEditor()
 QWidget *Window::newExampleButton(QString name)
 {
     Example example = getExamples()[name];
-    QIcon icon(QString(":/logos/" + name + ".png"));
+    QIcon icon(QString(":/logos/" + example.logo()));
     QPushButton *button = new QPushButton;
     button->setIconSize(QSize(48, 48));
     button->setIcon(icon);
@@ -420,6 +420,7 @@ void Window::quickInstance()
     distroLayout->addWidget(newExampleButton("alpine"));
     distroLayout->addWidget(newExampleButton("ubuntu"));
     distroLayout->addWidget(newExampleButton("fedora"));
+    distroLayout->addWidget(newExampleButton("archlinux"));
     distroGroupBox->setLayout(distroLayout);
 
     QGroupBox *engineGroupBox = new QGroupBox(tr("Container Engines"));
@@ -427,6 +428,7 @@ void Window::quickInstance()
     engineLayout->addWidget(newExampleButton("nerdctl"));
     engineLayout->addWidget(newExampleButton("docker"));
     engineLayout->addWidget(newExampleButton("podman"));
+    engineLayout->addWidget(newExampleButton("singularity"));
     engineGroupBox->setLayout(engineLayout);
 
     QGroupBox *orchestratorGroupBox = new QGroupBox(tr("Container Orchestration"));
@@ -434,6 +436,7 @@ void Window::quickInstance()
     orchestratorLayout->addWidget(newExampleButton("k3s"));
     orchestratorLayout->addWidget(newExampleButton("k8s"));
     orchestratorLayout->addWidget(newExampleButton("nomad"));
+    orchestratorLayout->addWidget(newExampleButton("faasd"));
     orchestratorGroupBox->setLayout(orchestratorLayout);
 
     QLabel *moreExamplesAvailable =

@@ -32,6 +32,7 @@ ExampleHash &getExamples()
     hash["faasd"] = Example("faasd", "Faasd", "https://openfaas.com");
 
     hash["nerdctl"].setYaml("default.yaml");
+    hash["faasd"].setLogo("openfaas.png");
 
     examples = hash;
     return examples;

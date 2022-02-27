@@ -14,6 +14,8 @@ requires(qtConfig(combobox))
 
 TARGET        = lima-gui
 
+macx: ICON    = icons/tux.icns
+
 DISTFILES += \
     LICENSE
 

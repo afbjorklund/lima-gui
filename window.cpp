@@ -706,6 +706,12 @@ void Window::sendCommand(QStringList arguments)
 {
     QString program = limactlPath();
     process = new QProcess(this);
+#ifdef Q_OS_OSX
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    // the macOS PATH does not inherit from the terminal PATH, add brew
+    env.insert("PATH", brewPaths().join(":") + ":" + env.value("PATH"));
+    process->setProcessEnvironment(env);
+#endif
     connect(process, SIGNAL(started()), this, SLOT(startedCommand()));
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
             SLOT(finishedCommand(int, QProcess::ExitStatus)));

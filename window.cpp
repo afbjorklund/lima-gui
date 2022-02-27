@@ -234,10 +234,8 @@ void Window::shellConsole()
     mainWindow->show();
 #elif defined(Q_OS_OSX)
     QString command = program + " shell " + instance;
-    QStringList arguments = { "-e", "tell app \"Terminal\"",
-                              "-e", "activate",
-                              "-e", "do script \"" + command + "\"",
-                              "-e", "end tell" };
+    QStringList arguments = { "-e", "tell app \"Terminal\"",         "-e", "activate",
+                              "-e", "do script \"" + command + "\"", "-e", "end tell" };
     QProcess *process = new QProcess(this);
     process->start("/usr/bin/osascript", arguments);
 #else

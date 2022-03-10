@@ -31,7 +31,9 @@ ExampleHash &getExamples()
     hash["nomad"] = Example("nomad", "Nomad", "https://nomadproject.io");
     hash["faasd"] = Example("faasd", "Faasd", "https://openfaas.com");
 
+    hash["docker"].setLogo("whale.png");
     hash["nerdctl"].setYaml("default.yaml");
+    hash["nerdctl"].setLogo("nerd-face.png");
     hash["faasd"].setLogo("openfaas.png");
 
     examples = hash;

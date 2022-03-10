@@ -11,8 +11,8 @@
    <file>logos/alpine.png</file>
    <file>logos/fedora.png</file>
    <file>logos/archlinux.png</file>
-   <file>logos/nerdctl.png</file>
-   <file>logos/docker.png</file>
+   <file>logos/nerd-face.png</file>
+   <file>logos/whale.png</file>
    <file>logos/podman.png</file>
    <file>logos/singularity.png</file>
    <file>logos/k3s.png</file>

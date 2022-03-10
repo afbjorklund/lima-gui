@@ -20,10 +20,10 @@ ExampleHash &getExamples()
     hash["ubuntu"] = Example("ubuntu", "Ubuntu", "https://ubuntu.com");
 
     // Container engines
+    hash["default"] = Example("default", "Default", "https://containerd.io");
     hash["docker"] = Example("docker", "Docker", "https://docker.com");
     hash["podman"] = Example("podman", "Podman", "https://podman.io");
     hash["singularity"] = Example("singularity", "Singularity", "https://apptainer.org");
-    hash["nerdctl"] = Example("nerdctl", "Nerdctl", "https://containerd.io");
 
     // Container orchestration
     hash["k3s"] = Example("k3s", "Kubernetes (k3s)", "https://k3s.io");
@@ -31,9 +31,8 @@ ExampleHash &getExamples()
     hash["nomad"] = Example("nomad", "Nomad", "https://nomadproject.io");
     hash["faasd"] = Example("faasd", "Faasd", "https://openfaas.com");
 
+    hash["default"].setLogo("nerd-face.png");
     hash["docker"].setLogo("whale.png");
-    hash["nerdctl"].setYaml("default.yaml");
-    hash["nerdctl"].setLogo("nerd-face.png");
     hash["faasd"].setLogo("openfaas.png");
 
     examples = hash;

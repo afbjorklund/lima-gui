@@ -444,7 +444,7 @@ void Window::quickInstance()
 
     QGroupBox *engineGroupBox = new QGroupBox(tr("Container Engines"));
     QHBoxLayout *engineLayout = new QHBoxLayout;
-    engineLayout->addWidget(newExampleButton("nerdctl"));
+    engineLayout->addWidget(newExampleButton("default"));
     engineLayout->addWidget(newExampleButton("docker"));
     engineLayout->addWidget(newExampleButton("podman"));
     engineLayout->addWidget(newExampleButton("singularity"));

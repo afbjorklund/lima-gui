@@ -100,7 +100,7 @@ using namespace QSourceHighlite;
 Window::Window()
 {
     iconComboBox = new QComboBox;
-    iconComboBox->addItem(QIcon(":/images/tux.png"), tr("Tux"));
+    iconComboBox->addItem(QIcon(":/images/lima.png"), tr("Lima"));
     createInstanceGroupBox();
 
     createActions();
@@ -949,7 +949,7 @@ void Window::createTrayIcon()
     trayIconMenu->addAction(aboutQtAction);
     trayIconMenu->addAction(quitAction);
 
-    trayIconIcon = new QIcon(":/images/tux.png");
+    trayIconIcon = new QIcon(":/images/lima.png");
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);

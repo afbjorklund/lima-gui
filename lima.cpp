@@ -18,7 +18,8 @@ QString defaultURL()
 
 QStringList brewPaths()
 {
-    return QStringList({ "/usr/local/bin", "/opt/homebrew/bin", "/home/linuxbrew/.linuxbrew/bin" });
+    return QStringList({ "/usr/local/bin", "/opt/homebrew/bin", "/home/linuxbrew/.linuxbrew/bin",
+                         "/opt/local/bin" });
 }
 
 QString limactlPath()

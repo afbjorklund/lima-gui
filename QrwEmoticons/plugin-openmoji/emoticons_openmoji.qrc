@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/QrwEmoticons/openmoji">
+	<file alias="1f7e2.svg">openmoji/color/svg/1F7E2.svg</file>
+	<file alias="1f535.svg">openmoji/color/svg/1F535.svg</file>
+</qresource>
+</RCC>

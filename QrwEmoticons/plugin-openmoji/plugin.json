@@ -1,0 +1,14 @@
+{
+    "id": "openmoji",
+    "name" : "OpenMoji Emoticons",
+    "version" : "1.0.0",
+    "author" : "raven-worx Software",
+    "url" : "http://www.raven-worx.net",
+    "copyright" : "(c)2021 raven-worx Software",
+    "description" : "Emoticons provided by OpenMoji",
+    "provider": {
+        "sizes" : ["svg"],
+        "name" : "OpenMoji",
+        "url" : "http://www.openmoji.org"
+    }
+}

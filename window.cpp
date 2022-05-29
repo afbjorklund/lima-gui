@@ -96,6 +96,10 @@
 using namespace QSourceHighlite;
 #endif
 
+#ifndef QT_NO_EMOTICONS
+#include <QrwEmoticons/QrwEmoticons>
+#endif
+
 //! [0]
 Window::Window()
 {
@@ -279,7 +283,13 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
     topLayout->addWidget(label);
     topLayout->addWidget(createName);
 
+#ifndef QT_NO_EMOTICONS
+    QrwEmoticonsTextEdit *textEdit = new QrwEmoticonsTextEdit( this );
+    textEdit->emoticons()->setProvider("openmoji", false);
+    createYAML = textEdit;
+#else
     createYAML = new QTextEdit("lima");
+#endif
     QFont font("monospace");
     font.setStyleHint(QFont::Monospace);
     font.setPointSize(10);

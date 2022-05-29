@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include <QApplication>
+#include <QtPlugin>
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
@@ -56,9 +57,16 @@
 #include "window.h"
 #include "lima.h"
 
+#ifndef QT_NO_EMOTICONS
+Q_IMPORT_PLUGIN(EmoticonOpenmojiPlugin)
+#endif
+
 int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(systray);
+#ifndef QT_NO_EMOTICONS
+    Q_INIT_RESOURCE(emoticons_openmoji);
+#endif
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);

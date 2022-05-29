@@ -20,6 +20,7 @@ DISTFILES += \
     LICENSE
 
 include(QSourceHighlite/QSourceHighlite.pri)
+include(QrwEmoticons/QrwEmoticons.pri)
 
 # Enabling qtermwidget requires GPL-v2 license
 #CONFIG += gpl_licensed

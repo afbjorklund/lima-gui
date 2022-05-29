@@ -1,5 +1,6 @@
 TEMPLATE = lib
 CONFIG += plugin
+CONFIG += static
 QT += core svg xml
 
 TARGET = $$qtLibraryTarget(emoticons_openmoji)
@@ -21,7 +22,3 @@ SOURCES = \
 
 OTHER_FILES = \
     plugin.json
-
-# install to Qt plugins
-target.path = $$[QT_INSTALL_PLUGINS]/emoticons
-INSTALLS += target

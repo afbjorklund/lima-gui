@@ -273,7 +273,7 @@ void QrwEmoticonsPrivate::applyTextCharFormat(int pos)
     m_CurrentlyApplying = false;
 }
 
-bool QrwEmoticonsPrivate::loadPlugin(const QString & id)
+bool QrwEmoticonsPrivate::loadPlugin(const QString & id, bool dynamic)
 {
     if( id.length() > 0 && m_Plugin.metaData.value(QStringLiteral("id")).toString() == id )
         return true;
@@ -282,6 +282,15 @@ bool QrwEmoticonsPrivate::loadPlugin(const QString & id)
     {
         m_PluginLoader.unload();
         m_Plugin.clear();
+    }
+
+    if ( !id.isEmpty() && !dynamic ) {
+        const auto staticInstances = QPluginLoader::staticInstances();
+        for (QObject *plugin : staticInstances) {
+	    QrwEmoticonsPluginInterface* pluginInterface = qobject_cast<QrwEmoticonsPluginInterface*>(plugin);
+            m_Plugin.interf = pluginInterface;
+            return true;
+	}
     }
 
     QStringList pluginPaths = QStringList()

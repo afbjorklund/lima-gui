@@ -13,3 +13,4 @@ qrc_*.cpp
 *_plugin_resources.cpp
 *.o
 lib*.so
+lib*.a

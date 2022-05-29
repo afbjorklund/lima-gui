@@ -1,4 +1,5 @@
 TEMPLATE = lib
+CONFIG += static
 QT += gui widgets svg
 
 TARGET = QrwEmoticons
@@ -34,7 +35,3 @@ HEADERS += \
     ../include/QrwEmoticons/TextEdit.h \
     src/QrwEmoticons_p.h \
     src/QrwEmoticonsTextObjectInterface_p.h
-
-# install to build directory
-target.path = ../build
-INSTALLS += target

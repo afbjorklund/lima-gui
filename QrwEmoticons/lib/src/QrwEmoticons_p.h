@@ -48,7 +48,7 @@ protected:
 
     void applyTextCharFormat(int pos = 0);
 
-    bool loadPlugin(const QString & id = QString());
+    bool loadPlugin(const QString & id = QString(), bool dynamic = true);
 
     int getLineHeight(int posInDocument, const QTextFormat & format) const;
 

@@ -44,10 +44,10 @@ QString QrwEmoticons::provider() const
         return QString();
 }
 
-void QrwEmoticons::setProvider(const QString & plugin)
+void QrwEmoticons::setProvider(const QString & plugin, bool dynamic)
 {
     Q_D(QrwEmoticons);
-    d->loadPlugin(plugin);
+    d->loadPlugin(plugin, dynamic);
 }
 
 quint8 QrwEmoticons::maximumEmoticonCharCount() const

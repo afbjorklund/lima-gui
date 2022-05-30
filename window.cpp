@@ -284,7 +284,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
     topLayout->addWidget(createName);
 
 #ifndef QT_NO_EMOTICONS
-    QrwEmoticonsTextEdit *textEdit = new QrwEmoticonsTextEdit( this );
+    QrwEmoticonsTextEdit *textEdit = new QrwEmoticonsTextEdit(this);
     textEdit->emoticons()->setProvider("openmoji", false);
     createYAML = textEdit;
 #else

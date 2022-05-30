@@ -295,7 +295,11 @@ bool QrwEmoticonsPrivate::loadPlugin(const QString & id, bool dynamic)
 
     QStringList pluginPaths = QStringList()
             << QCoreApplication::applicationDirPath()
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             << QLibraryInfo::location(QLibraryInfo::PluginsPath)
+#else
+            << QLibraryInfo::path(QLibraryInfo::PluginsPath)
+#endif
             << QCoreApplication::libraryPaths();
 
     for( int p = 0; p < pluginPaths.count(); ++p )

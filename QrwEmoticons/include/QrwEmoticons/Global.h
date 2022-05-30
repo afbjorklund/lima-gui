@@ -37,7 +37,7 @@
         E.size() == 6 ? EMOTICON_FILENAME_6(E) : \
         E.size() == 7 ? EMOTICON_FILENAME_7(E) : \
         E.size() == 8 ? EMOTICON_FILENAME_8(E) : \
-        QString::null \
+        QString() \
     )
 
 #define EMOTICON_FILENAME_1(E) \

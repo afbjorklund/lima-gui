@@ -161,7 +161,7 @@ void Window::closeEvent(QCloseEvent *event)
         return;
     }
 #endif
-    if (trayIcon->isVisible()) {
+    if (QSystemTrayIcon::isSystemTrayAvailable() && trayIcon->isVisible()) {
         QMessageBox::information(this, tr("Systray"),
                                  tr("The program will keep running in the "
                                     "system tray. To terminate the program, "

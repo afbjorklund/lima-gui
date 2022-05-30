@@ -74,12 +74,6 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        QMessageBox::critical(0, QObject::tr("Systray"),
-                              QObject::tr("I couldn't detect any system tray "
-                                          "on this system."));
-        return 1;
-    }
     QString program = limactlPath();
     if (program.isEmpty()) {
         QMessageBox::critical(0, QObject::tr("Lima"),
@@ -87,7 +81,9 @@ int main(int argc, char *argv[])
                                           "on this system."));
         return 1;
     }
-    QApplication::setQuitOnLastWindowClosed(false);
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        QApplication::setQuitOnLastWindowClosed(false);
+    }
 
     Window window;
     window.show();

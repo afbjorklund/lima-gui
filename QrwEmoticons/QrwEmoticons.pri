@@ -5,8 +5,8 @@ INCLUDEPATH += $$PWD/include
 # Removed all emojis but openmoji and circles
 
 QMAKE_PRE_LINK += \
-    cd $$PWD/lib && qmake && make; \
-    cd $$PWD/plugin-openmoji && qmake && make
+    cd $$PWD/lib && $(QMAKE) && $(MAKE); \
+    cd $$PWD/plugin-openmoji && $(QMAKE) && $(MAKE)
 
 LIBS += \
     -L$$PWD/lib \

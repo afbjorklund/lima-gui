@@ -112,6 +112,7 @@ private:
     QString selectedInstance();
     void setSelectedInstance(QString instance);
     void updateInstances();
+    void updateQuiet(int state);
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString &text);
     void yamlEditor(QString instanceName, QString yamlFile, bool create);
@@ -151,6 +152,7 @@ private:
     QGroupBox *instanceGroupBox;
     InstanceModel *instanceModel;
     QTableView *instanceListView;
+    QCheckBox *instanceListQuiet;
     QPushButton *createButton;
     QPushButton *quickButton;
     QPushButton *aboutButton;

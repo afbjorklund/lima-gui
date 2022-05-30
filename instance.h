@@ -51,11 +51,12 @@ class InstanceModel : public QAbstractListModel
 
 public:
     InstanceModel(const InstanceList &instances, QObject *parent = nullptr)
-        : QAbstractListModel(parent), instanceList(instances)
+        : QAbstractListModel(parent), instanceList(instances), m_quiet(false)
     {
     }
 
     void setInstances(const InstanceList &instances);
+    void setQuiet(bool quiet) { m_quiet = quiet; }
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -64,6 +65,7 @@ public:
 
 private:
     InstanceList instanceList;
+    bool m_quiet;
 };
 //! [1]
 

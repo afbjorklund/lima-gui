@@ -115,6 +115,7 @@ Window::Window()
 
     connect(createButton, &QAbstractButton::clicked, this, &Window::createEditor);
     connect(quickButton, &QAbstractButton::clicked, this, &Window::quickInstance);
+    connect(instanceListQuiet, &QCheckBox::stateChanged, this, &Window::updateQuiet);
     connect(aboutButton, &QAbstractButton::clicked, this, &Window::aboutProgram);
     connect(refreshButton, &QAbstractButton::clicked, this, &Window::updateInstances);
 
@@ -625,6 +626,9 @@ void Window::createInstanceGroupBox()
 
     connect(instanceListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(updateButtons()));
 
+    instanceListQuiet = new QCheckBox(tr("Quiet"));
+    instanceListQuiet->setToolTip(tr("Only show names"));
+
     createButton = new QPushButton(tr("Create"));
     createButton->setIcon(QIcon(":/images/add.png"));
     quickButton = new QPushButton(tr("Quick"));
@@ -647,6 +651,8 @@ void Window::createInstanceGroupBox()
     QHBoxLayout *refreshButtonLayout = new QHBoxLayout;
     refreshButtonLayout->addWidget(createButton);
     refreshButtonLayout->addWidget(quickButton);
+    refreshButtonLayout->addStretch();
+    refreshButtonLayout->addWidget(instanceListQuiet);
     refreshButtonLayout->addStretch();
     refreshButtonLayout->addWidget(aboutButton);
     refreshButtonLayout->addWidget(refreshButton);
@@ -705,6 +711,17 @@ void Window::updateInstances()
     QString instance = selectedInstance();
     instanceModel->setInstances(getInstances());
     setSelectedInstance(instance);
+    updateQuiet(instanceListQuiet->checkState());
+}
+
+void Window::updateQuiet(int state)
+{
+    bool hide = (state == Qt::Checked);
+    instanceModel->setQuiet(hide);
+    for (int i = 1; i < instanceModel->columnCount(); i++) {
+        instanceListView->setColumnHidden(i, hide);
+    }
+    instanceListView->update();
 }
 
 void Window::sendCommand(QString cmd)

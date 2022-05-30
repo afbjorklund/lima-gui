@@ -38,15 +38,21 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (index.row() >= instanceList.size())
+    if (index.row() >= rowCount(index))
         return QVariant();
-    if (index.column() >= 6)
+    if (index.column() >= columnCount(index))
         return QVariant();
+
+    Qt::Alignment nameColumnHAlign;
+    if (m_quiet)
+        nameColumnHAlign = Qt::AlignHCenter;
+    else
+        nameColumnHAlign = Qt::AlignLeft;
 
     if (role == Qt::TextAlignmentRole) {
         switch (index.column()) {
         case 0:
-            return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
+            return QVariant(nameColumnHAlign | Qt::AlignVCenter);
         case 1:
             return QVariant(Qt::AlignRight | Qt::AlignVCenter);
         case 2:

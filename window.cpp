@@ -987,6 +987,18 @@ void Window::inspectInstance()
     form2->addRow(new QLabel(tr("Release:")), new QLabel(pretty));
     form2->addRow(new QLabel(tr("Kernel:")), new QLabel(kernel));
     form2->addRow(new QLabel(tr("Uptime:")), new QLabel(uptime));
+    QPushButton *versionButton = new QPushButton(tr("Version"));
+    connect(versionButton, &QAbstractButton::clicked, this, &Window::showVersion);
+    form2->addRow(versionButton, new QWidget);
+    QPushButton *infoButton = new QPushButton(tr("Info"));
+    connect(infoButton, &QAbstractButton::clicked, this, &Window::showInfo);
+    form2->addRow(infoButton, new QWidget);
+    QPushButton *containersButton = new QPushButton(tr("Containers"));
+    connect(containersButton, &QAbstractButton::clicked, this, &Window::showContainers);
+    form2->addRow(containersButton, new QWidget);
+    QPushButton *imagesButton = new QPushButton(tr("Images"));
+    connect(imagesButton, &QAbstractButton::clicked, this, &Window::showImages);
+    form2->addRow(imagesButton, new QWidget);
     systemBox->setLayout(form2);
     systemBox->setEnabled(running);
     QVBoxLayout *layout = new QVBoxLayout;
@@ -996,6 +1008,62 @@ void Window::inspectInstance()
     layout->addWidget(button);
     dialog->setLayout(layout);
     dialog->exec();
+}
+
+void Window::showVersion()
+{
+    QString name = selectedInstance();
+
+    QTextEdit *versionJSON = new QTextEdit();
+#ifndef QT_NO_SOURCEHIGHLITER
+    QSourceHighliter *highlighter = new QSourceHighliter(versionJSON->document());
+    highlighter->setCurrentLanguage(QSourceHighliter::CodeJSON);
+#endif
+    QStringList args = { "shell", name, "nerdctl", "version", "--format=json" };
+    versionJSON->setText(outputCommand(args));
+    versionJSON->show();
+}
+
+void Window::showInfo()
+{
+    QString name = selectedInstance();
+
+    QTextEdit *infoJSON = new QTextEdit();
+#ifndef QT_NO_SOURCEHIGHLITER
+    QSourceHighliter *highlighter = new QSourceHighliter(infoJSON->document());
+    highlighter->setCurrentLanguage(QSourceHighliter::CodeJSON);
+#endif
+    QStringList args = { "shell", name, "nerdctl", "info", "--format=json" };
+    infoJSON->setText(outputCommand(args));
+    infoJSON->show();
+}
+
+void Window::showContainers()
+{
+    QString name = selectedInstance();
+
+    QTextEdit *containerJSON = new QTextEdit();
+#ifndef QT_NO_SOURCEHIGHLITER
+    QSourceHighliter *highlighter = new QSourceHighliter(containerJSON->document());
+    highlighter->setCurrentLanguage(QSourceHighliter::CodeJSON);
+#endif
+    QStringList args = { "shell", name, "nerdctl", "container", "list", "--format=json" };
+    containerJSON->setText(outputCommand(args));
+    containerJSON->show();
+}
+
+void Window::showImages()
+{
+    QString name = selectedInstance();
+
+    QTextEdit *imageJSON = new QTextEdit();
+#ifndef QT_NO_SOURCEHIGHLITER
+    QSourceHighliter *highlighter = new QSourceHighliter(imageJSON->document());
+    highlighter->setCurrentLanguage(QSourceHighliter::CodeJSON);
+#endif
+    QStringList args = { "shell", name, "nerdctl", "image", "list", "--format=json" };
+    imageJSON->setText(outputCommand(args));
+    imageJSON->show();
 }
 
 void Window::editInstance()

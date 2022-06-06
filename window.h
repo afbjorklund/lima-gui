@@ -140,6 +140,10 @@ private:
     void editInstance();
     bool askConfirm(QString instance);
     void removeInstance();
+    void showVersion();
+    void showInfo();
+    void showContainers();
+    void showImages();
 
     QComboBox *iconComboBox;
 

@@ -84,6 +84,7 @@
 #include <QJsonObject>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QRegularExpression>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
@@ -125,6 +126,7 @@ Window::Window()
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
     connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
     connect(stopButton, &QAbstractButton::clicked, this, &Window::stopInstance);
+    connect(inspectButton, &QAbstractButton::clicked, this, &Window::inspectInstance);
     connect(editButton, &QAbstractButton::clicked, this, &Window::editInstance);
     connect(removeButton, &QAbstractButton::clicked, this, &Window::removeInstance);
 
@@ -642,6 +644,7 @@ void Window::createInstanceGroupBox()
     shellButton->setIcon(QIcon(":/images/terminal.png"));
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
+    inspectButton = new QPushButton(tr("Inspect"));
     editButton = new QPushButton(tr("Edit"));
     removeButton = new QPushButton(tr("Remove"));
     removeButton->setIcon(QIcon(":/images/remove.png"));
@@ -661,6 +664,7 @@ void Window::createInstanceGroupBox()
     instanceButtonLayout->addWidget(shellButton);
     instanceButtonLayout->addWidget(startButton);
     instanceButtonLayout->addWidget(stopButton);
+    instanceButtonLayout->addWidget(inspectButton);
     instanceButtonLayout->addWidget(editButton);
     instanceButtonLayout->addWidget(removeButton);
 
@@ -678,6 +682,7 @@ void Window::updateButtons()
         shellButton->setEnabled(false);
         startButton->setEnabled(false);
         stopButton->setEnabled(false);
+        inspectButton->setEnabled(false);
         editButton->setEnabled(false);
         removeButton->setEnabled(false);
         return;
@@ -687,12 +692,14 @@ void Window::updateButtons()
         shellButton->setEnabled(true);
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
+        inspectButton->setEnabled(true);
         editButton->setEnabled(false);
         removeButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
         shellButton->setEnabled(false);
         startButton->setEnabled(true);
         stopButton->setEnabled(false);
+        inspectButton->setEnabled(true);
         editButton->setEnabled(true);
         removeButton->setEnabled(true);
     }
@@ -778,6 +785,23 @@ void Window::finishedCommand(int code, QProcess::ExitStatus status)
         delete editDir;
         editDir = nullptr;
     }
+}
+
+QString Window::outputCommand(QStringList arguments)
+{
+    QString program = limactlPath();
+    process = new QProcess(this);
+    process->start(program, arguments);
+    process->waitForFinished();
+    QByteArray out = process->readAllStandardOutput();
+    return QString(out);
+}
+
+QString Window::shellCommand(QString name, QStringList arguments)
+{
+    QStringList args = { "shell", name };
+    args.append(arguments);
+    return outputCommand(args);
 }
 
 void Window::loadYAML()
@@ -910,6 +934,88 @@ void Window::stopInstance()
     QStringList args = { "stop", instance };
     sendCommand(args);
     // updateInstances();
+}
+
+void Window::inspectInstance()
+{
+    QString name = selectedInstance();
+    Instance instance = getInstanceHash()[name];
+
+    QString kernel = tr("N/A");
+    QString pretty = tr("N/A");
+    QString uptime = tr("N/A");
+    QString id;
+    QString logo;
+    bool running = instance.status() == "Running";
+    if (running) {
+        // uname
+        QStringList args = { "uname", "-sr" }; // -a == -snrvmpio
+        kernel = shellCommand(name, args).trimmed();
+        // uptime
+        QString out = shellCommand(name, QStringList("uptime"));
+        QRegularExpression re("^(.*) up (.*?)(, +\\d+ users?)*, +load average\\: (.*)$");
+        QRegularExpressionMatch m = re.match(out);
+        if (m.hasMatch()) {
+            uptime = m.captured(2);
+        }
+        // os-release
+        args = QStringList({ "cat", "/etc/os-release" });
+        QString release = shellCommand(name, args);
+        QStringList lines = release.split("\n");
+        QStringList match = lines.filter("PRETTY_NAME=");
+        pretty = match.length() > 0 ? match[0].replace("PRETTY_NAME=", "") : "";
+        pretty = pretty.replace("\"", "");
+        match = lines.filter("VERSION_CODENAME=");
+        QString codename = match.length() > 0 ? match[0].replace("VERSION_CODENAME=", "") : "";
+        codename = codename.replace("\"", "");
+        if (!codename.isEmpty() && !pretty.contains(codename)) {
+            pretty += " ( " + codename + ")";
+        }
+        match = lines.filter(QRegularExpression("^ID="));
+        id = match.length() > 0 ? match[0].replace("ID=", "") : "";
+        Example example = getExamples()[id];
+        logo = example.logo();
+    }
+
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle(name);
+    dialog->setModal(true);
+    QPushButton *button = new QPushButton(tr("Close"));
+    button->setDefault(true);
+    connect(button, SIGNAL(clicked()), dialog, SLOT(close()));
+    QGroupBox *instanceBox = new QGroupBox(tr("Instance"));
+    QFormLayout *form1 = new QFormLayout;
+    form1->addRow(new QLabel(tr("Name:")), new QLabel(instance.name()));
+    form1->addRow(new QLabel(tr("Status:")), new QLabel(instance.status()));
+    form1->addRow(new QLabel(tr("Dir:")), new QLabel(instance.dir()));
+    form1->addRow(new QLabel(tr("Arch:")), new QLabel(instance.arch()));
+    form1->addRow(new QLabel(tr("CPUs:")), new QLabel(instance.strCpus()));
+    form1->addRow(new QLabel(tr("Memory:")), new QLabel(instance.strMemory()));
+    form1->addRow(new QLabel(tr("Disk:")), new QLabel(instance.strDisk()));
+    instanceBox->setLayout(form1);
+    QGroupBox *systemBox = new QGroupBox(tr("System"));
+    QFormLayout *form2 = new QFormLayout;
+    if (!logo.isEmpty()) {
+        QLabel *logoLabel = new QLabel;
+        QPixmap *pixmap = new QPixmap(QString(":/logos/" + logo));
+        if (!pixmap->isNull()) {
+            QPixmap scaled = pixmap->scaledToWidth(128, Qt::SmoothTransformation);
+            logoLabel->setPixmap(scaled);
+            form2->addRow(new QWidget, logoLabel);
+        }
+    }
+    form2->addRow(new QLabel(tr("Release:")), new QLabel(pretty));
+    form2->addRow(new QLabel(tr("Kernel:")), new QLabel(kernel));
+    form2->addRow(new QLabel(tr("Uptime:")), new QLabel(uptime));
+    systemBox->setLayout(form2);
+    systemBox->setEnabled(running);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(instanceBox);
+    layout->addWidget(systemBox);
+    layout->addStretch();
+    layout->addWidget(button);
+    dialog->setLayout(layout);
+    dialog->exec();
 }
 
 void Window::editInstance()

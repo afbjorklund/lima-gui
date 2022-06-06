@@ -124,6 +124,8 @@ private:
     void quickInstance();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);
+    QString outputCommand(QStringList cmds);
+    QString shellCommand(QString instanceName, QStringList cmds);
     void loadYAML();
     void readYAML(QString fileName);
     void saveYAML();
@@ -134,6 +136,7 @@ private:
     void updateInstance();
     void startInstance();
     void stopInstance();
+    void inspectInstance();
     void editInstance();
     bool askConfirm(QString instance);
     void removeInstance();
@@ -160,6 +163,7 @@ private:
     QPushButton *shellButton;
     QPushButton *startButton;
     QPushButton *stopButton;
+    QPushButton *inspectButton;
     QPushButton *editButton;
     QPushButton *removeButton;
 

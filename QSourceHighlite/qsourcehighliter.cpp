@@ -139,6 +139,9 @@ void QSourceHighliter::highlightSyntax(const QString &text)
             loadShellData(types, keywords, builtin, literals, others);
             comment = QLatin1Char('#');
             break;
+        case CodeJSON :
+            loadJSONData(types, keywords, builtin, literals, others);
+            break;
         case CodeYAML:
             isYAML = true;
             loadYAMLData(types, keywords, builtin, literals, others);

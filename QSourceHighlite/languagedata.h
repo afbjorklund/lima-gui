@@ -33,6 +33,15 @@ namespace QSourceHighlite {
 
 using LanguageData = QMultiHash<char, QLatin1String>;
 
+/********************************************************/
+/***   JSON DATA      ***********************************/
+/********************************************************/
+void loadJSONData(LanguageData &types,
+             LanguageData &keywords,
+             LanguageData &builtin,
+             LanguageData &literals,
+             LanguageData &other);
+
 /**********************************************************/
 /* Shell Data *********************************************/
 /**********************************************************/

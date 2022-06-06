@@ -348,7 +348,7 @@ void Window::createEditor()
 QWidget *Window::newExampleButton(QString name)
 {
     Example example = getExamples()[name];
-    QIcon icon(QString(":/logos/" + example.logo()));
+    QIcon icon(QPixmap(":/logos/" + example.logo()));
     QPushButton *button = new QPushButton;
     button->setIconSize(QSize(48, 48));
     button->setIcon(icon);

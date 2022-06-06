@@ -12,7 +12,14 @@ class Instance
 public:
     Instance() : Instance("") { }
     Instance(const QString &name)
-        : m_name(name), m_status(""), m_dir(""), m_arch(""), m_cpus(0), m_memory(0), m_disk(0)
+        : m_name(name),
+          m_status(""),
+          m_dir(""),
+          m_arch(""),
+          m_cpus(0),
+          m_memory(0),
+          m_disk(0),
+          m_ssh_local_port(0)
     {
     }
 
@@ -32,6 +39,8 @@ public:
     qint64 disk() const { return m_disk; }
     QString strDisk() const;
     void setDisk(qint64 disk) { m_disk = disk; }
+    int sshLocalPort() const { return m_ssh_local_port; }
+    void setSshLocalPort(int port) { m_ssh_local_port = port; }
 
 private:
     QString m_name;
@@ -41,6 +50,7 @@ private:
     int m_cpus;
     qint64 m_memory;
     qint64 m_disk;
+    int m_ssh_local_port;
 };
 //! [0]
 

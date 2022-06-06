@@ -11,6 +11,9 @@
    <file>logos/alpine.png</file>
    <file>logos/fedora.png</file>
    <file>logos/archlinux.png</file>
+   <file>logos/debian.png</file>
+   <file>logos/opensuse.png</file>
+   <file>logos/rocky.png</file>
    <file>logos/nerd-face.png</file>
    <file>logos/whale.png</file>
    <file>logos/podman.png</file>

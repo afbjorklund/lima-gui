@@ -591,9 +591,9 @@ InstanceList Window::getInstances()
                 instance.setDisk((qint64)disk);
             }
             if (obj.contains("sshLocalPort")) {
-		int port = obj["sshLocalPort"].toInt();
-		instance.setSshLocalPort(port);
-	    }
+                int port = obj["sshLocalPort"].toInt();
+                instance.setSshLocalPort(port);
+            }
             instances << instance;
         }
     }
@@ -991,7 +991,8 @@ void Window::inspectInstance()
     QFormLayout *form1 = new QFormLayout;
     form1->addRow(new QLabel(tr("Name:")), new QLabel(instance.name()));
     form1->addRow(new QLabel(tr("Status:")), new QLabel(instance.status()));
-    form1->addRow(new QLabel(tr("SSH:")), new QLabel(QString("127.0.0.1:%1").arg(instance.sshLocalPort())));
+    QString sshAddress = QString("127.0.0.1:%1").arg(instance.sshLocalPort());
+    form1->addRow(new QLabel(tr("SSH:")), new QLabel(sshAddress));
     form1->addRow(new QLabel(tr("Arch:")), new QLabel(instance.arch()));
     form1->addRow(new QLabel(tr("CPUs:")), new QLabel(instance.strCpus()));
     form1->addRow(new QLabel(tr("Memory:")), new QLabel(instance.strMemory()));

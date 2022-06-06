@@ -33,6 +33,21 @@ static QString bytesSize(qint64 size)
     return QString("%1 %2").arg(size, 4).arg(binaryAbbrs[i]);
 }
 
+QString Instance::strCpus() const
+{
+    return QString::number(cpus());
+}
+
+QString Instance::strMemory() const
+{
+    return bytesSize(memory());
+}
+
+QString Instance::strDisk() const
+{
+    return bytesSize(disk());
+}
+
 QVariant InstanceModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -75,11 +90,11 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
         case 2:
             return instance.arch();
         case 3:
-            return QString::number(instance.cpus());
+            return instance.strCpus();
         case 4:
-            return bytesSize(instance.memory());
+            return instance.strMemory();
         case 5:
-            return bytesSize(instance.disk());
+            return instance.strDisk();
         }
     }
     return QVariant();

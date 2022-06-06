@@ -24,10 +24,13 @@ public:
     QString arch() const { return m_arch; }
     void setArch(QString arch) { m_arch = arch; }
     int cpus() const { return m_cpus; }
+    QString strCpus() const;
     void setCpus(int cpus) { m_cpus = cpus; }
     qint64 memory() const { return m_memory; }
+    QString strMemory() const;
     void setMemory(qint64 memory) { m_memory = memory; }
     qint64 disk() const { return m_disk; }
+    QString strDisk() const;
     void setDisk(qint64 disk) { m_disk = disk; }
 
 private:

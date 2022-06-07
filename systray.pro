@@ -1,10 +1,14 @@
 HEADERS       = window.h \
                 lima.h \
+                instance.h \
                 examples.h \
-                instance.h
+                container.h \
+                image.h
 SOURCES       = main.cpp \
                 instance.cpp \
                 examples.cpp \
+                container.cpp \
+                image.cpp \
                 lima.cpp \
                 window.cpp
 RESOURCES     = systray.qrc

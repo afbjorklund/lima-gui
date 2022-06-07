@@ -532,6 +532,17 @@ QString Window::getVersion()
     return "N/A";
 }
 
+QStringList splitLines(QString text)
+{
+    QStringList lines;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    lines = text.split("\n", Qt::SkipEmptyParts);
+#else
+    lines = text.split("\n", QString::SkipEmptyParts);
+#endif
+    return lines;
+}
+
 InstanceList Window::getInstances()
 {
     InstanceList instances;
@@ -542,11 +553,7 @@ InstanceList Window::getInstances()
     bool success = getProcessOutput(arguments, text);
     QStringList lines;
     if (success) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-        lines = text.split("\n", Qt::SkipEmptyParts);
-#else
-        lines = text.split("\n", QString::SkipEmptyParts);
-#endif
+        lines = splitLines(text);
     }
     for (int i = 0; i < lines.size(); i++) {
         QString line = lines.at(i);

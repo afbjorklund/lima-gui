@@ -18,6 +18,7 @@
    <file>logos/whale.png</file>
    <file>logos/podman.png</file>
    <file>logos/singularity.png</file>
+   <file>logos/apptainer.png</file>
    <file>logos/k3s.png</file>
    <file>logos/k8s.png</file>
    <file>logos/nomad.png</file>

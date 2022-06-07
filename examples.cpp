@@ -23,7 +23,8 @@ ExampleHash &getExamples()
     hash["default"] = Example("default", "Default", "https://containerd.io");
     hash["docker"] = Example("docker", "Docker", "https://docker.com");
     hash["podman"] = Example("podman", "Podman", "https://podman.io");
-    hash["singularity"] = Example("singularity", "Singularity", "https://apptainer.org");
+    hash["singularity"] = Example("singularity", "Singularity", "https://singularity.hpcng.org");
+    hash["apptainer"] = Example("apptainer", "Apptainer", "https://apptainer.org");
 
     // Container orchestration
     hash["k3s"] = Example("k3s", "Kubernetes (k3s)", "https://k3s.io");

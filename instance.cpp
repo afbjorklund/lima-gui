@@ -1,6 +1,48 @@
 #include "instance.h"
 
 #include <QStringList>
+#include <QJsonObject>
+
+Instance::Instance(const QJsonObject &obj)
+{
+    QString name;
+    if (obj.contains("name")) {
+        name = obj["name"].toString();
+    }
+    if (name.isEmpty()) {
+        return;
+    }
+    m_name = name;
+
+    if (obj.contains("status")) {
+        QString status = obj["status"].toString();
+        setStatus(status);
+    }
+    if (obj.contains("dir")) {
+        QString dir = obj["dir"].toString();
+        setDir(dir);
+    }
+    if (obj.contains("arch")) {
+        QString arch = obj["arch"].toString();
+        setArch(arch);
+    }
+    if (obj.contains("cpus")) {
+        int cpus = obj["cpus"].toInt();
+        setCpus(cpus);
+    }
+    if (obj.contains("memory")) {
+        double memory = obj["memory"].toDouble();
+        setMemory((qint64)memory);
+    }
+    if (obj.contains("disk")) {
+        double disk = obj["disk"].toDouble();
+        setDisk((qint64)disk);
+    }
+    if (obj.contains("sshLocalPort")) {
+        int port = obj["sshLocalPort"].toInt();
+        setSshLocalPort(port);
+    }
+}
 
 void InstanceModel::setInstances(const InstanceList &instances)
 {

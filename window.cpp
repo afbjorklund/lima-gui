@@ -564,42 +564,9 @@ InstanceList Window::getInstances()
             continue;
         }
         if (json.isObject()) {
-            QJsonObject obj = json.object();
-            QString name;
-            if (obj.contains("name")) {
-                name = obj["name"].toString();
-            }
-            if (name.isEmpty()) {
+            Instance instance(json.object());
+            if (instance.name().isEmpty()) {
                 continue;
-            }
-            Instance instance(name);
-            if (obj.contains("status")) {
-                QString status = obj["status"].toString();
-                instance.setStatus(status);
-            }
-            if (obj.contains("dir")) {
-                QString dir = obj["dir"].toString();
-                instance.setDir(dir);
-            }
-            if (obj.contains("arch")) {
-                QString arch = obj["arch"].toString();
-                instance.setArch(arch);
-            }
-            if (obj.contains("cpus")) {
-                int cpus = obj["cpus"].toInt();
-                instance.setCpus(cpus);
-            }
-            if (obj.contains("memory")) {
-                double memory = obj["memory"].toDouble();
-                instance.setMemory((qint64)memory);
-            }
-            if (obj.contains("disk")) {
-                double disk = obj["disk"].toDouble();
-                instance.setDisk((qint64)disk);
-            }
-            if (obj.contains("sshLocalPort")) {
-                int port = obj["sshLocalPort"].toInt();
-                instance.setSshLocalPort(port);
             }
             instances << instance;
         }

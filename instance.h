@@ -1,10 +1,14 @@
 #ifndef INSTANCE_H
 #define INSTANCE_H
 
+#include <QJsonObject>
+
 #include <QAbstractListModel>
 #include <QString>
 #include <QList>
 #include <QMap>
+
+// NAME  STATUS  SSH  ARCH  CPUS  MEMORY  DISK  DIR
 
 //! [0]
 class Instance
@@ -22,6 +26,7 @@ public:
           m_ssh_local_port(0)
     {
     }
+    Instance(const QJsonObject &obj);
 
     QString name() const { return m_name; }
     QString status() const { return m_status; }

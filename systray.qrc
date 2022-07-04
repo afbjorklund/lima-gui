@@ -1,6 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
-   <file>images/tux.png</file>
+   <file>images/lima.png</file>
    <file>images/add.png</file>
    <file>images/remove.png</file>
    <file>images/quick.png</file>

@@ -460,7 +460,7 @@ void Window::quickInstance()
     engineLayout->addWidget(newExampleButton("default"));
     engineLayout->addWidget(newExampleButton("docker"));
     engineLayout->addWidget(newExampleButton("podman"));
-    engineLayout->addWidget(newExampleButton("singularity"));
+    engineLayout->addWidget(newExampleButton("apptainer"));
     engineGroupBox->setLayout(engineLayout);
 
     QGroupBox *orchestratorGroupBox = new QGroupBox(tr("Container Orchestration"));

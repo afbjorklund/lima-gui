@@ -917,6 +917,8 @@ void Window::stopInstance()
 void Window::inspectInstance()
 {
     QString name = selectedInstance();
+    if (name.isEmpty())
+        return;
     Instance instance = getInstanceHash()[name];
 
     QString kernel = tr("N/A");

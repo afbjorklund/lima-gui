@@ -41,6 +41,8 @@ Instance::Instance(const QJsonObject &obj)
     if (obj.contains("sshLocalPort")) {
         int port = obj["sshLocalPort"].toInt();
         setSshLocalPort(port);
+    } else {
+        setSshLocalPort(0);
     }
 }
 

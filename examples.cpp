@@ -11,6 +11,7 @@ ExampleHash &getExamples()
     }
 
     // Distro
+    hash["almalinux"] = Example("almalinux", "AlmaLinux", "https://almalinux.org");
     hash["alpine"] = Example("alpine", "Alpine", "https://alpinelinux.org");
     hash["archlinux"] = Example("archlinux", "Arch", "https://archlinux.org");
     hash["debian"] = Example("debian", "Debian", "https://debian.org");

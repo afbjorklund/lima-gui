@@ -72,7 +72,7 @@ int InstanceModel::rowCount(const QModelIndex &) const
 
 int InstanceModel::columnCount(const QModelIndex &) const
 {
-    return 6;
+    return 7;
 }
 
 static QStringList binaryAbbrs = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB" };
@@ -133,6 +133,8 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
         case 4:
             // fall-through
         case 5:
+            // fall-through
+        case 6:
             return QVariant(Qt::AlignHCenter | Qt::AlignVCenter);
         }
     }
@@ -144,12 +146,14 @@ QVariant InstanceModel::data(const QModelIndex &index, int role) const
         case 1:
             return instance.status();
         case 2:
-            return instance.arch();
+            return instance.vmType();
         case 3:
-            return instance.strCpus();
+            return instance.arch();
         case 4:
-            return instance.strMemory();
+            return instance.strCpus();
         case 5:
+            return instance.strMemory();
+        case 6:
             return instance.strDisk();
         }
     }
@@ -168,12 +172,14 @@ QVariant InstanceModel::headerData(int section, Qt::Orientation orientation, int
         case 1:
             return tr("Status");
         case 2:
-            return tr("Arch");
+            return tr("VMtype");
         case 3:
-            return tr("CPUs");
+            return tr("Arch");
         case 4:
-            return tr("Mem.");
+            return tr("CPUs");
         case 5:
+            return tr("Mem.");
+        case 6:
             return tr("Disk");
         }
     }

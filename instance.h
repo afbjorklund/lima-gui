@@ -33,8 +33,12 @@ public:
     void setStatus(QString status) { m_status = status; }
     QString dir() const { return m_dir; }
     void setDir(QString dir) { m_dir = dir; }
+    QString vmType() const { return m_vm_type; }
+    void setVmType(QString type) { m_vm_type = type; }
     QString arch() const { return m_arch; }
     void setArch(QString arch) { m_arch = arch; }
+    QString cpuType() const { return m_cpu_type; }
+    void setCpuType(QString type) { m_cpu_type = type; }
     int cpus() const { return m_cpus; }
     QString strCpus() const;
     void setCpus(int cpus) { m_cpus = cpus; }
@@ -51,7 +55,9 @@ private:
     QString m_name;
     QString m_status;
     QString m_dir;
+    QString m_vm_type;
     QString m_arch;
+    QString m_cpu_type;
     int m_cpus;
     qint64 m_memory;
     qint64 m_disk;

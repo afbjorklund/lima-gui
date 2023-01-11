@@ -22,9 +22,21 @@ Instance::Instance(const QJsonObject &obj)
         QString dir = obj["dir"].toString();
         setDir(dir);
     }
+    if (obj.contains("vmType")) {
+        QString type = obj["vmType"].toString();
+        setVmType(type);
+    } else {
+        setVmType(QString());
+    }
     if (obj.contains("arch")) {
         QString arch = obj["arch"].toString();
         setArch(arch);
+    }
+    if (obj.contains("cpuType")) {
+        QString type = obj["cpuType"].toString();
+        setCpuType(type);
+    } else {
+        setCpuType(QString());
     }
     if (obj.contains("cpus")) {
         int cpus = obj["cpus"].toInt();

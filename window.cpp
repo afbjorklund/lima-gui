@@ -967,7 +967,9 @@ void Window::inspectInstance()
     form1->addRow(new QLabel(tr("Status:")), new QLabel(instance.status()));
     QString sshAddress = QString("127.0.0.1:%1").arg(instance.sshLocalPort());
     form1->addRow(new QLabel(tr("SSH:")), new QLabel(sshAddress));
+    form1->addRow(new QLabel(tr("VM Type:")), new QLabel(instance.vmType()));
     form1->addRow(new QLabel(tr("Arch:")), new QLabel(instance.arch()));
+    form1->addRow(new QLabel(tr("CPU Type:")), new QLabel(instance.cpuType()));
     form1->addRow(new QLabel(tr("CPUs:")), new QLabel(instance.strCpus()));
     form1->addRow(new QLabel(tr("Memory:")), new QLabel(instance.strMemory()));
     form1->addRow(new QLabel(tr("Disk:")), new QLabel(instance.strDisk()));

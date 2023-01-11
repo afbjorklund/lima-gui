@@ -973,7 +973,8 @@ void Window::inspectInstance()
     form1->addRow(new QLabel(tr("CPUs:")), new QLabel(instance.strCpus()));
     form1->addRow(new QLabel(tr("Memory:")), new QLabel(instance.strMemory()));
     form1->addRow(new QLabel(tr("Disk:")), new QLabel(instance.strDisk()));
-    form1->addRow(new QLabel(tr("Dir:")), new QLabel(instance.dir().replace(QDir::homePath(), "~")));
+    QString homeDir = QDir::homePath();
+    form1->addRow(new QLabel(tr("Dir:")), new QLabel(instance.dir().replace(homeDir, "~")));
     instanceBox->setLayout(form1);
     QGroupBox *systemBox = new QGroupBox(tr("System"));
     QFormLayout *form2 = new QFormLayout;

@@ -956,6 +956,7 @@ void Window::inspectInstance()
     }
 
     QDialog *dialog = new QDialog(this);
+    dialog->setMinimumWidth(300);
     dialog->setWindowTitle(name);
     dialog->setModal(true);
     QPushButton *button = new QPushButton(tr("Close"));

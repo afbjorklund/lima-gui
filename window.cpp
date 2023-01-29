@@ -424,6 +424,14 @@ void Window::quickInstance()
 
     QWidget *machineGroupBox = new QWidget();
     QHBoxLayout *machineLayout = new QHBoxLayout;
+    machineLayout->addWidget(new QLabel(tr("VM Type:")));
+    QComboBox *vmTypeComboBox = new QComboBox;
+    vmTypeComboBox->addItem("qemu");
+#ifdef Q_OS_MACOS
+    vmTypeComboBox->addItem("vz");
+#endif
+    vmTypeComboBox->setEnabled(false); // TODO
+    machineLayout->addWidget(vmTypeComboBox);
     machineLayout->addWidget(new QLabel(tr("Arch:")));
     QComboBox *archComboBox = new QComboBox;
     archComboBox->addItem(tr("default"));

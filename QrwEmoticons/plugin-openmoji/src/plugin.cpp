@@ -14,7 +14,11 @@ EmoticonOpenmojiPlugin::~EmoticonOpenmojiPlugin()
 
 QString EmoticonOpenmojiPlugin::getEmoticonPath(const QrwEmoticons::Emoticon &code) const
 {
-    return QStringLiteral(":/QrwEmoticons/openmoji/") % EMOTICON_FILENAME(code) % QStringLiteral(".svg");
+    // OpenMoji doesn't add variation selectors (0xFE0E and 0xFE0F) to their filenames?!
+    QrwEmoticons::Emoticon c = code;
+        c.removeAll(0xFE0E);
+        c.removeAll(0xFE0F);
+    return QStringLiteral(":/QrwEmoticons/openmoji/") % EMOTICON_FILENAME(c) % QStringLiteral(".svg");
 }
 
 bool EmoticonOpenmojiPlugin::hasEmoticon(const QrwEmoticons::Emoticon & code)

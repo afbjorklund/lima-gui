@@ -246,7 +246,7 @@ void Window::shellConsole()
     QProcess *process = new QProcess(this);
     process->start("/usr/bin/osascript", arguments);
 #else
-    QString terminal = qEnvironmentVariable("TERMINAL");
+    QString terminal = QString::fromLocal8Bit(qgetenv("TERMINAL"));
     if (terminal.isEmpty()) {
         terminal = "x-terminal-emulator";
         if (QStandardPaths::findExecutable(terminal).isEmpty()) {

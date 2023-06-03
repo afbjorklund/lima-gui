@@ -933,6 +933,7 @@ void Window::inspectInstance()
     QString pretty = tr("N/A");
     QString uptime = tr("N/A");
     QString id;
+    QString ver;
     QString logo;
     bool running = instance.status() == "Running";
     if (running) {
@@ -960,7 +961,12 @@ void Window::inspectInstance()
             pretty += " ( " + codename + ")";
         }
         match = lines.filter(QRegularExpression("^ID="));
-        id = match.length() > 0 ? match[0].replace("ID=", "") : "";
+        id = match.length() > 0 ? match[0].replace("ID=", "").replace("\"", "") : "";
+        match = lines.filter(QRegularExpression("^VERSION_ID="));
+        ver = match.length() > 0 ? match[0].replace("VERSION_ID=", "").replace("\"", "") : "";
+        if (id == "centos" && ver != "7") {
+            id = "centos-stream";
+        }
         Example example = getExamples()[id];
         logo = example.logo();
     }

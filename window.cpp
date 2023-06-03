@@ -293,6 +293,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, boo
 #else
     createYAML = new QTextEdit("lima");
 #endif
+    createYAML->setWordWrapMode(QTextOption::NoWrap);
     createYAML->setReadOnly(!edit);
     QFont font("monospace");
     font.setStyleHint(QFont::Monospace);

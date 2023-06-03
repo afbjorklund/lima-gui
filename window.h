@@ -115,7 +115,7 @@ private:
     void updateQuiet(int state);
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString &text);
-    void yamlEditor(QString instanceName, QString yamlFile, bool create);
+    void yamlEditor(QString instanceName, QString yamlFile, bool create, bool edit);
     void createEditor();
     QWidget *newExampleButton(QString name);
     void quickCreate();
@@ -137,6 +137,7 @@ private:
     void startInstance();
     void stopInstance();
     void inspectInstance();
+    void viewInstance();
     void editInstance();
     bool askConfirm(QString instance);
     void removeInstance();

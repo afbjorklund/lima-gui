@@ -272,7 +272,7 @@ static QString getPrefix()
     return prefix;
 }
 
-void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
+void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, bool edit)
 {
     editWindow = new QMainWindow();
 
@@ -293,6 +293,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
 #else
     createYAML = new QTextEdit("lima");
 #endif
+    createYAML->setReadOnly(!edit);
     QFont font("monospace");
     font.setStyleHint(QFont::Monospace);
     font.setPointSize(10);
@@ -322,9 +323,11 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
             create ? &Window::createInstance : &Window::updateInstance);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
-    bottomLayout->addWidget(cancelButton);
-    bottomLayout->addWidget(loadButton);
-    bottomLayout->addWidget(saveButton);
+    if (edit) {
+        bottomLayout->addWidget(cancelButton);
+        bottomLayout->addWidget(loadButton);
+        bottomLayout->addWidget(saveButton);
+    }
     bottomLayout->addWidget(okButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -344,7 +347,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create)
 void Window::createEditor()
 {
     QString directory = getPrefix() + "/share/doc/lima";
-    yamlEditor("default", directory + "/" + defaultYAML(), true);
+    yamlEditor("default", directory + "/" + defaultYAML(), true, true);
 }
 
 QWidget *Window::newExampleButton(QString name)
@@ -380,7 +383,7 @@ void Window::quickCreate()
     QString examples = getPrefix() + "/share/doc/lima/examples";
     QString exampleYAML = examples + "/" + example.yaml();
     if (quickPreview->isChecked()) {
-        yamlEditor(example.name(), exampleYAML, true);
+        yamlEditor(example.name(), exampleYAML, true, true);
     } else {
         editWindow = new QMainWindow;
         createName = new QLineEdit;
@@ -995,6 +998,8 @@ void Window::inspectInstance()
     QGroupBox *limayamlBox = new QGroupBox(tr("lima.yaml"));
     QHBoxLayout *limayamlButtonLayout = new QHBoxLayout;
     limayamlButtonLayout->addStretch();
+    QPushButton *viewButton = new QPushButton(tr("View"));
+    limayamlButtonLayout->addWidget(viewButton);
     QPushButton *editButton = new QPushButton(tr("Edit"));
     limayamlButtonLayout->addWidget(editButton);
     if (instance.status() == "Running") {
@@ -1003,6 +1008,8 @@ void Window::inspectInstance()
         editButton->setEnabled(true);
     }
     limayamlBox->setLayout(limayamlButtonLayout);
+    connect(viewButton, &QAbstractButton::clicked, this, &Window::viewInstance);
+    connect(viewButton, SIGNAL(clicked()), dialog, SLOT(close()));
     connect(editButton, &QAbstractButton::clicked, this, &Window::editInstance);
     connect(editButton, SIGNAL(clicked()), dialog, SLOT(close()));
     QGroupBox *systemBox = new QGroupBox(tr("System"));
@@ -1031,12 +1038,20 @@ void Window::inspectInstance()
     dialog->exec();
 }
 
+void Window::viewInstance()
+{
+    QString name = selectedInstance();
+    Instance instance = getInstanceHash()[name];
+    QString yamlFile = instance.dir() + "/" + "lima.yaml";
+    yamlEditor(instance.name(), yamlFile, false, false);
+}
+
 void Window::editInstance()
 {
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), yamlFile, false);
+    yamlEditor(instance.name(), yamlFile, false, true);
 }
 
 bool Window::askConfirm(QString instance)

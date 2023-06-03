@@ -23,5 +23,7 @@
    <file>logos/k8s.png</file>
    <file>logos/nomad.png</file>
    <file>logos/openfaas.png</file>
+   <file>logos/centos.png</file>
+   <file>logos/stream.png</file>
 </qresource>
 </RCC>

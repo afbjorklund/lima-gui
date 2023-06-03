@@ -20,8 +20,10 @@ ExampleHash &getExamples()
     hash["rocky"] = Example("rocky", "Rocky", "https://rockylinux.org");
     hash["ubuntu"] = Example("ubuntu", "Ubuntu", "https://ubuntu.com");
 
-    hash["centos"] = Example("centos", "CentOS Linux", "https://www.centos.org/centos-linux/"); // CentOS-7
-    hash["centos-stream"] = Example("centos-stream", "CentOS Stream", "https://www.centos.org/centos-stream/");
+    hash["centos"] =
+            Example("centos", "CentOS Linux", "https://www.centos.org/centos-linux/"); // CentOS-7
+    hash["centos-stream"] =
+            Example("centos-stream", "CentOS Stream", "https://www.centos.org/centos-stream/");
 
     // Container engines
     hash["default"] = Example("default", "Default", "https://containerd.io");

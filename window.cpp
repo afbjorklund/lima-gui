@@ -992,6 +992,19 @@ void Window::inspectInstance()
     QString homeDir = QDir::homePath();
     form1->addRow(new QLabel(tr("Dir:")), new QLabel(instance.dir().replace(homeDir, "~")));
     instanceBox->setLayout(form1);
+    QGroupBox *limayamlBox = new QGroupBox(tr("lima.yaml"));
+    QHBoxLayout *limayamlButtonLayout = new QHBoxLayout;
+    limayamlButtonLayout->addStretch();
+    QPushButton *editButton = new QPushButton(tr("Edit"));
+    limayamlButtonLayout->addWidget(editButton);
+    if (instance.status() == "Running") {
+        editButton->setEnabled(false);
+    } else if (instance.status() == "Stopped") {
+        editButton->setEnabled(true);
+    }
+    limayamlBox->setLayout(limayamlButtonLayout);
+    connect(editButton, &QAbstractButton::clicked, this, &Window::editInstance);
+    connect(editButton, SIGNAL(clicked()), dialog, SLOT(close()));
     QGroupBox *systemBox = new QGroupBox(tr("System"));
     QFormLayout *form2 = new QFormLayout;
     if (!logo.isEmpty()) {
@@ -1010,6 +1023,7 @@ void Window::inspectInstance()
     systemBox->setEnabled(running);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(instanceBox);
+    layout->addWidget(limayamlBox);
     layout->addWidget(systemBox);
     layout->addStretch();
     layout->addWidget(button);

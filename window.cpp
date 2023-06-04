@@ -272,7 +272,8 @@ static QString getPrefix()
     return prefix;
 }
 
-void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, bool edit)
+void Window::yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
+                        bool edit)
 {
     editWindow = new QMainWindow();
 
@@ -282,7 +283,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, boo
         createName->setReadOnly(true);
     }
     QLabel *label2 = new QLabel(tr("Set"));
-    createSet = new QLineEdit("");
+    createSet = new QLineEdit(setString);
     if (edit) {
         createSet->setPlaceholderText(".cpus = 4 | .memory = \"4GiB\"");
     }
@@ -359,7 +360,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, boo
 void Window::createEditor()
 {
     QString directory = getPrefix() + "/share/doc/lima";
-    yamlEditor("default", directory + "/" + defaultYAML(), true, true);
+    yamlEditor("default", "", directory + "/" + defaultYAML(), true, true);
 }
 
 QWidget *Window::newExampleButton(QString name)
@@ -395,7 +396,7 @@ void Window::quickCreate()
     QString examples = getPrefix() + "/share/doc/lima/examples";
     QString exampleYAML = examples + "/" + example.yaml();
     if (quickPreview->isChecked()) {
-        yamlEditor(example.name(), exampleYAML, true, true);
+        yamlEditor(example.name(), quickSetString(), exampleYAML, true, true);
     } else {
         editWindow = new QMainWindow;
         createName = new QLineEdit;
@@ -417,6 +418,37 @@ void Window::advancedCreate()
 {
     quickDialog->close();
     createEditor();
+}
+
+QString Window::quickSetString()
+{
+    QStringList args;
+    QComboBox *vmType = quickDialog->findChild<QComboBox *>("vmType");
+    if (vmType && vmType->property("changed").isValid()) {
+        args << ".vmType = \"" + vmType->currentText() + "\"";
+    }
+    QComboBox *arch = quickDialog->findChild<QComboBox *>("arch");
+    if (arch && arch->property("changed").isValid()) {
+        args << ".arch = \"" + arch->currentText() + "\"";
+    }
+    QLineEdit *cpus = quickDialog->findChild<QLineEdit *>("cpus");
+    if (cpus && cpus->property("changed").isValid()) {
+        args << ".cpus= " + cpus->text();
+    }
+    QLineEdit *memory = quickDialog->findChild<QLineEdit *>("memory");
+    if (memory && memory->property("changed").isValid()) {
+        args << ".memory = \"" + memory->text() + "\"";
+    }
+    QLineEdit *disk = quickDialog->findChild<QLineEdit *>("disk");
+    if (disk && disk->property("changed").isValid()) {
+        args << ".disk = \"" + disk->text() + "\"";
+    }
+    return args.join(" | ");
+}
+
+void Window::setChanged(const QString &)
+{
+    sender()->setProperty("changed", true);
 }
 
 void Window::quickInstance()
@@ -441,31 +473,36 @@ void Window::quickInstance()
     QWidget *machineGroupBox = new QWidget();
     QHBoxLayout *machineLayout = new QHBoxLayout;
     machineLayout->addWidget(new QLabel(tr("VM Type:")));
-    QComboBox *vmTypeComboBox = new QComboBox;
-    vmTypeComboBox->addItem("qemu");
+    QComboBox *vmType = new QComboBox;
+    vmType->addItem("qemu");
 #ifdef Q_OS_MACOS
-    vmTypeComboBox->addItem("vz");
+    vmType->addItem("vz");
 #endif
-    vmTypeComboBox->setEnabled(false); // TODO
-    machineLayout->addWidget(vmTypeComboBox);
+    vmType->setObjectName("vmType");
+    connect(vmType, &QComboBox::currentTextChanged, this, &Window::setChanged);
+    machineLayout->addWidget(vmType);
     machineLayout->addWidget(new QLabel(tr("Arch:")));
-    QComboBox *archComboBox = new QComboBox;
-    archComboBox->addItem(tr("default"));
-    archComboBox->addItem("x86_64");
-    archComboBox->addItem("aarch64");
-    archComboBox->setEnabled(false); // TODO
-    machineLayout->addWidget(archComboBox);
+    QComboBox *arch = new QComboBox;
+    arch->addItem(tr("default"));
+    arch->addItem("x86_64");
+    arch->addItem("aarch64");
+    arch->setObjectName("arch");
+    connect(arch, &QComboBox::currentTextChanged, this, &Window::setChanged);
+    machineLayout->addWidget(arch);
     machineLayout->addWidget(new QLabel(tr("CPUs:")));
     QLineEdit *cpus = new QLineEdit("4");
-    cpus->setEnabled(false); // TODO
+    cpus->setObjectName("cpus");
+    connect(cpus, &QLineEdit::textChanged, this, &Window::setChanged);
     machineLayout->addWidget(cpus);
     machineLayout->addWidget(new QLabel(tr("Memory:")));
     QLineEdit *memory = new QLineEdit("4GiB");
-    memory->setEnabled(false); // TODO
+    memory->setObjectName("memory");
+    connect(memory, &QLineEdit::textChanged, this, &Window::setChanged);
     machineLayout->addWidget(memory);
     machineLayout->addWidget(new QLabel(tr("Disk:")));
     QLineEdit *disk = new QLineEdit("100GiB");
-    disk->setEnabled(false); // TODO
+    disk->setObjectName("disk");
+    connect(disk, &QLineEdit::textChanged, this, &Window::setChanged);
     machineLayout->addWidget(disk);
     quickPreview = new QCheckBox("Edit YAML", this);
     machineLayout->addWidget(quickPreview);
@@ -1085,7 +1122,7 @@ void Window::viewInstance()
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), yamlFile, false, false);
+    yamlEditor(instance.name(), "", yamlFile, false, false);
 }
 
 void Window::editInstance()
@@ -1093,7 +1130,7 @@ void Window::editInstance()
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), yamlFile, false, true);
+    yamlEditor(instance.name(), "", yamlFile, false, true);
 }
 
 bool Window::askConfirm(QString instance)

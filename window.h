@@ -115,12 +115,15 @@ private:
     void updateQuiet(int state);
     void shellConsole();
     bool getProcessOutput(QStringList arguments, QString &text);
-    void yamlEditor(QString instanceName, QString yamlFile, bool create, bool edit);
+    void yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
+                    bool edit);
     void createEditor();
     QWidget *newExampleButton(QString name);
     void quickCreate();
     void urlCreate();
     void advancedCreate();
+    QString quickSetString();
+    void setChanged(const QString &);
     void quickInstance();
     void sendCommand(QString cmd);
     void sendCommand(QStringList cmds);

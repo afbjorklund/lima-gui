@@ -150,6 +150,7 @@ private:
     QTemporaryDir *editDir;
     QFile *editFile;
     QLineEdit *createName;
+    QLineEdit *createSet;
     QTextEdit *createYAML;
     QLineEdit *createURL;
 

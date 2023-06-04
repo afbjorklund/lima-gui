@@ -281,10 +281,20 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, boo
     if (!create || !edit) {
         createName->setReadOnly(true);
     }
+    QLabel *label2 = new QLabel(tr("Set"));
+    createSet = new QLineEdit("");
+    if (edit) {
+        createSet->setPlaceholderText(".cpus = 4 | .memory = \"4GiB\"");
+    }
+    createSet->setToolTip("modify the template inplace, using yq syntax");
+    createSet->setEnabled(edit);
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(label);
     topLayout->addWidget(createName);
+    QHBoxLayout *topLayout2 = new QHBoxLayout;
+    topLayout2->addWidget(label2);
+    topLayout2->addWidget(createSet);
 
 #ifndef QT_NO_EMOTICONS
     QrwEmoticonsTextEdit *textEdit = new QrwEmoticonsTextEdit(this);
@@ -333,6 +343,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, boo
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(topLayout);
+    layout->addLayout(topLayout2);
     layout->addWidget(createYAML);
     layout->addLayout(bottomLayout);
 
@@ -388,6 +399,7 @@ void Window::quickCreate()
     } else {
         editWindow = new QMainWindow;
         createName = new QLineEdit;
+        createSet = new QLineEdit;
         createYAML = new QTextEdit;
         readYAML(exampleYAML);
         // TODO: arch, cpus, memory, disk
@@ -772,6 +784,8 @@ void Window::finishedCommand(int code, QProcess::ExitStatus status)
         editFile->remove();
         delete editFile;
         editFile = nullptr;
+    }
+    if (editDir) {
         delete editDir;
         editDir = nullptr;
     }
@@ -851,6 +865,9 @@ QFile *Window::validateYAML(QString name)
         QString yaml = createYAML->toPlainText();
         temp->write(yaml.toUtf8());
         temp->close();
+    } else {
+        QMessageBox::warning(this, tr("lima"), tr("Could not create temporary file"));
+        return 0;
     }
     QProcess process(this);
     QString program = limactlPath();
@@ -873,11 +890,17 @@ QFile *Window::validateYAML(QString name)
 void Window::createInstance()
 {
     QString name = createName->text();
+    QString set = createSet->text();
     editFile = validateYAML(name);
     if (!editFile)
         return;
     editWindow->close();
-    QStringList args = { "start", "--tty=false", editFile->fileName() };
+    QStringList args = { "start", "--tty=false" };
+    if (!set.isEmpty()) {
+        args << "--set";
+        args << set;
+    }
+    args << editFile->fileName();
     sendCommand(args);
 
     updateInstances();
@@ -886,12 +909,18 @@ void Window::createInstance()
 void Window::createInstanceURL()
 {
     QString url = createURL->text();
+    QString set = createSet->text();
     if (url.startsWith("https://github.com")) {
         // Get the "raw" YAML, and not the prettified HTTP
         url = url.replace("github.com", "raw.githubusercontent.com");
         url = url.replace("blob/", "");
     }
-    QStringList args = { "start", "--tty=false", url };
+    QStringList args = { "start", "--tty=false" };
+    if (!set.isEmpty()) {
+        args << "--set";
+        args << set;
+    }
+    args << url;
     sendCommand(args);
 
     updateInstances();
@@ -900,6 +929,7 @@ void Window::createInstanceURL()
 void Window::updateInstance()
 {
     QString name = createName->text();
+    QString set = createSet->text();
     editFile = validateYAML(name);
     if (!editFile)
         return;
@@ -907,7 +937,18 @@ void Window::updateInstance()
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
     QFile(yamlFile).remove();
-    editFile->rename(yamlFile);
+    bool ok = editFile->rename(yamlFile);
+    delete editFile;
+    editFile = nullptr;
+    if (ok && !set.isEmpty()) {
+        QStringList args = { "edit", "--tty=false" };
+        args << "--set";
+        args << set;
+        args << name;
+        sendCommand(args);
+    } else if (!ok) {
+        QMessageBox::warning(this, tr("lima"), tr("Failed to update") + " " + yamlFile);
+    }
 }
 
 void Window::startInstance()

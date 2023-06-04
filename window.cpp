@@ -278,7 +278,7 @@ void Window::yamlEditor(QString instanceName, QString yamlFile, bool create, boo
 
     QLabel *label = new QLabel(tr("Name"));
     createName = new QLineEdit(instanceName);
-    if (!create) {
+    if (!create || !edit) {
         createName->setReadOnly(true);
     }
 

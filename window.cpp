@@ -200,7 +200,9 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 QString Window::selectedInstance()
 {
+    QAbstractItemModel *model = instanceListView->model();
     QModelIndex index = instanceListView->currentIndex();
+    index = model->index(index.row(), 0); // get name
     QVariant variant = index.data(Qt::DisplayRole);
     if (variant.isNull()) {
         return QString();

@@ -335,12 +335,12 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
             create ? &Window::createInstance : &Window::updateInstance);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
+    bottomLayout->addWidget(cancelButton);
     if (edit) {
-        bottomLayout->addWidget(cancelButton);
         bottomLayout->addWidget(loadButton);
         bottomLayout->addWidget(saveButton);
+        bottomLayout->addWidget(okButton);
     }
-    bottomLayout->addWidget(okButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(topLayout);

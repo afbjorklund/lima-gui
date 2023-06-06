@@ -127,8 +127,6 @@ Window::Window()
     connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
     connect(stopButton, &QAbstractButton::clicked, this, &Window::stopInstance);
     connect(inspectButton, &QAbstractButton::clicked, this, &Window::inspectInstance);
-    connect(viewButton, &QAbstractButton::clicked, this, &Window::viewInstance);
-    connect(editButton, &QAbstractButton::clicked, this, &Window::editInstance);
     connect(removeButton, &QAbstractButton::clicked, this, &Window::removeInstance);
 
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
@@ -688,8 +686,6 @@ void Window::createInstanceGroupBox()
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     inspectButton = new QPushButton(tr("Inspect"));
-    viewButton = new QPushButton(tr("View"));
-    editButton = new QPushButton(tr("Edit"));
     removeButton = new QPushButton(tr("Remove"));
     removeButton->setIcon(QIcon(":/images/remove.png"));
 
@@ -709,8 +705,6 @@ void Window::createInstanceGroupBox()
     instanceButtonLayout->addWidget(startButton);
     instanceButtonLayout->addWidget(stopButton);
     instanceButtonLayout->addWidget(inspectButton);
-    instanceButtonLayout->addWidget(viewButton);
-    instanceButtonLayout->addWidget(editButton);
     instanceButtonLayout->addWidget(removeButton);
 
     QVBoxLayout *instanceLayout = new QVBoxLayout;
@@ -728,10 +722,6 @@ void Window::updateButtons()
         startButton->setEnabled(false);
         stopButton->setEnabled(false);
         inspectButton->setEnabled(false);
-        viewButton->setVisible(false);
-        viewButton->setEnabled(false);
-        editButton->setEnabled(false);
-        editButton->setVisible(true);
         removeButton->setEnabled(false);
         return;
     }
@@ -741,20 +731,12 @@ void Window::updateButtons()
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
         inspectButton->setEnabled(true);
-        viewButton->setEnabled(true);
-        viewButton->setVisible(true);
-        editButton->setVisible(false);
-        editButton->setEnabled(false);
         removeButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
         shellButton->setEnabled(false);
         startButton->setEnabled(true);
         stopButton->setEnabled(false);
         inspectButton->setEnabled(true);
-        viewButton->setVisible(false);
-        viewButton->setEnabled(false);
-        editButton->setEnabled(true);
-        editButton->setVisible(true);
         removeButton->setEnabled(true);
     }
 }

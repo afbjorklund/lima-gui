@@ -170,8 +170,6 @@ private:
     QPushButton *startButton;
     QPushButton *stopButton;
     QPushButton *inspectButton;
-    QPushButton *viewButton;
-    QPushButton *editButton;
     QPushButton *removeButton;
 
     QAction *minimizeAction;

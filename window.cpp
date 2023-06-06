@@ -324,7 +324,8 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
         file.close();
     }
 
-    QPushButton *cancelButton = !edit ? new QPushButton(tr("Close")) : new QPushButton(tr("Cancel"));
+    QPushButton *cancelButton =
+            !edit ? new QPushButton(tr("Close")) : new QPushButton(tr("Cancel"));
     QPushButton *loadButton = new QPushButton(tr("Load"));
     QPushButton *saveButton = new QPushButton(tr("Save"));
     QPushButton *okButton = create ? new QPushButton(tr("Create")) : new QPushButton(tr("Ok"));
@@ -1153,7 +1154,7 @@ void Window::messageInstance()
             QMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Information);
             msgBox.setText("<b>" + name + "</b>");
-	    QString message = process.readAllStandardOutput();
+            QString message = process.readAllStandardOutput();
             msgBox.setInformativeText(Qt::convertFromPlainText(message));
             msgBox.exec();
         }

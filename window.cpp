@@ -1102,8 +1102,10 @@ void Window::inspectInstance()
     limayamlButtonLayout->addWidget(messageButton);
     if (instance.status() == "Running") {
         editButton->setEnabled(false);
+        messageButton->setEnabled(true);
     } else if (instance.status() == "Stopped") {
         editButton->setEnabled(true);
+        messageButton->setEnabled(false);
     }
     limayamlBox->setLayout(limayamlButtonLayout);
     connect(viewButton, &QAbstractButton::clicked, this, &Window::viewInstance);

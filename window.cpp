@@ -1010,6 +1010,8 @@ void Window::inspectInstance()
     if (name.isEmpty())
         return;
     Instance instance = getInstanceHash()[name];
+    if (instance.name().isEmpty())
+        return;
 
     QString kernel = tr("N/A");
     QString pretty = tr("N/A");

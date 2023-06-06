@@ -1076,11 +1076,13 @@ void Window::inspectInstance()
     instanceBox->setLayout(form1);
     QGroupBox *limayamlBox = new QGroupBox(tr("lima.yaml"));
     QHBoxLayout *limayamlButtonLayout = new QHBoxLayout;
-    limayamlButtonLayout->addStretch();
     QPushButton *viewButton = new QPushButton(tr("View"));
     limayamlButtonLayout->addWidget(viewButton);
     QPushButton *editButton = new QPushButton(tr("Edit"));
     limayamlButtonLayout->addWidget(editButton);
+    limayamlButtonLayout->addStretch();
+    QPushButton *messageButton = new QPushButton(tr("Message"));
+    limayamlButtonLayout->addWidget(messageButton);
     if (instance.status() == "Running") {
         editButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
@@ -1091,6 +1093,7 @@ void Window::inspectInstance()
     connect(viewButton, SIGNAL(clicked()), dialog, SLOT(close()));
     connect(editButton, &QAbstractButton::clicked, this, &Window::editInstance);
     connect(editButton, SIGNAL(clicked()), dialog, SLOT(close()));
+    connect(messageButton, &QAbstractButton::clicked, this, &Window::messageInstance);
     QGroupBox *systemBox = new QGroupBox(tr("System"));
     QFormLayout *form2 = new QFormLayout;
     if (!logo.isEmpty()) {
@@ -1131,6 +1134,26 @@ void Window::editInstance()
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
     yamlEditor(instance.name(), "", yamlFile, false, true);
+}
+
+void Window::messageInstance()
+{
+    QString name = selectedInstance();
+    QProcess process(this);
+    QString program = limactlPath();
+    // limactl list will automagically expand all variables in the message
+    process.start(program, { "list", "--format", "{{.Message}}", name });
+    bool success = process.waitForFinished();
+    if (success) {
+        if (process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0) {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText("<b>" + name + "</b>");
+	    QString message = process.readAllStandardOutput();
+            msgBox.setInformativeText(Qt::convertFromPlainText(message));
+            msgBox.exec();
+        }
+    }
 }
 
 bool Window::askConfirm(QString instance)

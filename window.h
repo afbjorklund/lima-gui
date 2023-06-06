@@ -142,6 +142,7 @@ private:
     void inspectInstance();
     void viewInstance();
     void editInstance();
+    void messageInstance();
     bool askConfirm(QString instance);
     void removeInstance();
 

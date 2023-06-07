@@ -370,7 +370,8 @@ QWidget *Window::newExampleButton(QString name)
     Example example = getExamples()[name];
     QIcon icon(QPixmap(":/logos/" + example.logo()));
     QPushButton *button = new QPushButton;
-    button->setIconSize(QSize(48, 48));
+    qreal size = 48 * devicePixelRatio();
+    button->setIconSize(QSize(size, size));
     button->setIcon(icon);
     QString text = example.text();
     QLabel *textLabel = new QLabel(text);

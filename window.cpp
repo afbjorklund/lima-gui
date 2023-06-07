@@ -468,7 +468,7 @@ void Window::quickInstance()
     connect(advancedButton, &QAbstractButton::clicked, this, &Window::advancedCreate);
 
     createURL = new QLineEdit(defaultURL());
-    createURL->setFixedWidth(400);
+    createURL->setFixedWidth(440);
     QFont font;
     font.setPointSize(9);
     createURL->setFont(font);

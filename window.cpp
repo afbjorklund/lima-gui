@@ -747,9 +747,12 @@ void Window::updateButtons()
 void Window::aboutProgram()
 {
     QString url = "https://github.com/lima-vm/lima";
-    QMessageBox::about(this, tr("Lima") + " version " + getVersion(),
-                       tr("Lima runs Linux Virtual Machines") + "<br>" + "<br>" + "<a href=\"" + url
-                               + "\">" + url + "</a>");
+    QString text = tr("Lima runs Linux Virtual Machines");
+    text += "<br><br><a href=\"" + url + "\">" + url + "</a><br>";
+    text += tr("<p>Use <b>Create</b> (or <b>Quick</b>) to create a new instance of Lima.</p>");
+    text += tr("<p>To access an instance, use <b>Shell</b> or the "
+               "<tt>lima</tt> command.</p>");
+    QMessageBox::about(this, tr("Lima") + " version " + getVersion(), text);
 }
 
 void Window::updateInstances()

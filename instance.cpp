@@ -183,5 +183,5 @@ QVariant InstanceModel::headerData(int section, Qt::Orientation orientation, int
             return tr("Disk");
         }
     }
-    return QVariant(); // QStringLiteral("Row %1").arg(section);
+    return QVariant();
 }

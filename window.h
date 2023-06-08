@@ -97,6 +97,7 @@ private slots:
     void setIcon(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void updateButtons();
+    void inspectInstance();
     void aboutProgram();
     void startedCommand();
     void finishedCommand(int code, QProcess::ExitStatus status);
@@ -139,7 +140,6 @@ private:
     void updateInstance();
     void startInstance();
     void stopInstance();
-    void inspectInstance();
     void viewInstance();
     void editInstance();
     void messageInstance();

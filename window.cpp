@@ -669,6 +669,7 @@ void Window::createInstanceGroupBox()
     setSelectedInstance("default");
 
     connect(instanceListView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(updateButtons()));
+    connect(instanceListView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(inspectInstance()));
 
     instanceListQuiet = new QCheckBox(tr("Quiet"));
     instanceListQuiet->setToolTip(tr("Only show names"));

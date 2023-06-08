@@ -56,6 +56,12 @@ Instance::Instance(const QJsonObject &obj)
     } else {
         setSshLocalPort(0);
     }
+    if (obj.contains("sshConfigFile")) {
+        QString file = obj["sshConfigFile"].toString();
+        setSshConfigFile(file);
+    } else {
+        setSshConfigFile("");
+    }
 }
 
 void InstanceModel::setInstances(const InstanceList &instances)

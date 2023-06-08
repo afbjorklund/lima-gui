@@ -25,7 +25,8 @@ public:
           m_cpus(0),
           m_memory(0),
           m_disk(0),
-          m_ssh_local_port(0)
+          m_ssh_local_port(0),
+          m_ssh_config_file("")
     {
     }
     Instance(const QJsonObject &obj);
@@ -52,6 +53,8 @@ public:
     void setDisk(qint64 disk) { m_disk = disk; }
     int sshLocalPort() const { return m_ssh_local_port; }
     void setSshLocalPort(int port) { m_ssh_local_port = port; }
+    QString sshConfigFile() const { return m_ssh_config_file; }
+    void setSshConfigFile(QString file) { m_ssh_config_file = file; }
 
 private:
     QString m_name;
@@ -64,6 +67,7 @@ private:
     qint64 m_memory;
     qint64 m_disk;
     int m_ssh_local_port;
+    QString m_ssh_config_file;
 };
 //! [0]
 

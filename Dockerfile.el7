@@ -1,0 +1,17 @@
+# docker build -f Dockerfile.el7 -t el7-build .
+
+FROM docker.io/centos:7
+#RUN yum install -y epel-release && && yum clean all && yum-config-manager --disable epel
+
+RUN yum install -y qt5-qtbase-devel gcc-c++ make && yum clean all
+
+RUN yum install -y pkgconfig qt5-qtsvg-devel && yum clean all
+#RUN yum install --enablerepo=epel -y pkgconfig qtermwidget-devel qt5-qtsvg-devel && yum clean all
+
+# docker run --rm -v $PWD:/build el7-build
+
+VOLUME /build
+
+WORKDIR /build
+
+CMD qmake-qt5 && make CXX="g++ -std=c++11"

@@ -8,7 +8,7 @@
 #include <QList>
 #include <QMap>
 
-// NAME  STATUS  SSH  ARCH  CPUS  MEMORY  DISK  DIR
+// NAME  STATUS  SSH  VMTYPE  ARCH  CPUS  MEMORY  DISK  DIR
 
 //! [0]
 class Instance

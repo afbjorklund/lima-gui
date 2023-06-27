@@ -3,7 +3,7 @@
 #include <QStringList>
 #include <QJsonObject>
 
-Instance::Instance(const QJsonObject &obj)
+Instance::Instance(const QJsonObject &obj) : Instance()
 {
     QString name;
     if (obj.contains("name")) {

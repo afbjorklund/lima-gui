@@ -1051,7 +1051,10 @@ void Window::inspectInstance()
         id = match.length() > 0 ? match[0].replace("ID=", "").replace("\"", "") : "";
         match = lines.filter(QRegularExpression("^VERSION_ID="));
         ver = match.length() > 0 ? match[0].replace("VERSION_ID=", "").replace("\"", "") : "";
-        if (id == "centos" && ver != "7") {
+        // Special case for CentOS
+        match = lines.filter(QRegularExpression("^NAME="));
+        QString distro = match.length() > 0 ? match[0].replace("NAME=", "") : "";
+        if (id == "centos" && distro == "CentOS Stream") { // != "CentOS Linux"
             id = "centos-stream";
         }
         Example example = getExamples()[id];

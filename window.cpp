@@ -1020,6 +1020,7 @@ void Window::inspectInstance()
     QString pretty = tr("N/A");
     QString uptime = tr("N/A");
     QString id;
+    QString var;
     QString ver;
     QString logo;
     bool running = instance.status() == "Running";
@@ -1041,6 +1042,12 @@ void Window::inspectInstance()
         QStringList match = lines.filter("PRETTY_NAME=");
         pretty = match.length() > 0 ? match[0].replace("PRETTY_NAME=", "") : "";
         pretty = pretty.replace("\"", "");
+        match = lines.filter("VARIANT=");
+        QString variant = match.length() > 0 ? match[0].replace("VARIANT=", "") : "";
+        variant = variant.replace("\"", "");
+        if (!variant.isEmpty() && !pretty.contains(variant)) {
+            pretty += " ( " + variant + ")";
+        }
         match = lines.filter("VERSION_CODENAME=");
         QString codename = match.length() > 0 ? match[0].replace("VERSION_CODENAME=", "") : "";
         codename = codename.replace("\"", "");
@@ -1049,13 +1056,17 @@ void Window::inspectInstance()
         }
         match = lines.filter(QRegularExpression("^ID="));
         id = match.length() > 0 ? match[0].replace("ID=", "").replace("\"", "") : "";
+        match = lines.filter(QRegularExpression("^VARIANT_ID="));
+        var = match.length() > 0 ? match[0].replace("VARIANT_ID=", "").replace("\"", "") : "";
         match = lines.filter(QRegularExpression("^VERSION_ID="));
         ver = match.length() > 0 ? match[0].replace("VERSION_ID=", "").replace("\"", "") : "";
-        // Special case for CentOS
         match = lines.filter(QRegularExpression("^NAME="));
         QString distro = match.length() > 0 ? match[0].replace("NAME=", "") : "";
         if (id == "centos" && distro == "CentOS Stream") { // != "CentOS Linux"
             id = "centos-stream";
+        }
+        if (id == "fedora" && variant == "CoreOS") { // != "Cloud Edition"
+            id = "fedora-coreos";
         }
         Example example = getExamples()[id];
         logo = example.logo();

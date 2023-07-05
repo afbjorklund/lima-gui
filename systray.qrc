@@ -25,5 +25,6 @@
    <file>logos/openfaas.png</file>
    <file>logos/centos.png</file>
    <file>logos/stream.png</file>
+   <file>logos/coreos.png</file>
 </qresource>
 </RCC>

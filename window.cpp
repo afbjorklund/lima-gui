@@ -1062,6 +1062,7 @@ void Window::inspectInstance()
         ver = match.length() > 0 ? match[0].replace("VERSION_ID=", "").replace("\"", "") : "";
         match = lines.filter(QRegularExpression("^NAME="));
         QString distro = match.length() > 0 ? match[0].replace("NAME=", "") : "";
+        distro = distro.replace("\"", "");
         if (id == "centos" && distro == "CentOS Stream") { // != "CentOS Linux"
             id = "centos-stream";
         }

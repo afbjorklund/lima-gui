@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=Lima
+Exec=lima-gui
+Icon=tux
+Type=Application
+Terminal=false
+Keywords=Emulators;Virtualization;KVM;

@@ -26,5 +26,6 @@
    <file>logos/centos.png</file>
    <file>logos/stream.png</file>
    <file>logos/coreos.png</file>
+   <file>logos/flatcar.png</file>
 </qresource>
 </RCC>

@@ -31,6 +31,17 @@ $ ./lima-gui
 
 ![screenshot](assets/screenshot3.png)
 
+### Themes
+
+You can use [Kvantum](https://github.com/tsujan/Kvantum), for theme support.
+It has several themes:
+
+![kvantum light](assets/lima-gui-quick-start.light.png)
+
+![kvantum dark](assets/lima-gui-quick-start.dark.png)
+
+`QT_STYLE_OVERRIDE=kvantum` (or use `kvantummanager` GUI)
+
 ----
 
 See <https://doc.qt.io/qt-5/qtwidgets-desktop-systray-example.html>

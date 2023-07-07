@@ -489,6 +489,8 @@ void Window::quickInstance()
     arch->addItem(tr("default"));
     arch->addItem("x86_64");
     arch->addItem("aarch64");
+    arch->addItem("armv7l");
+    arch->addItem("riscv64");
     arch->setObjectName("arch");
     connect(arch, &QComboBox::currentTextChanged, this, &Window::setChanged);
     machineLayout->addWidget(arch);

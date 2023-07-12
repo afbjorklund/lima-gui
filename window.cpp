@@ -1146,6 +1146,10 @@ void Window::inspectInstance()
     QString homeDir = QDir::homePath();
     form1->addRow(new QLabel(tr("Dir:")), new QLabel(instance.dir().replace(homeDir, "~")));
     instanceBox->setLayout(form1);
+    QGroupBox *advancedBox = new QGroupBox(tr("Advanced"));
+    QFormLayout *form2 = new QFormLayout;
+    form2->addRow(new QLabel(tr("Video Display:")), new QLabel(instance.display()));
+    advancedBox->setLayout(form2);
     QGroupBox *limayamlBox = new QGroupBox(tr("lima.yaml"));
     QHBoxLayout *limayamlButtonLayout = new QHBoxLayout;
     QPushButton *viewButton = new QPushButton(tr("View"));
@@ -1186,6 +1190,7 @@ void Window::inspectInstance()
     systemBox->setEnabled(running);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(instanceBox);
+    layout->addWidget(advancedBox);
     layout->addWidget(limayamlBox);
     layout->addWidget(systemBox);
     layout->addStretch();

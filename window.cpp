@@ -801,6 +801,8 @@ void Window::aboutProgram()
     text += tr("<p>Use <b>Create</b> (or <b>Quick</b>) to create a new instance of Lima.</p>");
     text += tr("<p>To access an instance, use <b>Shell</b> or the "
                "<tt>lima</tt> command.</p>");
+    text += tr("<p>Use <b>Display</b> to connect to the instance's graphical display.</p>");
+    text += tr("<p>This requires that the VNC display has been enabled for it.</p>");
     QMessageBox::about(this, tr("Lima") + " version " + getVersion(), text);
 }
 

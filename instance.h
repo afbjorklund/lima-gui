@@ -55,6 +55,8 @@ public:
     void setSshLocalPort(int port) { m_ssh_local_port = port; }
     QString sshConfigFile() const { return m_ssh_config_file; }
     void setSshConfigFile(QString file) { m_ssh_config_file = file; }
+    QVariantMap config() const { return m_config; }
+    void setConfig(QVariantMap config) { m_config = config; }
 
 private:
     QString m_name;
@@ -68,6 +70,7 @@ private:
     qint64 m_disk;
     int m_ssh_local_port;
     QString m_ssh_config_file;
+    QVariantMap m_config;
 };
 //! [0]
 

@@ -62,6 +62,11 @@ Instance::Instance(const QJsonObject &obj) : Instance()
     } else {
         setSshConfigFile("");
     }
+
+    if (obj.contains("config")) {
+        QJsonObject config = obj["config"].toObject();
+        setConfig(config.toVariantMap());
+    }
 }
 
 void InstanceModel::setInstances(const InstanceList &instances)

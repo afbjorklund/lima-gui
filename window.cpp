@@ -297,6 +297,7 @@ void Window::displayWindow()
     mainWindow->setCentralWidget(client);
     client->startFrameBufferUpdate();
     mainWindow->show();
+    client->tryRefreshScreen();
 #else
     // gvncviewer
 #endif

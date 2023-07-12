@@ -1169,20 +1169,20 @@ void Window::inspectInstance()
     connect(editButton, SIGNAL(clicked()), dialog, SLOT(close()));
     connect(messageButton, &QAbstractButton::clicked, this, &Window::messageInstance);
     QGroupBox *systemBox = new QGroupBox(tr("System"));
-    QFormLayout *form2 = new QFormLayout;
+    QFormLayout *form3 = new QFormLayout;
     if (!logo.isEmpty()) {
         QLabel *logoLabel = new QLabel;
         QPixmap *pixmap = new QPixmap(QString(":/logos/" + logo));
         if (!pixmap->isNull()) {
             QPixmap scaled = pixmap->scaledToWidth(128, Qt::SmoothTransformation);
             logoLabel->setPixmap(scaled);
-            form2->addRow(new QWidget, logoLabel);
+            form3->addRow(new QWidget, logoLabel);
         }
     }
-    form2->addRow(new QLabel(tr("Release:")), new QLabel(pretty));
-    form2->addRow(new QLabel(tr("Kernel:")), new QLabel(kernel));
-    form2->addRow(new QLabel(tr("Uptime:")), new QLabel(uptime));
-    systemBox->setLayout(form2);
+    form3->addRow(new QLabel(tr("Release:")), new QLabel(pretty));
+    form3->addRow(new QLabel(tr("Kernel:")), new QLabel(kernel));
+    form3->addRow(new QLabel(tr("Uptime:")), new QLabel(uptime));
+    systemBox->setLayout(form3);
     systemBox->setEnabled(running);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(instanceBox);

@@ -22,6 +22,9 @@ DISTFILES += \
 include(QSourceHighlite/QSourceHighlite.pri)
 include(QrwEmoticons/QrwEmoticons.pri)
 
+//DEFINES += QT_NO_VNCCLIENT
+include(QVNCClient/QVNCClient.pri)
+
 # Enabling qtermwidget requires GPL-v2 license
 #CONFIG += gpl_licensed
 

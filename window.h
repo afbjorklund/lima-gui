@@ -115,6 +115,7 @@ private:
     void updateInstances();
     void updateQuiet(int state);
     void shellConsole();
+    void displayWindow();
     bool getProcessOutput(QStringList arguments, QString &text);
     void yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
                     bool edit);
@@ -167,6 +168,7 @@ private:
     QPushButton *aboutButton;
     QPushButton *refreshButton;
     QPushButton *shellButton;
+    QPushButton *displayButton;
     QPushButton *startButton;
     QPushButton *stopButton;
     QPushButton *inspectButton;

@@ -92,6 +92,10 @@
 #include "qtermwidget.h"
 #endif
 
+#ifndef QT_NO_VNCCLIENT
+#include "qvncclientwidget.h"
+#endif
+
 #ifndef QT_NO_SOURCEHIGHLITER
 #include "qsourcehighliter.h"
 using namespace QSourceHighlite;
@@ -124,6 +128,7 @@ Window::Window()
             &Window::setIcon);
 
     connect(shellButton, &QAbstractButton::clicked, this, &Window::shellConsole);
+    connect(displayButton, &QAbstractButton::clicked, this, &Window::displayWindow);
     connect(startButton, &QAbstractButton::clicked, this, &Window::startInstance);
     connect(stopButton, &QAbstractButton::clicked, this, &Window::stopInstance);
     connect(inspectButton, &QAbstractButton::clicked, this, &Window::inspectInstance);
@@ -259,6 +264,41 @@ void Window::shellConsole()
     arguments << "-e" << QString("%1 shell %2").arg(program).arg(instance);
     QProcess *process = new QProcess(this);
     process->start(QStandardPaths::findExecutable(terminal), arguments);
+#endif
+}
+
+void Window::displayWindow()
+{
+    QString inst = selectedInstance();
+    Instance instance = getInstanceHash()[inst];
+    QFile displayFile(instance.dir() + "/" + "vncdisplay");
+    if (!displayFile.open(QFile::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("lima"), tr("Could not read vnc display"));
+        return;
+    }
+    QString display = QString::fromUtf8(displayFile.readAll()).trimmed();
+    QStringList parts = display.split(":");
+    QString address = parts[0];
+    int port = 5900 + parts[1].toInt();
+    QFile passwordFile(instance.dir() + "/" + "vncpassword");
+    if (!passwordFile.open(QFile::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("lima"), tr("Could not read vnc password"));
+        return;
+    }
+    QString password = QString::fromUtf8(passwordFile.readAll()).trimmed();
+#ifndef QT_NO_VNCCLIENT
+    QMainWindow *mainWindow = new QMainWindow();
+
+    QVNCClientWidget *client = new QVNCClientWidget();
+    client->connectToVncServer(address, password, port);
+
+    mainWindow->setWindowTitle(QString(tr("lima [%1]")).arg(inst));
+    mainWindow->resize(1024, 768);
+    mainWindow->setCentralWidget(client);
+    client->startFrameBufferUpdate();
+    mainWindow->show();
+#else
+    // gvncviewer
 #endif
 }
 
@@ -688,6 +728,8 @@ void Window::createInstanceGroupBox()
 
     shellButton = new QPushButton(tr("Shell"));
     shellButton->setIcon(QIcon(":/images/terminal.png"));
+    displayButton = new QPushButton(tr("Display"));
+    displayButton->setIcon(QIcon(":/images/desktopshare.png"));
     startButton = new QPushButton(tr("Start"));
     stopButton = new QPushButton(tr("Stop"));
     inspectButton = new QPushButton(tr("Inspect"));
@@ -707,6 +749,7 @@ void Window::createInstanceGroupBox()
 
     QHBoxLayout *instanceButtonLayout = new QHBoxLayout;
     instanceButtonLayout->addWidget(shellButton);
+    instanceButtonLayout->addWidget(displayButton);
     instanceButtonLayout->addWidget(startButton);
     instanceButtonLayout->addWidget(stopButton);
     instanceButtonLayout->addWidget(inspectButton);
@@ -724,6 +767,7 @@ void Window::updateButtons()
     QString inst = selectedInstance();
     if (inst.isEmpty()) {
         shellButton->setEnabled(false);
+        displayButton->setEnabled(false);
         startButton->setEnabled(false);
         stopButton->setEnabled(false);
         inspectButton->setEnabled(false);
@@ -733,12 +777,14 @@ void Window::updateButtons()
     Instance instance = getInstanceHash()[inst];
     if (instance.status() == "Running") {
         shellButton->setEnabled(true);
+        displayButton->setEnabled(true);
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
         inspectButton->setEnabled(true);
         removeButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
         shellButton->setEnabled(false);
+        displayButton->setEnabled(false);
         startButton->setEnabled(true);
         stopButton->setEnabled(false);
         inspectButton->setEnabled(true);

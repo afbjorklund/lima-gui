@@ -778,7 +778,8 @@ void Window::updateButtons()
     Instance instance = getInstanceHash()[inst];
     if (instance.status() == "Running") {
         shellButton->setEnabled(true);
-        displayButton->setEnabled(true);
+        bool hasDisplay = instance.display() != "none";
+        displayButton->setEnabled(hasDisplay);
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
         inspectButton->setEnabled(true);

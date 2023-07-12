@@ -58,6 +58,8 @@ public:
     QVariantMap config() const { return m_config; }
     void setConfig(QVariantMap config) { m_config = config; }
 
+    QString display();
+
 private:
     QString m_name;
     QString m_status;

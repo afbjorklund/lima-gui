@@ -69,6 +69,18 @@ Instance::Instance(const QJsonObject &obj) : Instance()
     }
 }
 
+QString Instance::display()
+{
+    QString display;
+    if (config().contains("video")) {
+        QJsonObject video = config()["video"].toJsonObject();
+        if (video.contains("display")) {
+            display = video["display"].toString();
+        }
+    }
+    return display;
+}
+
 void InstanceModel::setInstances(const InstanceList &instances)
 {
     beginResetModel();

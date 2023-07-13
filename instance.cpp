@@ -69,7 +69,7 @@ Instance::Instance(const QJsonObject &obj) : Instance()
     }
 }
 
-QString Instance::display()
+QString Instance::videoDisplay()
 {
     QString display;
     if (config().contains("video")) {

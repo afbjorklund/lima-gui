@@ -58,7 +58,7 @@ public:
     QVariantMap config() const { return m_config; }
     void setConfig(QVariantMap config) { m_config = config; }
 
-    QString display();
+    QString videoDisplay();
 
 private:
     QString m_name;

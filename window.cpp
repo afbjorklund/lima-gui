@@ -778,7 +778,7 @@ void Window::updateButtons()
     Instance instance = getInstanceHash()[inst];
     if (instance.status() == "Running") {
         shellButton->setEnabled(true);
-        bool hasDisplay = instance.display() != "none";
+        bool hasDisplay = instance.videoDisplay() != "none";
         displayButton->setEnabled(hasDisplay);
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
@@ -1148,7 +1148,7 @@ void Window::inspectInstance()
     instanceBox->setLayout(form1);
     QGroupBox *advancedBox = new QGroupBox(tr("Advanced"));
     QFormLayout *form2 = new QFormLayout;
-    form2->addRow(new QLabel(tr("Video Display:")), new QLabel(instance.display()));
+    form2->addRow(new QLabel(tr("Video Display:")), new QLabel(instance.videoDisplay()));
     advancedBox->setLayout(form2);
     QGroupBox *limayamlBox = new QGroupBox(tr("lima.yaml"));
     QHBoxLayout *limayamlButtonLayout = new QHBoxLayout;

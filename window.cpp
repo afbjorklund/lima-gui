@@ -1162,7 +1162,8 @@ void Window::inspectInstance()
     limayamlButtonLayout->addWidget(messageButton);
     if (instance.status() == "Running") {
         editButton->setEnabled(false);
-        messageButton->setEnabled(true);
+        bool hasMessage = instance.config().contains("message");
+        messageButton->setEnabled(hasMessage);
     } else if (instance.status() == "Stopped") {
         editButton->setEnabled(true);
         messageButton->setEnabled(false);

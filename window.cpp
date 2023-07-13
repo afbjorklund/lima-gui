@@ -1148,6 +1148,7 @@ void Window::inspectInstance()
     instanceBox->setLayout(form1);
     QGroupBox *advancedBox = new QGroupBox(tr("Advanced"));
     QFormLayout *form2 = new QFormLayout;
+    form2->addRow(new QLabel(tr("Audio Device:")), new QLabel(instance.audioDevice()));
     form2->addRow(new QLabel(tr("Video Display:")), new QLabel(instance.videoDisplay()));
     advancedBox->setLayout(form2);
     QGroupBox *limayamlBox = new QGroupBox(tr("lima.yaml"));

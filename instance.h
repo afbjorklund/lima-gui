@@ -58,6 +58,7 @@ public:
     QVariantMap config() const { return m_config; }
     void setConfig(QVariantMap config) { m_config = config; }
 
+    QString audioDevice();
     QString videoDisplay();
 
 private:

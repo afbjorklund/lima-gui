@@ -69,6 +69,18 @@ Instance::Instance(const QJsonObject &obj) : Instance()
     }
 }
 
+QString Instance::audioDevice()
+{
+    QString device;
+    if (config().contains("audio")) {
+        QJsonObject audio = config()["audio"].toJsonObject();
+        if (audio.contains("device")) {
+            device = audio["device"].toString();
+        }
+    }
+    return device;
+}
+
 QString Instance::videoDisplay()
 {
     QString display;

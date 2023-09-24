@@ -315,7 +315,7 @@ static QString getPrefix()
 }
 
 void Window::yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
-                        bool edit)
+                        bool edit, bool start)
 {
     editWindow = new QMainWindow();
 
@@ -386,10 +386,21 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
         bottomLayout->addWidget(okButton);
     }
 
+    QLabel *label3 = new QLabel(tr("Start"));
+    label3->setEnabled(edit);
+    createStart = new QCheckBox;
+    createStart->setEnabled(edit);
+    createStart->setChecked(start);
+    QHBoxLayout *bottomLayout2 = new QHBoxLayout;
+    bottomLayout2->addStretch();
+    bottomLayout2->addWidget(label3);
+    bottomLayout2->addWidget(createStart);
+
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(topLayout);
     layout->addLayout(topLayout2);
     layout->addWidget(createYAML);
+    layout->addLayout(bottomLayout2);
     layout->addLayout(bottomLayout);
 
     QWidget *widget = new QWidget();
@@ -404,7 +415,7 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
 void Window::createEditor()
 {
     QString directory = getPrefix() + "/share/doc/lima";
-    yamlEditor("default", "", directory + "/" + defaultYAML(), true, true);
+    yamlEditor("default", "", directory + "/" + defaultYAML(), true, true, true);
 }
 
 QWidget *Window::newExampleButton(QString name)
@@ -441,14 +452,17 @@ void Window::quickCreate()
     QString examples = getPrefix() + "/share/doc/lima/examples";
     QString exampleYAML = examples + "/" + example.yaml();
     if (quickPreview->isChecked()) {
-        yamlEditor(example.name(), quickSetString(), exampleYAML, true, true);
+        yamlEditor(example.name(), quickSetString(), exampleYAML, true, true,
+                   quickStart->isChecked());
     } else {
         editWindow = new QMainWindow;
         createName = new QLineEdit;
         createSet = new QLineEdit;
         createYAML = new QTextEdit;
+        createStart = new QCheckBox;
         readYAML(exampleYAML);
         // TODO: arch, cpus, memory, disk
+        createStart->setChecked(quickStart->isChecked());
         createInstance();
     }
 }
@@ -553,6 +567,9 @@ void Window::quickInstance()
     machineLayout->addWidget(disk);
     quickPreview = new QCheckBox("Edit YAML", this);
     machineLayout->addWidget(quickPreview);
+    quickStart = new QCheckBox("Start now", this);
+    quickStart->setChecked(true);
+    machineLayout->addWidget(quickStart);
     machineGroupBox->setLayout(machineLayout);
 
     QGroupBox *distroGroupBox = new QGroupBox(tr("Linux Distributions"));
@@ -988,8 +1005,13 @@ void Window::createInstance()
     if (!editFile)
         return;
     editWindow->close();
+    bool start = createStart->isChecked();
     QStringList args;
-    args << "start";
+    if (start) {
+        args << "start";
+    } else {
+        args << "create";
+    }
     args << "--tty=false";
     if (!set.isEmpty()) {
         args << "--set";
@@ -1010,8 +1032,13 @@ void Window::createInstanceURL()
         url = url.replace("github.com", "raw.githubusercontent.com");
         url = url.replace("blob/", "");
     }
+    bool start = createStart->isChecked();
     QStringList args;
-    args << "start";
+    if (start) {
+        args << "start";
+    } else {
+        args << "create";
+    }
     args << "--tty=false";
     if (!set.isEmpty()) {
         args << "--set";
@@ -1031,6 +1058,7 @@ void Window::updateInstance()
     if (!editFile)
         return;
     editWindow->close();
+    bool start = createStart->isChecked();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
     QFile(yamlFile).remove();
@@ -1045,6 +1073,11 @@ void Window::updateInstance()
         outputCommand(args);
     } else if (!ok) {
         QMessageBox::warning(this, tr("lima"), tr("Failed to update") + " " + yamlFile);
+    }
+    if (start) {
+        QStringList args2 = { "start", "--tty=false" };
+        args2 << name;
+        sendCommand(args2);
     }
 }
 
@@ -1211,7 +1244,7 @@ void Window::viewInstance()
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), "", yamlFile, false, false);
+    yamlEditor(instance.name(), "", yamlFile, false, false, false);
 }
 
 void Window::editInstance()
@@ -1219,7 +1252,7 @@ void Window::editInstance()
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), "", yamlFile, false, true);
+    yamlEditor(instance.name(), "", yamlFile, false, true, true);
 }
 
 void Window::messageInstance()

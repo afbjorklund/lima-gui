@@ -118,7 +118,7 @@ private:
     void displayWindow();
     bool getProcessOutput(QStringList arguments, QString &text);
     void yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
-                    bool edit);
+                    bool edit, bool start);
     void createEditor();
     QWidget *newExampleButton(QString name);
     void quickCreate();
@@ -152,10 +152,12 @@ private:
     QMainWindow *editWindow;
     QDialog *quickDialog;
     QCheckBox *quickPreview;
+    QCheckBox *quickStart;
     QTemporaryDir *editDir;
     QFile *editFile;
     QLineEdit *createName;
     QLineEdit *createSet;
+    QCheckBox *createStart;
     QTextEdit *createYAML;
     QLineEdit *createURL;
 

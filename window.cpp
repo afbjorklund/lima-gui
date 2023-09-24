@@ -987,7 +987,9 @@ void Window::createInstance()
     if (!editFile)
         return;
     editWindow->close();
-    QStringList args = { "start", "--tty=false" };
+    QStringList args;
+    args << "start";
+    args << "--tty=false";
     if (!set.isEmpty()) {
         args << "--set";
         args << set;
@@ -1007,7 +1009,9 @@ void Window::createInstanceURL()
         url = url.replace("github.com", "raw.githubusercontent.com");
         url = url.replace("blob/", "");
     }
-    QStringList args = { "start", "--tty=false" };
+    QStringList args;
+    args << "start";
+    args << "--tty=false";
     if (!set.isEmpty()) {
         args << "--set";
         args << set;
@@ -1037,7 +1041,7 @@ void Window::updateInstance()
         args << "--set";
         args << set;
         args << name;
-        sendCommand(args);
+        outputCommand(args);
     } else if (!ok) {
         QMessageBox::warning(this, tr("lima"), tr("Failed to update") + " " + yamlFile);
     }

@@ -325,6 +325,7 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
         createName->setReadOnly(true);
     }
     QLabel *label2 = new QLabel(tr("Set"));
+    label2->setEnabled(edit);
     createSet = new QLineEdit(setString);
     if (edit) {
         createSet->setPlaceholderText(".cpus = 4 | .memory = \"4GiB\"");

@@ -461,7 +461,7 @@ void Window::quickCreate()
         createYAML = new QTextEdit;
         createStart = new QCheckBox;
         readYAML(exampleYAML);
-        // TODO: arch, cpus, memory, disk
+        createSet->setText(quickSetString());
         createStart->setChecked(quickStart->isChecked());
         createInstance();
     }

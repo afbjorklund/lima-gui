@@ -1204,8 +1204,10 @@ void Window::inspectInstance()
     limayamlButtonLayout->addWidget(messageButton);
     if (instance.status() == "Running") {
         editButton->setEnabled(false);
+        editButton->setToolTip(tr("Can't edit running instance"));
         bool hasMessage = instance.config().contains("message");
         messageButton->setEnabled(hasMessage);
+        messageButton->setToolTip(hasMessage ? "" : tr("No message found"));
     } else if (instance.status() == "Stopped") {
         editButton->setEnabled(true);
         messageButton->setEnabled(false);

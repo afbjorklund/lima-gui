@@ -796,15 +796,19 @@ void Window::updateButtons()
     Instance instance = getInstanceHash()[inst];
     if (instance.status() == "Running") {
         shellButton->setEnabled(true);
+        shellButton->setToolTip("");
         bool hasDisplay = instance.videoDisplay() != "none";
         displayButton->setEnabled(hasDisplay);
+        displayButton->setToolTip(hasDisplay ? "" : tr("Needs VNC enabled"));
         startButton->setEnabled(false);
         stopButton->setEnabled(true);
         inspectButton->setEnabled(true);
         removeButton->setEnabled(false);
     } else if (instance.status() == "Stopped") {
         shellButton->setEnabled(false);
+        shellButton->setToolTip(tr("Needs to be running"));
         displayButton->setEnabled(false);
+        displayButton->setToolTip(tr("Needs to be running"));
         startButton->setEnabled(true);
         stopButton->setEnabled(false);
         inspectButton->setEnabled(true);

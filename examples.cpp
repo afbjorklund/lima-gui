@@ -21,6 +21,7 @@ ExampleHash &getExamples()
     hash["ubuntu"] = Example("ubuntu", "Ubuntu", "https://ubuntu.com");
     hash["centos"] = Example("centos", "CentOS", "https://www.centos.org/centos-linux/");
     hash["flatcar"] = Example("flatcar", "Flatcar", "https://flatcar.org");
+    hash["tinycore"] = Example("tinycore", "TinyCore", "http://tinycorelinux.net/");
 
     hash["centos-stream"] =
             Example("centos-stream", "CentOS Stream", "https://www.centos.org/centos-stream/");

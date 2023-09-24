@@ -28,5 +28,6 @@
    <file>logos/stream.png</file>
    <file>logos/coreos.png</file>
    <file>logos/flatcar.png</file>
+   <file>logos/tinycore.png</file>
 </qresource>
 </RCC>

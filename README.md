@@ -1,4 +1,6 @@
-# System Tray Icon
+# Lima GUI
+
+See <https://lima-vm.io>
 
 ## Running
 

@@ -418,24 +418,19 @@ void QVNCClientWidget::mouseMoveEvent(QMouseEvent *event)
 
     message[0] = 5; // pointer event
 
-    switch(event->button())
-    {
-    case Qt::LeftButton:
+    Qt::MouseButtons buttons = event->buttons();
+    message[1] = 0;
+
+    if (buttons & Qt::LeftButton) {
         message[1] = 1;
-        break;
+    }
 
-    case Qt::MiddleButton:
+    if (buttons & Qt::MiddleButton) {
         message[1] = 2;
-        break;
+    }
 
-    case Qt::RightButton:
+    if (buttons & Qt::RightButton) {
         message[1] = 4;
-        break;
-
-    default:
-        message[1] = 0;
-        break;
-
     }
 
     quint16 posX = (double(event->pos().x()) / double(width())) * double(frameBufferWidth);

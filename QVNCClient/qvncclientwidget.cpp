@@ -139,6 +139,8 @@ bool QVNCClientWidget::connectToVncServer(QString ip, QString password, int port
             qDebug() << "Connection failed";
             return false;
         }
+
+        setClientEncodings();
     }
     else
     {
@@ -177,6 +179,29 @@ QByteArray QVNCClientWidget::desHash(QByteArray challenge, QString passStr)
         (unsigned char*)result.data()+8);
 
     return result;
+}
+
+void QVNCClientWidget::setClientEncodings()
+{
+    QByteArray clientSetEncodings(12, 0);
+
+    int numEncodings = 2;
+
+    clientSetEncodings[0] = 2; // message type must be 2
+    clientSetEncodings[2] = (numEncodings >> 8) & 0xFF;
+    clientSetEncodings[3] = (numEncodings >> 0) & 0xFF;
+    clientSetEncodings[4] = 0xFF;
+    clientSetEncodings[5] = 0xFF;
+    clientSetEncodings[6] = 0xFE;
+    clientSetEncodings[7] = 0xFF; // ENCODING_POINTER_TYPE_CHANGE
+    clientSetEncodings[8] = 0x00;
+    clientSetEncodings[9] = 0x00;
+    clientSetEncodings[10] = 0x00;
+    clientSetEncodings[11] = 0x00; // ENCODING_RAW
+
+    socket.write(clientSetEncodings);
+
+    connect(&socket, SIGNAL(readyRead()), this, SLOT(onServerMessage()));
 }
 
 void QVNCClientWidget::tryRefreshScreen()
@@ -238,8 +263,10 @@ void QVNCClientWidget::onServerMessage()
 
     QByteArray response;
     int noOfRects;
-    response = socket.read(1);
-    switch(response.at(0))
+    int type;
+    response = socket.read(2);
+    type = qMakeU16(response.at(0), response.at(1));
+    switch(type)
     {
 
     // ***************************************************************************************
@@ -247,7 +274,6 @@ void QVNCClientWidget::onServerMessage()
     // ***************************************************************************************
     case 0:
 
-        response = socket.read(1); // padding
         response = socket.read(2); // number of rectangles
 
         noOfRects = qMakeU16(response.at(0), response.at(1));
@@ -304,6 +330,10 @@ void QVNCClientWidget::onServerMessage()
                         img_pointer += 4;
                     }
                 }
+            }
+            else if(encodingType == -257) {
+                response = socket.read(2);
+                absolute = qMakeU16(response.at(0), response.at(1));
             }
 
             QPainter painter(&screen);
@@ -386,7 +416,7 @@ void QVNCClientWidget::mouseMoveEvent(QMouseEvent *event)
 
     QByteArray message(6, 0);
 
-    message[0] = 5; // mouse event
+    message[0] = 5; // pointer event
 
     switch(event->button())
     {
@@ -410,6 +440,12 @@ void QVNCClientWidget::mouseMoveEvent(QMouseEvent *event)
 
     quint16 posX = (double(event->pos().x()) / double(width())) * double(frameBufferWidth);
     quint16 posY = (double(event->pos().y()) / double(height())) * double(frameBufferHeight);
+
+    if (absolute) {
+        QPoint global = mapToGlobal(QPoint(0,0));
+        posX += global.x();
+        posY += global.y();
+    }
 
     message[2] = (posX >> 8) & 0xFF;
     message[3] = (posX >> 0) & 0xFF;
@@ -429,7 +465,7 @@ void QVNCClientWidget::mousePressEvent(QMouseEvent *event)
 
     QByteArray message(6, 0);
 
-    message[0] = 5; // mouse event
+    message[0] = 5; // pointer event
 
     switch(event->button())
     {
@@ -453,6 +489,12 @@ void QVNCClientWidget::mousePressEvent(QMouseEvent *event)
 
     quint16 posX = (double(event->pos().x()) / double(width())) * double(frameBufferWidth);
     quint16 posY = (double(event->pos().y()) / double(height())) * double(frameBufferHeight);
+
+    if (absolute) {
+        QPoint global = mapToGlobal(QPoint(0,0));
+        posX += global.x();
+        posY += global.y();
+    }
 
     message[2] = (posX >> 8) & 0xFF;
     message[3] = (posX >> 0) & 0xFF;
@@ -470,7 +512,7 @@ void QVNCClientWidget::mouseReleaseEvent(QMouseEvent *event)
 
     QByteArray message(6, 0);
 
-    message[0] = 5; // mouse event
+    message[0] = 5; // pointer event
 
     switch(event->button())
     {
@@ -494,6 +536,12 @@ void QVNCClientWidget::mouseReleaseEvent(QMouseEvent *event)
 
     quint16 posX = (double(event->pos().x()) / double(width())) * double(frameBufferWidth);
     quint16 posY = (double(event->pos().y()) / double(height())) * double(frameBufferHeight);
+
+    if (absolute) {
+        QPoint global = mapToGlobal(QPoint(0,0));
+        posX += global.x();
+        posY += global.y();
+    }
 
     message[2] = (posX >> 8) & 0xFF;
     message[3] = (posX >> 0) & 0xFF;

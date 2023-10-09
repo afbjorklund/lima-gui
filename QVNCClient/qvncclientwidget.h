@@ -40,6 +40,7 @@ public:
     bool isConnectedToServer();
     void disconnectFromVncServer();
 
+    void setClientEncodings();
     void tryRefreshScreen();
 
     void startFrameBufferUpdate()
@@ -73,6 +74,7 @@ signals:
 
 private:
     QImage screen;
+    bool absolute;
 
     QTcpSocket socket;
     QByteArray desHash(QByteArray challenge, QString passStr);

@@ -1149,7 +1149,7 @@ void Window::inspectInstance()
         QString codename = match.length() > 0 ? match[0].replace("VERSION_CODENAME=", "") : "";
         codename = codename.replace("\"", "");
         if (!codename.isEmpty() && !pretty.contains(codename)) {
-            pretty += " ( " + codename + ")";
+            pretty += " (" + codename + ")";
         }
         match = lines.filter(QRegularExpression("^ID="));
         id = match.length() > 0 ? match[0].replace("ID=", "").replace("\"", "") : "";

@@ -750,8 +750,11 @@ void Window::createInstanceGroupBox()
     displayButton = new QPushButton(tr("Display"));
     displayButton->setIcon(QIcon(":/images/desktopshare.png"));
     startButton = new QPushButton(tr("Start"));
+    startButton->setIcon(QIcon(":/images/player_start.png"));
     stopButton = new QPushButton(tr("Stop"));
+    stopButton->setIcon(QIcon(":/images/player_stop.png"));
     inspectButton = new QPushButton(tr("Inspect"));
+    inspectButton->setIcon(QIcon(":/images/advanced.png"));
     removeButton = new QPushButton(tr("Remove"));
     removeButton->setIcon(QIcon(":/images/remove.png"));
 

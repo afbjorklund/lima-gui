@@ -261,7 +261,7 @@ void Window::shellConsole()
     }
 
     QStringList arguments;
-    arguments << "-e" << QString("%1 shell %2").arg(program).arg(instance);
+    arguments << "-e" << program << "shell" << instance;
     QProcess *process = new QProcess(this);
     process->start(QStandardPaths::findExecutable(terminal), arguments);
 #endif

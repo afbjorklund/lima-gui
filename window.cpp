@@ -279,7 +279,9 @@ void Window::displayWindow()
     QString display = QString::fromUtf8(displayFile.readAll()).trimmed();
     QStringList parts = display.split(":");
     QString address = parts[0];
+#ifndef QT_NO_VNCCLIENT
     int port = 5900 + parts[1].toInt();
+#endif
     QFile passwordFile(instance.dir() + "/" + "vncpassword");
     if (!passwordFile.open(QFile::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, tr("lima"), tr("Could not read vnc password"));

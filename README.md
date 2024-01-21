@@ -51,6 +51,19 @@ See <https://doc.qt.io/qt-5/qtwidgets-desktop-systray-example.html>
 Tux icon from the Crystal project by Everaldo Coelho.
 The icons are licensed under the GNU Lesser General Public License (LGPL).
 
+## Optional
+
+These features are optional, and can be disabled or enabled in build:
+
+* QTermWidget (default: off) <https://github.com/lxqt/qtermwidget>
+* QrwEmoticons (default: on) <https://github.com/raven-worx/qrwemoticons>
+* QSourceHighlite (default: on) <https://github.com/Waqar144/QSourceHighlite>
+* QVNCClient (default: on) <https://bitbucket.org/amahta/qvncclient>
+
+The QTermWidget has a GPL-2+ license, and is not included by default.
+
 Unix builds (Linux, Mac) will need to install qtermwidget dependency:
 
 See <https://github.com/lxqt/qtermwidget> (not available on Windows)
+
+The default is to start the regular terminal application, externally.

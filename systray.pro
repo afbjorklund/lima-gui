@@ -19,7 +19,10 @@ macx: ICON    = icons/tux.icns
 DISTFILES += \
     LICENSE
 
+//DEFINES += QT_NO_SOURCEHIGHLITER
 include(QSourceHighlite/QSourceHighlite.pri)
+
+//DEFINES += QT_NO_EMOTICONS
 include(QrwEmoticons/QrwEmoticons.pri)
 
 //DEFINES += QT_NO_VNCCLIENT

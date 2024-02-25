@@ -25,6 +25,7 @@ public:
           m_cpus(0),
           m_memory(0),
           m_disk(0),
+          m_ssh_address(""),
           m_ssh_local_port(0),
           m_ssh_config_file("")
     {
@@ -51,6 +52,8 @@ public:
     qint64 disk() const { return m_disk; }
     QString strDisk() const;
     void setDisk(qint64 disk) { m_disk = disk; }
+    QString sshAddress() const { return m_ssh_address; }
+    void setSshAddress(QString addr) { m_ssh_address = addr; }
     int sshLocalPort() const { return m_ssh_local_port; }
     void setSshLocalPort(int port) { m_ssh_local_port = port; }
     QString sshConfigFile() const { return m_ssh_config_file; }
@@ -71,6 +74,7 @@ private:
     int m_cpus;
     qint64 m_memory;
     qint64 m_disk;
+    QString m_ssh_address;
     int m_ssh_local_port;
     QString m_ssh_config_file;
     QVariantMap m_config;

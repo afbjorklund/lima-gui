@@ -1183,7 +1183,7 @@ void Window::inspectInstance()
     QFormLayout *form1 = new QFormLayout;
     form1->addRow(new QLabel(tr("Name:")), new QLabel(instance.name()));
     form1->addRow(new QLabel(tr("Status:")), new QLabel(instance.status()));
-    QString sshAddress = QString("127.0.0.1:%1").arg(instance.sshLocalPort());
+    QString sshAddress = QString("%1:%2").arg(instance.sshAddress()).arg(instance.sshLocalPort());
     form1->addRow(new QLabel(tr("SSH:")), new QLabel(sshAddress));
     form1->addRow(new QLabel(tr("VM Type:")), new QLabel(instance.vmType()));
     form1->addRow(new QLabel(tr("Arch:")), new QLabel(instance.arch()));

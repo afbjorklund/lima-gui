@@ -50,6 +50,12 @@ Instance::Instance(const QJsonObject &obj) : Instance()
         double disk = obj["disk"].toDouble();
         setDisk((qint64)disk);
     }
+    if (obj.contains("sshAddress")) {
+        QString addr = obj["sshAddress"].toString();
+        setSshAddress(addr);
+    } else {
+        setSshAddress("127.0.0.1");
+    }
     if (obj.contains("sshLocalPort")) {
         int port = obj["sshLocalPort"].toInt();
         setSshLocalPort(port);

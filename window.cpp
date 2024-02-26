@@ -416,8 +416,13 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
 
 void Window::createEditor()
 {
+    createEditorSet("");
+}
+
+void Window::createEditorSet(QString set)
+{
     QString directory = getPrefix() + "/share/doc/lima";
-    yamlEditor("default", "", directory + "/" + defaultYAML(), true, true, true);
+    yamlEditor("default", set, directory + "/" + defaultYAML(), true, true, true);
 }
 
 QWidget *Window::newExampleButton(QString name)
@@ -478,7 +483,7 @@ void Window::urlCreate()
 void Window::advancedCreate()
 {
     quickDialog->close();
-    createEditor();
+    createEditorSet(quickSetString());
 }
 
 QString Window::quickSetString()

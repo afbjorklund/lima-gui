@@ -120,6 +120,7 @@ private:
     void yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
                     bool edit, bool start);
     void createEditor();
+    void createEditorSet(QString set);
     QWidget *newExampleButton(QString name);
     void quickCreate();
     void urlCreate();

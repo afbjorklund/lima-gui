@@ -504,6 +504,10 @@ QString Window::quickSetString()
     if (disk && disk->property("changed").isValid()) {
         args << ".disk = \"" + disk->text() + "\"";
     }
+    QComboBox *mountType = quickDialog->findChild<QComboBox *>("mountType");
+    if (mountType && mountType->property("changed").isValid()) {
+        args << ".mountType = \"" + mountType->currentText() + "\"";
+    }
     QComboBox *audiodev = quickDialog->findChild<QComboBox *>("audiodev");
     if (audiodev && audiodev->property("changed").isValid()) {
         args << ".audio.device = \"" + audiodev->currentText() + "\"";
@@ -589,6 +593,15 @@ void Window::quickInstance()
     advancedButton->setChecked(false);
     advancedLayout->addWidget(advancedButton);
     advancedLayout->addStretch();
+    advancedLayout->addWidget(new QLabel(tr("Mount Type:")));
+    QComboBox *mountType = new QComboBox;
+    mountType->addItem("");
+    mountType->addItem("reverse-sshfs");
+    mountType->addItem("9p");
+    mountType->addItem("virtiofs");
+    mountType->setObjectName("mountType");
+    connect(vmType, &QComboBox::currentTextChanged, this, &Window::setChanged);
+    advancedLayout->addWidget(mountType);
     advancedLayout->addWidget(new QLabel(tr("Audio Device:")));
     QComboBox *audiodev = new QComboBox;
     audiodev->addItem(""); // default
@@ -1253,6 +1266,7 @@ void Window::inspectInstance()
     instanceBox->setLayout(form1);
     QGroupBox *advancedBox = new QGroupBox(tr("Advanced"));
     QFormLayout *form2 = new QFormLayout;
+    form2->addRow(new QLabel(tr("Mount Type:")), new QLabel(instance.mountType()));
     form2->addRow(new QLabel(tr("Audio Device:")), new QLabel(instance.audioDevice()));
     form2->addRow(new QLabel(tr("Video Display:")), new QLabel(instance.videoDisplay()));
     advancedBox->setLayout(form2);

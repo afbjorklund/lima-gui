@@ -72,6 +72,13 @@ Instance::Instance(const QJsonObject &obj) : Instance()
     if (obj.contains("config")) {
         QJsonObject config = obj["config"].toObject();
         setConfig(config.toVariantMap());
+
+        if (config.contains("mountType")) {
+            QString type = config["mountType"].toString();
+            setMountType(type);
+        } else {
+            setMountType(QString());
+        }
     }
 }
 

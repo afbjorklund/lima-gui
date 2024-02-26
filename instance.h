@@ -20,6 +20,7 @@ public:
           m_status(""),
           m_dir(""),
           m_vm_type(""),
+          m_mount_type(""),
           m_arch(""),
           m_cpu_type(""),
           m_cpus(0),
@@ -39,6 +40,8 @@ public:
     void setDir(QString dir) { m_dir = dir; }
     QString vmType() const { return m_vm_type; }
     void setVmType(QString type) { m_vm_type = type; }
+    QString mountType() const { return m_mount_type; }
+    void setMountType(QString type) { m_mount_type = type; }
     QString arch() const { return m_arch; }
     void setArch(QString arch) { m_arch = arch; }
     QString cpuType() const { return m_cpu_type; }
@@ -69,6 +72,7 @@ private:
     QString m_status;
     QString m_dir;
     QString m_vm_type;
+    QString m_mount_type;
     QString m_arch;
     QString m_cpu_type;
     int m_cpus;

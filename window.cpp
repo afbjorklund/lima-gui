@@ -674,9 +674,13 @@ void Window::quickInstance()
     orchestratorLayout->addWidget(newExampleButton("faasd"));
     orchestratorGroupBox->setLayout(orchestratorLayout);
 
+    QString url = "https://lima-vm.io/docs/templates/";
     QLabel *moreExamplesAvailable =
-            new QLabel(tr("There are more examples available. "
-                          "Use the \"Load\" button (under Advanced), to see them.<br>"));
+            new QLabel(tr("There are more <a href=\"%1\">templates</a> available. "
+                          "Use the \"Load\" button (under Advanced), or \"URL\" below, "
+                          "to use them.<br>")
+                               .arg(url));
+    moreExamplesAvailable->setOpenExternalLinks(true);
 
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(machineGroupBox);

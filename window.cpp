@@ -504,6 +504,14 @@ QString Window::quickSetString()
     if (disk && disk->property("changed").isValid()) {
         args << ".disk = \"" + disk->text() + "\"";
     }
+    QComboBox *audiodev = quickDialog->findChild<QComboBox *>("audiodev");
+    if (audiodev && audiodev->property("changed").isValid()) {
+        args << ".audio.device = \"" + audiodev->currentText() + "\"";
+    }
+    QComboBox *display = quickDialog->findChild<QComboBox *>("display");
+    if (display && display->property("changed").isValid()) {
+        args << ".video.display = \"" + display->currentText() + "\"";
+    }
     return args.join(" | ");
 }
 
@@ -522,8 +530,10 @@ void Window::quickInstance()
     connect(cancelButton, SIGNAL(clicked()), quickDialog, SLOT(close()));
     QPushButton *urlButton = new QPushButton(tr("URL..."));
     connect(urlButton, &QAbstractButton::clicked, this, &Window::urlCreate);
-    QPushButton *advancedButton = new QPushButton(tr("Advanced..."));
-    connect(advancedButton, &QAbstractButton::clicked, this, &Window::advancedCreate);
+    urlButton->setToolTip(tr("Create from URL"));
+    QPushButton *createButton = new QPushButton(tr("Create"));
+    connect(createButton, &QAbstractButton::clicked, this, &Window::quickCreate);
+    createButton->setProperty("name", "default");
 
     createURL = new QLineEdit(defaultURL());
     createURL->setFixedWidth(440);
@@ -567,12 +577,57 @@ void Window::quickInstance()
     disk->setObjectName("disk");
     connect(disk, &QLineEdit::textChanged, this, &Window::setChanged);
     machineLayout->addWidget(disk);
-    quickPreview = new QCheckBox("Edit YAML", this);
-    machineLayout->addWidget(quickPreview);
     quickStart = new QCheckBox("Start now", this);
     quickStart->setChecked(true);
     machineLayout->addWidget(quickStart);
     machineGroupBox->setLayout(machineLayout);
+
+    QWidget *advancedGroupBox = new QWidget();
+    QHBoxLayout *advancedLayout = new QHBoxLayout;
+    QPushButton *advancedButton = new QPushButton(tr("Advanced..."));
+    connect(advancedButton, &QAbstractButton::clicked, this, &Window::advancedCreate);
+    advancedButton->setChecked(false);
+    advancedLayout->addWidget(advancedButton);
+    advancedLayout->addStretch();
+    advancedLayout->addWidget(new QLabel(tr("Audio Device:")));
+    QComboBox *audiodev = new QComboBox;
+    audiodev->addItem(""); // default
+    audiodev->addItem("none");
+#ifdef Q_OS_MACOS
+    audiodev->addItem("coreaudio");
+#endif
+#ifdef Q_OS_WIN
+    audiodev->addItem("dsound");
+#endif
+#ifdef Q_OS_LINUX
+    audiodev->addItem("alsa");
+    audiodev->addItem("oss");
+    audiodev->addItem("pa");
+#endif
+#ifdef Q_OS_MACOS
+    audiodev->addItem("vz");
+#endif
+    audiodev->setObjectName("audiodev");
+    advancedLayout->addWidget(audiodev);
+    advancedLayout->addWidget(new QLabel(tr("Video Display:")));
+    QComboBox *display = new QComboBox;
+    display->addItem("none");
+    display->addItem("default");
+#ifdef Q_OS_MACOS
+    display->addItem("cocoa");
+#endif
+    display->addItem("sdl");
+#ifdef Q_OS_LINUX
+    display->addItem("gtk");
+#endif
+    display->addItem("vnc");
+    display->setObjectName("display");
+    connect(display, &QComboBox::currentTextChanged, this, &Window::setChanged);
+    advancedLayout->addWidget(display);
+    advancedLayout->addStretch();
+    quickPreview = new QCheckBox("Edit YAML", this);
+    advancedLayout->addWidget(quickPreview);
+    advancedGroupBox->setLayout(advancedLayout);
 
     QGroupBox *distroGroupBox = new QGroupBox(tr("Linux Distributions"));
     QHBoxLayout *distroLayout = new QHBoxLayout;
@@ -604,6 +659,7 @@ void Window::quickInstance()
 
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(machineGroupBox);
+    topLayout->addWidget(advancedGroupBox);
     topLayout->addWidget(distroGroupBox);
     topLayout->addWidget(engineGroupBox);
     topLayout->addWidget(orchestratorGroupBox);
@@ -614,7 +670,8 @@ void Window::quickInstance()
     bottomLayout->addStretch();
     bottomLayout->addWidget(urlButton);
     bottomLayout->addWidget(createURL);
-    bottomLayout->addWidget(advancedButton);
+    bottomLayout->addStretch();
+    bottomLayout->addWidget(createButton);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addLayout(topLayout);
@@ -622,6 +679,7 @@ void Window::quickInstance()
 
     quickDialog->resize(640, 480);
     quickDialog->setLayout(layout);
+    createButton->setDefault(true);
     quickDialog->exec();
 }
 

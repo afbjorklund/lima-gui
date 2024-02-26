@@ -38,7 +38,7 @@ ExampleHash &getExamples()
 
     // Container orchestration
     hash["k3s"] = Example("k3s", "Kubernetes (k3s)", "https://k3s.io");
-    hash["k8s"] = Example("k8s", "Kubernetes (k8s)", "https://kubernetes.io");
+    hash["k8s"] = Example("k8s", "Kubernetes (k8s)", "https://k8s.io");
     hash["nomad"] = Example("nomad", "Nomad", "https://nomadproject.io");
     hash["faasd"] = Example("faasd", "Faasd", "https://openfaas.com");
 

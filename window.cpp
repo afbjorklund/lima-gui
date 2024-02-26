@@ -85,6 +85,8 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QRegularExpression>
+#include <QDesktopServices>
+#include <QUrl>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
@@ -334,6 +336,10 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
     }
     createSet->setToolTip("modify the template inplace, using yq syntax");
     createSet->setEnabled(edit);
+    createHelp = new QPushButton(tr("Docs..."));
+    createHelp->setIcon(QIcon(":/images/help.png"));
+
+    connect(createHelp, &QAbstractButton::clicked, this, &Window::helpDocs);
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(label);
@@ -341,6 +347,7 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
     QHBoxLayout *topLayout2 = new QHBoxLayout;
     topLayout2->addWidget(label2);
     topLayout2->addWidget(createSet);
+    topLayout2->addWidget(createHelp);
 
 #ifndef QT_NO_EMOTICONS
     QrwEmoticonsTextEdit *textEdit = new QrwEmoticonsTextEdit(this);
@@ -1009,6 +1016,12 @@ QString Window::shellCommand(QString name, QStringList arguments)
     QStringList args = { "shell", name };
     args.append(arguments);
     return outputCommand(args);
+}
+
+void Window::helpDocs()
+{
+    QString link = "https://lima-vm.io/docs/";
+    QDesktopServices::openUrl(QUrl(link));
 }
 
 void Window::loadYAML()

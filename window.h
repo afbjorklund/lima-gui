@@ -132,6 +132,7 @@ private:
     void sendCommand(QStringList cmds);
     QString outputCommand(QStringList cmds);
     QString shellCommand(QString instanceName, QStringList cmds);
+    void helpDocs();
     void loadYAML();
     void readYAML(QString fileName);
     void saveYAML();
@@ -158,6 +159,7 @@ private:
     QFile *editFile;
     QLineEdit *createName;
     QLineEdit *createSet;
+    QPushButton *createHelp;
     QCheckBox *createStart;
     QTextEdit *createYAML;
     QLineEdit *createURL;

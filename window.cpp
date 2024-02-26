@@ -588,6 +588,7 @@ void Window::quickInstance()
     machineLayout->addWidget(disk);
     quickStart = new QCheckBox("Start now", this);
     quickStart->setChecked(true);
+    quickStart->setToolTip(tr("Start after create"));
     machineLayout->addWidget(quickStart);
     machineGroupBox->setLayout(machineLayout);
 
@@ -596,6 +597,7 @@ void Window::quickInstance()
     QPushButton *advancedButton = new QPushButton(tr("Advanced..."));
     connect(advancedButton, &QAbstractButton::clicked, this, &Window::advancedCreate);
     advancedButton->setChecked(false);
+    advancedButton->setToolTip(tr("Open YAML editor"));
     advancedLayout->addWidget(advancedButton);
     advancedLayout->addStretch();
     advancedLayout->addWidget(new QLabel(tr("Mount Type:")));
@@ -645,6 +647,7 @@ void Window::quickInstance()
     advancedLayout->addStretch();
     quickPreview = new QCheckBox("Edit YAML", this);
     advancedLayout->addWidget(quickPreview);
+    quickPreview->setToolTip(tr("Edit before start"));
     advancedGroupBox->setLayout(advancedLayout);
 
     QGroupBox *distroGroupBox = new QGroupBox(tr("Linux Distributions"));

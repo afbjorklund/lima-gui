@@ -902,9 +902,10 @@ void Window::updateButtons()
 
 void Window::aboutProgram()
 {
-    QString url = "https://github.com/lima-vm/lima";
-    QString text = tr("Lima runs Linux Virtual Machines");
-    text += "<br><br><a href=\"" + url + "\">" + url + "</a><br>";
+    QString title = tr("Lima: Linux Machines");
+    QString url = "https://lima-vm.io";
+    QString text = "<h1>" + title + "</h1>";
+    text += "<a align=\"right\" href=\"" + url + "\">" + url + "</a>";
     text += tr("<p>Use <b>Create</b> (or <b>Quick</b>) to create a new instance of Lima.</p>");
     text += tr("<p>To access an instance, use <b>Shell</b> or the "
                "<tt>lima</tt> command.</p>");

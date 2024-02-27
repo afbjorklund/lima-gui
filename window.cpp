@@ -1288,7 +1288,11 @@ void Window::inspectInstance()
     form1->addRow(new QLabel(tr("Memory:")), new QLabel(instance.strMemory()));
     form1->addRow(new QLabel(tr("Disk:")), new QLabel(instance.strDisk()));
     QString homeDir = QDir::homePath();
-    form1->addRow(new QLabel(tr("Dir:")), new QLabel(instance.dir().replace(homeDir, "~")));
+    QString instDir = instance.dir().replace(homeDir, "~");
+    QLabel *dirLabel =
+            new QLabel(QString("<a href=\"file://%1\">%2</a>").arg(instance.dir(), instDir));
+    dirLabel->setOpenExternalLinks(true);
+    form1->addRow(new QLabel(tr("Dir:")), dirLabel);
     instanceBox->setLayout(form1);
     QGroupBox *advancedBox = new QGroupBox(tr("Advanced"));
     QFormLayout *form2 = new QFormLayout;

@@ -470,10 +470,6 @@ void Window::quickCreate()
                    quickStart->isChecked());
     } else {
         editWindow = new QMainWindow;
-        createName = new QLineEdit;
-        createSet = new QLineEdit;
-        createYAML = new QTextEdit;
-        createStart = new QCheckBox;
         readYAML(exampleYAML);
         createSet->setText(quickSetString());
         createStart->setChecked(quickStart->isChecked());
@@ -550,6 +546,11 @@ void Window::quickInstance()
     QPushButton *createButton = new QPushButton(tr("Create"));
     connect(createButton, &QAbstractButton::clicked, this, &Window::quickCreate);
     createButton->setProperty("name", "default");
+
+    createName = new QLineEdit;
+    createSet = new QLineEdit;
+    createYAML = new QTextEdit;
+    createStart = new QCheckBox;
 
     createURL = new QLineEdit(defaultURL());
     createURL->setFixedWidth(440);

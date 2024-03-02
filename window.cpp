@@ -697,6 +697,7 @@ void Window::quickInstance()
                           "to use them.<br>")
                                .arg(url));
     moreExamplesAvailable->setOpenExternalLinks(true);
+    connect(moreExamplesAvailable, &QLabel::linkHovered, this, &tooltipLink);
 
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(machineGroupBox);

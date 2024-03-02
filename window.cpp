@@ -1282,7 +1282,12 @@ void Window::inspectInstance()
     form1->addRow(new QLabel(tr("Name:")), new QLabel(instance.name()));
     form1->addRow(new QLabel(tr("Status:")), new QLabel(instance.status()));
     QString sshAddress = QString("%1:%2").arg(instance.sshAddress()).arg(instance.sshLocalPort());
-    form1->addRow(new QLabel(tr("SSH:")), new QLabel(sshAddress));
+    QLabel *sshLabel = new QLabel(sshAddress);
+    if (running) {
+        sshLabel->setText(QString("<a href=\"ssh://%1\">%2</a>").arg(sshAddress, sshAddress));
+        connect(sshLabel, &QLabel::linkActivated, this, &Window::shellConsole);
+    }
+    form1->addRow(new QLabel(tr("SSH:")), sshLabel);
     form1->addRow(new QLabel(tr("VM Type:")), new QLabel(instance.vmType()));
     form1->addRow(new QLabel(tr("Arch:")), new QLabel(instance.arch()));
     form1->addRow(new QLabel(tr("CPUs:")), new QLabel(instance.strCpus()));

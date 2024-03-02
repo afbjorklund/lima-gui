@@ -318,6 +318,14 @@ static QString getPrefix()
     return prefix;
 }
 
+static void tooltipLink(const QString &link)
+{
+    if (!link.isEmpty())
+        QToolTip::showText(QCursor::pos(), link);
+    else
+        QToolTip::hideText();
+}
+
 void Window::yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
                         bool edit, bool start)
 {
@@ -1286,6 +1294,7 @@ void Window::inspectInstance()
     if (running) {
         sshLabel->setText(QString("<a href=\"ssh://%1\">%2</a>").arg(sshAddress, sshAddress));
         connect(sshLabel, &QLabel::linkActivated, this, &Window::shellConsole);
+        connect(sshLabel, &QLabel::linkHovered, this, &tooltipLink);
     }
     form1->addRow(new QLabel(tr("SSH:")), sshLabel);
     form1->addRow(new QLabel(tr("VM Type:")), new QLabel(instance.vmType()));
@@ -1298,6 +1307,7 @@ void Window::inspectInstance()
     QLabel *dirLabel =
             new QLabel(QString("<a href=\"file://%1\">%2</a>").arg(instance.dir(), instDir));
     dirLabel->setOpenExternalLinks(true);
+    connect(dirLabel, &QLabel::linkHovered, this, &tooltipLink);
     form1->addRow(new QLabel(tr("Dir:")), dirLabel);
     instanceBox->setLayout(form1);
     QGroupBox *advancedBox = new QGroupBox(tr("Advanced"));

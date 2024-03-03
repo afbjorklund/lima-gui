@@ -63,3 +63,7 @@ These features are optional, and can be disabled or enabled in build:
 The QTermWidget has a GPL-2+ license, and is not included by default.
 
 The default is to start the regular terminal application, externally.
+
+If you don't have a terminal application, there is one available here:
+
+* QTerminal <https://github.com/lxqt/qterminal> (under GPL-2+ license)

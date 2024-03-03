@@ -385,7 +385,9 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
     QPushButton *cancelButton =
             !edit ? new QPushButton(tr("Close")) : new QPushButton(tr("Cancel"));
     QPushButton *loadButton = new QPushButton(tr("Load..."));
+    loadButton->setToolTip(tr("Load YAML file"));
     QPushButton *saveButton = new QPushButton(tr("Save..."));
+    saveButton->setToolTip(tr("Save YAML file"));
     QPushButton *okButton = create ? new QPushButton(tr("Create")) : new QPushButton(tr("Ok"));
     okButton->setDefault(true);
 

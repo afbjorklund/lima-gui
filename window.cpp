@@ -405,13 +405,18 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
         bottomLayout->addWidget(okButton);
     }
 
+    createFind = new QLineEdit;
+    connect(createFind, &QLineEdit::returnPressed, this, &Window::findYAML);
+    QPushButton *findButton = new QPushButton(tr("Find"));
+    connect(findButton, &QPushButton::clicked, this, &Window::findYAML);
     QLabel *label3 = new QLabel(tr("Start"));
     label3->setEnabled(edit);
     createStart = new QCheckBox;
     createStart->setEnabled(edit);
     createStart->setChecked(start);
     QHBoxLayout *bottomLayout2 = new QHBoxLayout;
-    bottomLayout2->addStretch();
+    bottomLayout2->addWidget(createFind);
+    bottomLayout2->addWidget(findButton);
     bottomLayout2->addWidget(label3);
     bottomLayout2->addWidget(createStart);
 
@@ -1034,6 +1039,11 @@ void Window::helpDocs()
 {
     QString link = "https://lima-vm.io/docs/";
     QDesktopServices::openUrl(QUrl(link));
+}
+
+void Window::findYAML()
+{
+    createYAML->find(createFind->text());
 }
 
 void Window::loadYAML()

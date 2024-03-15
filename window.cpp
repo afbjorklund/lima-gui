@@ -255,15 +255,20 @@ void Window::shellConsole()
     process->start("/usr/bin/osascript", arguments);
 #else
     QString terminal = QString::fromLocal8Bit(qgetenv("TERMINAL"));
+    QString execute = "-e";
     if (terminal.isEmpty()) {
         terminal = "x-terminal-emulator";
-        if (QStandardPaths::findExecutable(terminal).isEmpty()) {
+        QString path = QStandardPaths::findExecutable(terminal);
+        if (path.isEmpty()) {
             terminal = "xterm";
+        }
+        if (QDir(path).canonicalPath() == "/usr/bin/io.elementary.terminal") {
+            execute = "-x";
         }
     }
 
     QStringList arguments;
-    arguments << "-e" << program << "shell" << instance;
+    arguments << execute << program << "shell" << instance;
     QProcess *process = new QProcess(this);
     process->start(QStandardPaths::findExecutable(terminal), arguments);
 #endif

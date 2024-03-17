@@ -414,9 +414,11 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
 
     QLabel *label3 = new QLabel(tr("Search"));
     createFind = new QLineEdit;
+    createFind->setToolTip("search for text in the yaml document");
     connect(createFind, &QLineEdit::returnPressed, this, &Window::findYAML);
     QPushButton *findButton = new QPushButton(tr("Find"));
     findButton->setIcon(QIcon(":/images/search.png"));
+    findButton->setToolTip(tr("Search YAML doc"));
     connect(findButton, &QPushButton::clicked, this, &Window::findYAML);
     QLabel *label4 = new QLabel(tr("Start"));
     label4->setEnabled(edit);

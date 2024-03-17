@@ -415,6 +415,7 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
     createFind = new QLineEdit;
     connect(createFind, &QLineEdit::returnPressed, this, &Window::findYAML);
     QPushButton *findButton = new QPushButton(tr("Find"));
+    findButton->setIcon(QIcon(":/images/search.png"));
     connect(findButton, &QPushButton::clicked, this, &Window::findYAML);
     QLabel *label3 = new QLabel(tr("Start"));
     label3->setEnabled(edit);

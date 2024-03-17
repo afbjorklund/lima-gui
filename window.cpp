@@ -412,20 +412,22 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
         bottomLayout->addWidget(okButton);
     }
 
+    QLabel *label3 = new QLabel(tr("Search"));
     createFind = new QLineEdit;
     connect(createFind, &QLineEdit::returnPressed, this, &Window::findYAML);
     QPushButton *findButton = new QPushButton(tr("Find"));
     findButton->setIcon(QIcon(":/images/search.png"));
     connect(findButton, &QPushButton::clicked, this, &Window::findYAML);
-    QLabel *label3 = new QLabel(tr("Start"));
-    label3->setEnabled(edit);
+    QLabel *label4 = new QLabel(tr("Start"));
+    label4->setEnabled(edit);
     createStart = new QCheckBox;
     createStart->setEnabled(edit);
     createStart->setChecked(start);
     QHBoxLayout *bottomLayout2 = new QHBoxLayout;
+    bottomLayout2->addWidget(label3);
     bottomLayout2->addWidget(createFind);
     bottomLayout2->addWidget(findButton);
-    bottomLayout2->addWidget(label3);
+    bottomLayout2->addWidget(label4);
     bottomLayout2->addWidget(createStart);
 
     QVBoxLayout *layout = new QVBoxLayout;

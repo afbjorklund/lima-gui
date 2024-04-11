@@ -1,0 +1,16 @@
+# docker build -f Dockerfile.f40 -t f40-build .
+
+FROM docker.io/fedora:40
+
+RUN yum install -y qt6-qtbase-devel gcc-c++ make && yum clean all
+
+RUN yum install -y pkgconfig qt6-qtsvg-devel && yum clean all
+#RUN yum install -y pkgconfig qtermwidget-devel qt6-qtsvg-devel && yum clean all
+
+# docker run --rm -v $PWD:/build f40-build
+
+VOLUME /build
+
+WORKDIR /build
+
+CMD qmake && make CXX="g++ -std=c++17"

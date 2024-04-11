@@ -406,7 +406,7 @@ void QVNCClientWidget::keyReleaseEvent(QKeyEvent *event)
     message[6] = (key >> 8) & 0xFF;
     message[7] = (key >> 0) & 0xFF;
 
-    socket.write(message);    
+    socket.write(message);
 }
 
 void QVNCClientWidget::mouseMoveEvent(QMouseEvent *event)
@@ -835,7 +835,7 @@ static unsigned char pc2[48] = {
 
 void deskey(unsigned char *key, short edf)   /* Thanks to James Gillogly & Phil Karn! */
 {
-        register int i, j, l, m, n;
+        int i, j, l, m, n;
         unsigned char pc1m[56], pcr[56];
         unsigned long kn[32];
 
@@ -868,11 +868,11 @@ void deskey(unsigned char *key, short edf)   /* Thanks to James Gillogly & Phil 
         return;
         }
 
-static void cookey(register unsigned long *raw1)
+static void cookey(unsigned long *raw1)
 {
-        register unsigned long *cook, *raw0;
+        unsigned long *cook, *raw0;
         unsigned long dough[32];
-        register int i;
+        int i;
 
         cook = dough;
         for( i = 0; i < 16; i++, raw1++ ) {
@@ -890,18 +890,18 @@ static void cookey(register unsigned long *raw1)
         return;
         }
 
-void cpkey(register unsigned long *into)
+void cpkey(unsigned long *into)
 {
-        register unsigned long *from, *endp;
+        unsigned long *from, *endp;
 
         from = KnL, endp = &KnL[32];
         while( from < endp ) *into++ = *from++;
         return;
         }
 
-void usekey(register unsigned long *from)
+void usekey(unsigned long *from)
 {
-        register unsigned long *to, *endp;
+        unsigned long *to, *endp;
 
         to = KnL, endp = &KnL[32];
         while( to < endp ) *to++ = *from++;
@@ -918,7 +918,7 @@ void des(unsigned char *inblock, unsigned char *outblock)
         return;
         }
 
-static void scrunch(register unsigned char *outof, register unsigned long *into)
+static void scrunch(unsigned char *outof, unsigned long *into)
 {
         *into    = (*outof++ & 0xffL) << 24;
         *into   |= (*outof++ & 0xffL) << 16;
@@ -931,7 +931,7 @@ static void scrunch(register unsigned char *outof, register unsigned long *into)
         return;
         }
 
-static void unscrun(register unsigned long *outof, register unsigned char *into)
+static void unscrun(unsigned long *outof, unsigned char *into)
 {
         *into++ = (unsigned char) ((*outof >> 24) & 0xffL);
         *into++ = (unsigned char) ((*outof >> 16) & 0xffL);
@@ -1088,10 +1088,10 @@ static unsigned long SP8[64] = {
         0x10041040L, 0x00041000L, 0x00041000L, 0x00001040L,
         0x00001040L, 0x00040040L, 0x10000000L, 0x10041000L };
 
-static void desfunc(register unsigned long *block, register unsigned long *keys)
+static void desfunc(unsigned long *block, unsigned long *keys)
 {
-        register unsigned long fval, work, right, leftt;
-        register int round;
+        unsigned long fval, work, right, leftt;
+        int round;
 
         leftt = block[0];
         right = block[1];

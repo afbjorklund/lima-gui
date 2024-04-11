@@ -38,4 +38,6 @@ gpl_licensed {
   unix: PKGCONFIG += qtermwidget5
 } else {
   DEFINES += QT_NO_TERMWIDGET
+
+  win32: DEFINES += QT_NO_EMOTICONS
 }

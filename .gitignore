@@ -14,3 +14,4 @@ qrc_*.cpp
 *.o
 lib*.so
 lib*.a
+lima-gui.app

@@ -76,7 +76,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QSettings settings("lima", "lima-gui");
-    QString program = limactlPath();
+    QStringList paths = settings.value("paths").value<QStringList>();
+    QString program = limactlPath(paths);
     if (program.isEmpty()) {
         QMessageBox::critical(0, QObject::tr("Lima"),
                               QObject::tr("I couldn't find limactl in PATH "

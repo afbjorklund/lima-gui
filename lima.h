@@ -5,6 +5,6 @@ extern QString defaultYAML();
 extern QString defaultURL();
 
 extern QStringList brewPaths();
-extern QString limactlPath();
+extern QString limactlPath(const QStringList &paths = QStringList());
 
 #endif // LIMA_H

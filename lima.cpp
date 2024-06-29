@@ -22,12 +22,20 @@ QStringList brewPaths()
                          "/opt/local/bin" });
 }
 
-QString limactlPath()
+QStringList standardPaths;
+
+QString limactlPath(const QStringList &paths)
 {
-    QString program = QStandardPaths::findExecutable("limactl");
+    QStringList searchPaths;
+    if (paths.isEmpty()) {
+        searchPaths = standardPaths;
+    } else {
+        standardPaths = paths;
+	searchPaths = paths;
+    }
+    QString program = QStandardPaths::findExecutable("limactl", paths);
     if (program.isEmpty()) {
-        QStringList paths = brewPaths();
-        program = QStandardPaths::findExecutable("limactl", paths);
+        program = QStandardPaths::findExecutable("limactl", brewPaths());
     }
     return program;
 }

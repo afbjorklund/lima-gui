@@ -75,6 +75,7 @@ class QMenu;
 class QPushButton;
 class QTemporaryDir;
 class QTextEdit;
+class QSettings;
 QT_END_NAMESPACE
 
 #include "instance.h"
@@ -89,6 +90,7 @@ public:
     Window();
 
     void setVisible(bool visible) override;
+    void setSettings(QSettings *settings);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -192,6 +194,8 @@ private:
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     QIcon *trayIconIcon;
+
+    QSettings *settings;
 };
 //! [0]
 

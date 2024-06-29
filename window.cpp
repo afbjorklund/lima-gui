@@ -87,6 +87,7 @@
 #include <QRegularExpression>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QSettings>
 
 #ifndef QT_NO_TERMWIDGET
 #include <QApplication>
@@ -158,6 +159,11 @@ void Window::setVisible(bool visible)
     maximizeAction->setEnabled(!isMaximized());
     restoreAction->setEnabled(isMaximized() || !visible);
     QDialog::setVisible(visible);
+}
+
+void Window::setSettings(QSettings *settings)
+{
+    this->settings = settings;
 }
 //! [1]
 

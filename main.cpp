@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include <QApplication>
+#include <QSettings>
 #include <QtPlugin>
 
 #ifndef QT_NO_SYSTEMTRAYICON
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
+    QSettings settings("lima", "lima-gui");
     QString program = limactlPath();
     if (program.isEmpty()) {
         QMessageBox::critical(0, QObject::tr("Lima"),
@@ -86,6 +88,7 @@ int main(int argc, char *argv[])
     }
 
     Window window;
+    window.setSettings(&settings);
     window.show();
     return app.exec();
 }

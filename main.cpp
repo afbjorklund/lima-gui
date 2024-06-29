@@ -50,6 +50,7 @@
 
 #include <QApplication>
 #include <QSettings>
+#include <QDebug>
 #include <QtPlugin>
 
 #ifndef QT_NO_SYSTEMTRAYICON

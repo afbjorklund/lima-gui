@@ -170,7 +170,7 @@ void Window::setSettings(QSettings *settings)
 //! [2]
 void Window::closeEvent(QCloseEvent *event)
 {
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     if (!event->spontaneous() || !isVisible()) {
         return;
     }
@@ -253,7 +253,7 @@ void Window::shellConsole()
     mainWindow->resize(640, 480);
     mainWindow->setCentralWidget(console);
     mainWindow->show();
-#elif defined(Q_OS_OSX)
+#elif defined(Q_OS_MACOS)
     QString command = program + " shell " + instance;
     QStringList arguments = { "-e", "tell app \"Terminal\"",         "-e", "activate",
                               "-e", "do script \"" + command + "\"", "-e", "end tell" };
@@ -987,7 +987,7 @@ void Window::sendCommand(QStringList arguments)
 {
     QString program = limactlPath();
     process = new QProcess(this);
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     // the macOS PATH does not inherit from the terminal PATH, add brew
     env.insert("PATH", brewPaths().join(":") + ":" + env.value("PATH"));

@@ -28,6 +28,10 @@ ExampleHash &getExamples()
             Example("centos-stream", "CentOS Stream", "https://www.centos.org/centos-stream/");
     hash["fedora-coreos"] =
             Example("fedora-coreos", "Fedora CoreOS", "https://fedoraproject.org/coreos/");
+    hash["opensuse-leap"] =
+            Example("opensuse-leap", "openSUSE Leap", "https://www.opensuse.org.org/#Leap");
+    hash["opensuse-tumbleweed"] =
+            Example("opensuse-tumbleweed", "openSUSE Tumbleweed", "https://www.opensuse.org/#Tumbleweed");
 
     // Container engines
     hash["default"] = Example("default", "Default", "https://containerd.io");
@@ -44,6 +48,10 @@ ExampleHash &getExamples()
 
     hash["centos-stream"].setLogo("stream.png");
     hash["fedora-coreos"].setLogo("coreos.png");
+    hash["opensuse-leap"].setLogo("leap.png");
+    hash["opensuse-leap"].setYaml("opensuse.yaml");
+    hash["opensuse-tumbleweed"].setLogo("tumbleweed.png");
+    hash["opensuse-tumbleweed"].setYaml("experimental/tumbleweed.yaml");
     hash["default"].setLogo("nerd-face.png");
     hash["docker"].setLogo("whale.png");
     hash["faasd"].setLogo("openfaas.png");

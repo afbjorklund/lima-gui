@@ -35,5 +35,7 @@
    <file>logos/flatcar.png</file>
    <file>logos/tinycore.png</file>
    <file>logos/buildroot.png</file>
+   <file>logos/leap.png</file>
+   <file>logos/tumbleweed.png</file>
 </qresource>
 </RCC>

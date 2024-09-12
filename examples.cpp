@@ -51,7 +51,7 @@ ExampleHash &getExamples()
     hash["opensuse-leap"].setLogo("leap.png");
     hash["opensuse-leap"].setYaml("opensuse.yaml");
     hash["opensuse-tumbleweed"].setLogo("tumbleweed.png");
-    hash["opensuse-tumbleweed"].setYaml("experimental/tumbleweed.yaml");
+    hash["opensuse-tumbleweed"].setYaml("experimental/opensuse-tumbleweed.yaml");
     hash["default"].setLogo("nerd-face.png");
     hash["docker"].setLogo("whale.png");
     hash["faasd"].setLogo("openfaas.png");

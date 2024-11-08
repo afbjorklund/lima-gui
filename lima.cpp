@@ -8,12 +8,12 @@
 
 QString defaultYAML()
 {
-    return "examples/default.yaml";
+    return "templates/default.yaml";
 }
 
 QString defaultURL()
 {
-    return "https://github.com/lima-vm/lima/blob/master/examples/default.yaml";
+    return "https://github.com/lima-vm/lima/blob/master/templates/default.yaml";
 }
 
 QStringList brewPaths()

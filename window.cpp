@@ -496,7 +496,7 @@ void Window::quickCreate()
     quickDialog->close();
     QString name = QObject::sender()->property("name").value<QString>();
     Example example = getExamples()[name];
-    QString examples = getPrefix() + "/share/doc/lima/examples";
+    QString examples = getPrefix() + "/share/doc/lima/templates";
     QString exampleYAML = examples + "/" + example.yaml();
     if (quickPreview->isChecked()) {
         yamlEditor(example.name(), quickSetString(), exampleYAML, true, true,
@@ -1066,7 +1066,7 @@ void Window::findYAML()
 
 void Window::loadYAML()
 {
-    QString examples = getPrefix() + "/share/doc/lima/examples";
+    QString examples = getPrefix() + "/share/doc/lima/templates";
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open YAML"), examples,
                                                     tr("YAML Files (*.yaml)"));

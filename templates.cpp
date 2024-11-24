@@ -28,10 +28,9 @@ TemplateHash &getTemplates()
             Template("centos-stream", "CentOS Stream", "https://www.centos.org/centos-stream/");
     hash["fedora-coreos"] =
             Template("fedora-coreos", "Fedora CoreOS", "https://fedoraproject.org/coreos/");
-    hash["opensuse-leap"] =
-            Template("opensuse-leap", "openSUSE Leap", "https://www.opensuse.org.org/#Leap");
+    hash["opensuse-leap"] = Template("opensuse-leap", "openSUSE Leap", "https://www.opensuse.org/");
     hash["opensuse-tumbleweed"] =
-            Template("opensuse-tumbleweed", "openSUSE Tumbleweed", "https://www.opensuse.org/#Tumbleweed");
+            Template("opensuse-tumbleweed", "openSUSE Tumbleweed", "https://www.opensuse.org/");
 
     // Container engines
     hash["default"] = Template("default", "Default", "https://containerd.io");

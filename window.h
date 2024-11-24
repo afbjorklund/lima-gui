@@ -79,7 +79,7 @@ class QSettings;
 QT_END_NAMESPACE
 
 #include "instance.h"
-#include "examples.h"
+#include "templates.h"
 
 //! [0]
 class Window : public QDialog
@@ -123,7 +123,7 @@ private:
                     bool edit, bool start);
     void createEditor();
     void createEditorSet(QString set);
-    QWidget *newExampleButton(QString name);
+    QWidget *newTemplateButton(QString name);
     void quickCreate();
     void urlCreate();
     void advancedCreate();

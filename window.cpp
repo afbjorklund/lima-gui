@@ -465,9 +465,9 @@ void Window::createEditorSet(QString set)
     yamlEditor("default", set, directory + "/" + defaultYAML(), true, true, true);
 }
 
-QWidget *Window::newExampleButton(QString name)
+QWidget *Window::newTemplateButton(QString name)
 {
-    Example example = getExamples()[name];
+    Template example = getTemplates()[name];
     QIcon icon(QPixmap(":/logos/" + example.logo()));
     QPushButton *button = new QPushButton;
     qreal size = 48 * devicePixelRatio();
@@ -495,9 +495,9 @@ void Window::quickCreate()
 {
     quickDialog->close();
     QString name = QObject::sender()->property("name").value<QString>();
-    Example example = getExamples()[name];
-    QString examples = getPrefix() + "/share/doc/lima/templates";
-    QString exampleYAML = examples + "/" + example.yaml();
+    Template example = getTemplates()[name];
+    QString templates = getPrefix() + "/share/doc/lima/templates";
+    QString exampleYAML = templates + "/" + example.yaml();
     if (quickPreview->isChecked()) {
         yamlEditor(example.name(), quickSetString(), exampleYAML, true, true,
                    quickStart->isChecked());
@@ -693,36 +693,36 @@ void Window::quickInstance()
 
     QGroupBox *distroGroupBox = new QGroupBox(tr("Linux Distributions"));
     QHBoxLayout *distroLayout = new QHBoxLayout;
-    distroLayout->addWidget(newExampleButton("alpine"));
-    distroLayout->addWidget(newExampleButton("ubuntu"));
-    distroLayout->addWidget(newExampleButton("fedora"));
-    distroLayout->addWidget(newExampleButton("archlinux"));
+    distroLayout->addWidget(newTemplateButton("alpine"));
+    distroLayout->addWidget(newTemplateButton("ubuntu"));
+    distroLayout->addWidget(newTemplateButton("fedora"));
+    distroLayout->addWidget(newTemplateButton("archlinux"));
     distroGroupBox->setLayout(distroLayout);
 
     QGroupBox *engineGroupBox = new QGroupBox(tr("Container Engines"));
     QHBoxLayout *engineLayout = new QHBoxLayout;
-    engineLayout->addWidget(newExampleButton("default"));
-    engineLayout->addWidget(newExampleButton("docker"));
-    engineLayout->addWidget(newExampleButton("podman"));
-    engineLayout->addWidget(newExampleButton("apptainer"));
+    engineLayout->addWidget(newTemplateButton("default"));
+    engineLayout->addWidget(newTemplateButton("docker"));
+    engineLayout->addWidget(newTemplateButton("podman"));
+    engineLayout->addWidget(newTemplateButton("apptainer"));
     engineGroupBox->setLayout(engineLayout);
 
     QGroupBox *orchestratorGroupBox = new QGroupBox(tr("Container Orchestration"));
     QHBoxLayout *orchestratorLayout = new QHBoxLayout;
-    orchestratorLayout->addWidget(newExampleButton("k3s"));
-    orchestratorLayout->addWidget(newExampleButton("k8s"));
-    orchestratorLayout->addWidget(newExampleButton("nomad"));
-    orchestratorLayout->addWidget(newExampleButton("faasd"));
+    orchestratorLayout->addWidget(newTemplateButton("k3s"));
+    orchestratorLayout->addWidget(newTemplateButton("k8s"));
+    orchestratorLayout->addWidget(newTemplateButton("nomad"));
+    orchestratorLayout->addWidget(newTemplateButton("faasd"));
     orchestratorGroupBox->setLayout(orchestratorLayout);
 
     QString url = "https://lima-vm.io/docs/templates/";
-    QLabel *moreExamplesAvailable =
+    QLabel *moreTemplatesAvailable =
             new QLabel(tr("There are more <a href=\"%1\">templates</a> available. "
                           "Use the \"Load\" button (under Advanced), or \"URL\" below, "
                           "to use them.<br>")
                                .arg(url));
-    moreExamplesAvailable->setOpenExternalLinks(true);
-    connect(moreExamplesAvailable, &QLabel::linkHovered, this, &tooltipLink);
+    moreTemplatesAvailable->setOpenExternalLinks(true);
+    connect(moreTemplatesAvailable, &QLabel::linkHovered, this, &tooltipLink);
 
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(machineGroupBox);
@@ -730,7 +730,7 @@ void Window::quickInstance()
     topLayout->addWidget(distroGroupBox);
     topLayout->addWidget(engineGroupBox);
     topLayout->addWidget(orchestratorGroupBox);
-    topLayout->addWidget(moreExamplesAvailable);
+    topLayout->addWidget(moreTemplatesAvailable);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
     bottomLayout->addWidget(cancelButton);
@@ -1066,9 +1066,9 @@ void Window::findYAML()
 
 void Window::loadYAML()
 {
-    QString examples = getPrefix() + "/share/doc/lima/templates";
+    QString templates = getPrefix() + "/share/doc/lima/templates";
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open YAML"), examples,
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open YAML"), templates,
                                                     tr("YAML Files (*.yaml)"));
     if (fileName.isEmpty()) {
         return;
@@ -1305,7 +1305,7 @@ void Window::inspectInstance()
         if (id == "fedora" && variant == "CoreOS") { // != "Cloud Edition"
             id = "fedora-coreos";
         }
-        Example example = getExamples()[id];
+        Template example = getTemplates()[id];
         logo = example.logo();
     }
 

@@ -4,11 +4,11 @@
 #include <QList>
 #include <QHash>
 
-class Example
+class Template
 {
 public:
-    Example() : Example("", "", "") { }
-    Example(const QString &name, const QString &text, const QString &url)
+    Template() : Template("", "", "") { }
+    Template(const QString &name, const QString &text, const QString &url)
         : m_name(name), m_logo(""), m_yaml(""), m_text(text), m_url(url)
     {
     }
@@ -31,9 +31,9 @@ private:
     QString m_url;
 };
 
-typedef QList<Example> ExampleList;
-typedef QHash<QString, Example> ExampleHash;
+typedef QList<Template> TemplateList;
+typedef QHash<QString, Template> TemplateHash;
 
-extern ExampleHash &getExamples();
+extern TemplateHash &getTemplates();
 
 #endif // EXAMPLES_H

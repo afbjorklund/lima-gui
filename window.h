@@ -120,10 +120,11 @@ private:
     void displayWindow();
     bool getProcessOutput(QStringList arguments, QString &text);
     void yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
-                    bool edit, bool start);
+                    bool edit, bool embed, bool start);
     void createEditor();
     void createEditorSet(QString set);
     QWidget *newTemplateButton(QString name);
+    void updateEmbed();
     void quickCreate();
     void urlCreate();
     void advancedCreate();
@@ -140,6 +141,8 @@ private:
     void readYAML(QString fileName);
     void saveYAML();
     void writeYAML(QString fileName);
+    QFile *tempYAML(QString name);
+    void embedYAML(QString name);
     QFile *validateYAML(QString name);
     void createInstance();
     void createInstanceURL();
@@ -157,6 +160,7 @@ private:
     QMainWindow *editWindow;
     QDialog *quickDialog;
     QCheckBox *quickPreview;
+    QCheckBox *quickEmbed;
     QCheckBox *quickStart;
     QTemporaryDir *editDir;
     QFile *editFile;
@@ -164,6 +168,7 @@ private:
     QLineEdit *createSet;
     QPushButton *createHelp;
     QLineEdit *createFind;
+    QCheckBox *createEmbed;
     QCheckBox *createStart;
     QTextEdit *createYAML;
     QLineEdit *createURL;

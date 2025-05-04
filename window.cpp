@@ -340,7 +340,7 @@ static void tooltipLink(const QString &link)
 }
 
 void Window::yamlEditor(QString instanceName, QString setString, QString yamlFile, bool create,
-                        bool edit, bool start)
+                        bool edit, bool embed, bool start)
 {
     editWindow = new QMainWindow();
 
@@ -394,6 +394,9 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
         createYAML->setPlainText(content);
         file.close();
     }
+    if (embed) {
+        embedYAML(yamlFile);
+    }
 
     QPushButton *cancelButton =
             !edit ? new QPushButton(tr("Close")) : new QPushButton(tr("Cancel"));
@@ -426,8 +429,12 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
     findButton->setIcon(QIcon(":/images/search.png"));
     findButton->setToolTip(tr("Search YAML doc"));
     connect(findButton, &QPushButton::clicked, this, &Window::findYAML);
-    QLabel *label4 = new QLabel(tr("Start"));
+    QLabel *label4 = new QLabel(tr("Embed"));
+    QLabel *label5 = new QLabel(tr("Start"));
     label4->setEnabled(edit);
+    createEmbed = new QCheckBox;
+    createEmbed->setEnabled(edit);
+    createEmbed->setChecked(embed);
     createStart = new QCheckBox;
     createStart->setEnabled(edit);
     createStart->setChecked(start);
@@ -436,6 +443,8 @@ void Window::yamlEditor(QString instanceName, QString setString, QString yamlFil
     bottomLayout2->addWidget(createFind);
     bottomLayout2->addWidget(findButton);
     bottomLayout2->addWidget(label4);
+    bottomLayout2->addWidget(createEmbed);
+    bottomLayout2->addWidget(label5);
     bottomLayout2->addWidget(createStart);
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -462,7 +471,7 @@ void Window::createEditor()
 void Window::createEditorSet(QString set)
 {
     QString directory = getPrefix() + "/share/doc/lima";
-    yamlEditor("default", set, directory + "/" + defaultYAML(), true, true, true);
+    yamlEditor("default", set, directory + "/" + defaultYAML(), true, true, true, true);
 }
 
 QWidget *Window::newTemplateButton(QString name)
@@ -500,11 +509,12 @@ void Window::quickCreate()
     QString exampleYAML = templates + "/" + example.yaml();
     if (quickPreview->isChecked()) {
         yamlEditor(example.name(), quickSetString(), exampleYAML, true, true,
-                   quickStart->isChecked());
+                   quickEmbed->isChecked(), quickStart->isChecked());
     } else {
         editWindow = new QMainWindow;
         readYAML(exampleYAML);
         createSet->setText(quickSetString());
+        createEmbed->setChecked(quickEmbed->isChecked());
         createStart->setChecked(quickStart->isChecked());
         createInstance();
     }
@@ -565,6 +575,11 @@ void Window::setChanged(const QString &)
     sender()->setProperty("changed", true);
 }
 
+void Window::updateEmbed()
+{
+    quickEmbed->setEnabled(quickPreview->isChecked());
+}
+
 void Window::quickInstance()
 {
     quickDialog = new QDialog(this);
@@ -583,6 +598,7 @@ void Window::quickInstance()
     createName = new QLineEdit;
     createSet = new QLineEdit;
     createYAML = new QTextEdit;
+    createEmbed = new QCheckBox;
     createStart = new QCheckBox;
 
     createURL = new QLineEdit(defaultURL());
@@ -689,7 +705,14 @@ void Window::quickInstance()
     quickPreview = new QCheckBox("Edit YAML", this);
     advancedLayout->addWidget(quickPreview);
     quickPreview->setToolTip(tr("Edit before start"));
+    quickEmbed = new QCheckBox("Embed", this);
+    quickEmbed->setEnabled(false);
+    quickEmbed->setChecked(true);
+    advancedLayout->addWidget(quickEmbed);
+    quickEmbed->setToolTip(tr("Embed dependencies into template"));
     advancedGroupBox->setLayout(advancedLayout);
+
+    connect(quickPreview, &QCheckBox::stateChanged, this, &Window::updateEmbed);
 
     QGroupBox *distroGroupBox = new QGroupBox(tr("Linux Distributions"));
     QHBoxLayout *distroLayout = new QHBoxLayout;
@@ -1073,7 +1096,11 @@ void Window::loadYAML()
     if (fileName.isEmpty()) {
         return;
     }
-    readYAML(fileName);
+    if (createEmbed->isChecked()) {
+        embedYAML(fileName);
+    } else {
+        readYAML(fileName);
+    }
 }
 
 void Window::readYAML(QString fileName)
@@ -1109,7 +1136,7 @@ void Window::writeYAML(QString fileName)
     }
 }
 
-QFile *Window::validateYAML(QString name)
+QFile *Window::tempYAML(QString name)
 {
     editDir = new QTemporaryDir;
     if (!editDir->isValid()) {
@@ -1125,6 +1152,35 @@ QFile *Window::validateYAML(QString name)
         QMessageBox::warning(this, tr("lima"), tr("Could not create temporary file"));
         return 0;
     }
+    return temp;
+}
+
+void Window::embedYAML(QString fileName)
+{
+    QString baseName = QFileInfo(fileName).baseName();
+    baseName = baseName.replace(".yaml", "");
+    QFile *temp = tempYAML(baseName);
+    QProcess process(this);
+    QString program = limactlPath();
+    process.start(program, { "template", "copy", "--embed-all", fileName, temp->fileName() });
+    bool success = process.waitForFinished();
+    if (success) {
+        if (process.exitStatus() == QProcess::NormalExit && process.exitCode() != 0) {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Critical);
+            msgBox.setText(tr("Expansion failed!"));
+            msgBox.setInformativeText(process.readAllStandardError());
+            msgBox.exec();
+	    // fallback: copy the original template
+	    QFile::copy(fileName, temp->fileName());
+        }
+    }
+    readYAML(temp->fileName());
+}
+
+QFile *Window::validateYAML(QString name)
+{
+    QFile *temp = tempYAML(name);
     QProcess process(this);
     QString program = limactlPath();
     process.start(program, { "validate", temp->fileName() });
@@ -1404,7 +1460,7 @@ void Window::viewInstance()
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), "", yamlFile, false, false, false);
+    yamlEditor(instance.name(), "", yamlFile, false, false, false, false);
 }
 
 void Window::editInstance()
@@ -1412,7 +1468,7 @@ void Window::editInstance()
     QString name = selectedInstance();
     Instance instance = getInstanceHash()[name];
     QString yamlFile = instance.dir() + "/" + "lima.yaml";
-    yamlEditor(instance.name(), "", yamlFile, false, true, true);
+    yamlEditor(instance.name(), "", yamlFile, false, true, false, true);
 }
 
 void Window::messageInstance()

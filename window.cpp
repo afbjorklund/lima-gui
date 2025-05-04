@@ -1171,8 +1171,8 @@ void Window::embedYAML(QString fileName)
             msgBox.setText(tr("Expansion failed!"));
             msgBox.setInformativeText(process.readAllStandardError());
             msgBox.exec();
-	    // fallback: copy the original template
-	    QFile::copy(fileName, temp->fileName());
+            // fallback: copy the original template
+            QFile::copy(fileName, temp->fileName());
         }
     }
     readYAML(temp->fileName());

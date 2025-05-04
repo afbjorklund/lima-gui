@@ -609,6 +609,15 @@ void QSourceHighliter::ymlHighlighter(const QString &text) {
                 setFormat(i, space - i, f);
                 i = space;
             }
+        } else if (text.at(i) == QLatin1Char('t')) {
+            if (strMidRef(text, i, 8) == QLatin1String("template")) {
+                int space = text.indexOf(QChar(' '), i);
+                if (space == -1) space = textLen;
+                QTextCharFormat f = _formats[CodeString];
+                f.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+                setFormat(i, space - i, f);
+                i = space;
+            }
         }
     }
 }

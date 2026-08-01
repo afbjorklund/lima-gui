@@ -446,7 +446,7 @@ void Window::createEditor()
 
 void Window::createEditorSet(QString set)
 {
-    QString directory = getPrefix() + "/share/doc/lima";
+    QString directory = getPrefix() + "/share/lima";
     yamlEditor("default", set, directory + "/" + defaultYAML(), true, true, true, true);
 }
 
@@ -481,7 +481,7 @@ void Window::quickCreate()
     quickDialog->close();
     QString name = QObject::sender()->property("name").value<QString>();
     Template example = getTemplates()[name];
-    QString templates = getPrefix() + "/share/doc/lima/templates";
+    QString templates = getPrefix() + "/share/lima/templates";
     QString exampleYAML = templates + "/" + example.yaml();
     if (quickPreview->isChecked()) {
         yamlEditor(example.name(), quickSetString(), exampleYAML, true, true,
@@ -1089,7 +1089,7 @@ void Window::findYAML()
 
 void Window::loadYAML()
 {
-    QString templates = getPrefix() + "/share/doc/lima/templates";
+    QString templates = getPrefix() + "/share/lima/templates";
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open YAML"), templates,
                                                     tr("YAML Files (*.yaml)"));
